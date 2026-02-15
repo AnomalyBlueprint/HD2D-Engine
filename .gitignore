@@ -39,3 +39,17 @@
 
 # debug information files
 *.dwo
+
+# Mac System Files
+.DS_Store
+
+# VS Code Settings
+.vscode/
+.qodo
+
+# Build Artifacts
+build/
+bin/
+*.o
+*.d
+engine_3d
