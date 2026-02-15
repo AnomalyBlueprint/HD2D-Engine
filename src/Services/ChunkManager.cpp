@@ -10,8 +10,9 @@
 #include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
 #include <GL/glew.h>
+#include "Core/GameConfig.h"
 
-const float CHUNK_PIXEL_SIZE = 32.0f * 32.0f; // 1024.0f
+// const float CHUNK_PIXEL_SIZE = 32.0f * 32.0f; // Moved to GameConfig
 
 ChunkManager::ChunkManager() {}
 
@@ -36,8 +37,8 @@ void ChunkManager::Clean()
 void ChunkManager::Update(glm::vec3 focusPoint)
 {
     // Calculate Center Chunk from World Focus Point
-    int chunkX = (int)floor(focusPoint.x / CHUNK_PIXEL_SIZE);
-    int chunkZ = (int)floor(focusPoint.z / CHUNK_PIXEL_SIZE);
+    int chunkX = (int)floor(focusPoint.x / GameConfig::CHUNK_PIXEL_SIZE);
+    int chunkZ = (int)floor(focusPoint.z / GameConfig::CHUNK_PIXEL_SIZE);
 
     int currentX = chunkX;
     int currentZ = chunkZ;
@@ -46,7 +47,7 @@ void ChunkManager::Update(glm::vec3 focusPoint)
     auto atlasService = ServiceLocator::Get().GetService<TextureAtlasService>();
 
     // FIX: Use the class member m_renderDistance (fixes unused variable warning)
-    int radius = m_renderDistance; 
+    int radius = GameConfig::RENDER_RADIUS; 
 
     for (int x = -radius; x <= radius; x++)
     {
@@ -144,8 +145,8 @@ void ChunkManager::Render(RenderService* renderer, IShaderService* shader)
         if (chunk->GetMeshID() == 0) continue;
         
         // Translate Mesh
-        float posX = key.first * CHUNK_PIXEL_SIZE;
-        float posZ = key.second * CHUNK_PIXEL_SIZE;
+        float posX = key.first * GameConfig::CHUNK_PIXEL_SIZE;
+        float posZ = key.second * GameConfig::CHUNK_PIXEL_SIZE;
         
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(posX, 0.0f, posZ));

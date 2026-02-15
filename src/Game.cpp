@@ -19,6 +19,8 @@
 #include "Services/ChunkManager.h" // Added
 #include "World/Chunk.h" // Added
 #include "Data/KenneyIDs.h"
+#include "Core/GameConfig.h"
+#include <string>
 
 #include <iostream>
 #include <glm/glm.hpp>
@@ -194,7 +196,7 @@ void Game::Run()
         {
             float previousZoom = camera->zoom;
             // User requested gentle speed: zoom * 2.0f * deltaTime
-            float zoomChange = camera->zoom * 2.0f * deltaTime;
+            float zoomChange = camera->zoom * GameConfig::ZOOM_SPEED * deltaTime;
 
             // Scroll Zoom (Discrete steps but scaled)
             int scroll = inputService->GetMouseScroll();
@@ -208,8 +210,8 @@ void Game::Run()
             if (inputService->IsKeyDown(SDL_SCANCODE_E)) camera->zoom += zoomChange; // Zoom Out
 
             // Clamp (0.15 to 0.25)
-            if (camera->zoom < 0.15f) camera->zoom = 0.15f;
-            if (camera->zoom > 1.0f) camera->zoom = 1.0f;
+            if (camera->zoom < GameConfig::ZOOM_MIN) camera->zoom = GameConfig::ZOOM_MIN;
+            if (camera->zoom > GameConfig::ZOOM_MAX) camera->zoom = GameConfig::ZOOM_MAX;
 
             // Debug Output
             if (abs(camera->zoom - previousZoom) > 0.0001f)
@@ -222,16 +224,36 @@ void Game::Run()
         auto renderer = ServiceLocator::Get().GetService<RenderService>();
         auto shaders = ServiceLocator::Get().GetService<IShaderService>();
 
-        // 3. Simple Camera Movement (Arrow Keys / WASD)
-        
-        // Speed needs to be higher now that we are in Pixel Coordinates
-        // Speed needs to be higher now that we are in Pixel Coordinates
-        float speed = 500.0f * deltaTime; // Updated Speed as requested
+        // 3. Simple Camera Movement (Axis-Aligned / Original)
+        // User requested to revert isometric rotation for clearer coordinate movement
+        float speed = GameConfig::MOVE_SPEED * deltaTime;
         
         if (inputService->IsKeyDown(SDL_SCANCODE_W)) camera->position.y += speed;
         if (inputService->IsKeyDown(SDL_SCANCODE_S)) camera->position.y -= speed;
         if (inputService->IsKeyDown(SDL_SCANCODE_A)) camera->position.x -= speed;
         if (inputService->IsKeyDown(SDL_SCANCODE_D)) camera->position.x += speed;
+
+        // UI Title Update
+        static Uint32 lastTitleUpdate = 0;
+        if (currentTime > lastTitleUpdate + 100)
+        {
+            lastTitleUpdate = currentTime;
+            
+            // Map Camera to World (Isometric Transformation)
+            // Forward (W/CamY+) -> World X+, World Z-
+            // Right (D/CamX+) -> World X+, World Z+
+            // Therefore: WorldX = CamX + CamY; WorldZ = CamX - CamY;
+            float wx = camera->position.x + camera->position.y;
+            float wz = camera->position.x - camera->position.y;
+
+            int cx = (int)floor(wx / GameConfig::CHUNK_PIXEL_SIZE);
+            int cz = (int)floor(wz / GameConfig::CHUNK_PIXEL_SIZE);
+            
+            float fps = (deltaTime > 0) ? 1.0f / deltaTime : 0.0f;
+            
+            std::string title = "HD2D Engine | Chunk: [" + std::to_string(cx) + ", " + std::to_string(cz) + "] | FPS: " + std::to_string((int)fps);
+            SDL_SetWindowTitle(window, title.c_str());
+        }
 
         // Limit Camera Checks REMOVED for Infinite Scrolling
 
@@ -270,12 +292,15 @@ void Game::Run()
                 glm::mat4 identityModel(1.0f);
                 if (modelLoc >= 0) glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &identityModel[0][0]);
 
-                // NEW: Calculate World Center for Chunk Loading
-                int w, h;
-                SDL_GetWindowSize(window, &w, &h);
-                // We need the ACTUAL view matrix used for rendering (with rotation) to unproject correctly.
-                // The 'view' variable here HAS the rotation applied.
-                glm::vec3 worldFocus = GetWorldCenter(w, h, view, projection);
+                // FIX: Map Camera 2D to World 3D (Isometric)
+                // WorldX = CamX + CamY
+                // WorldZ = CamX - CamY
+                // We use the same transformation for Chunk Loading as for UI
+                glm::vec3 worldFocus(
+                    camera->position.x + camera->position.y, 
+                    0.0f, 
+                    camera->position.x - camera->position.y
+                ); 
 
                 // --- CHUNK MANAGER ---
                 auto chunkManager = ServiceLocator::Get().GetService<ChunkManager>();

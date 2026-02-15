@@ -23,7 +23,7 @@ public:
         float width = 1280.0f * zoom; 
         float height = width / aspectRatio;
 
-        return glm::ortho(-width / 2.0f, width / 2.0f, -height / 2.0f, height / 2.0f, -1000.0f, 1000.0f);
+        return glm::ortho(-width / 2.0f, width / 2.0f, -height / 2.0f, height / 2.0f, -2000.0f, 5000.0f);
     }
 
     // 2. Get View (Where the camera is)
