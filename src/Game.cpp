@@ -68,7 +68,7 @@ void Game::Init()
     // FIX 2: Massive Zoom Out
     // We want to see about 20 blocks vertical (20 * 32 = 640 pixels).
     // If your Camera math is "height = 2.0f * zoom", then zoom needs to be ~320.
-    camera->zoom = 0.2f;
+    camera->zoom = 0.20f;
     // --------------------
 
     // 4. Render Service (CRITICAL: This initializes GLEW!)
@@ -162,10 +162,14 @@ void Game::Run()
         if (inputService)
         {
             float previousZoom = camera->zoom;
-            float zoomChange = camera->zoom * 1.5f * deltaTime;
+            // User requested gentle speed: zoom * 2.0f * deltaTime
+            float zoomChange = camera->zoom * 2.0f * deltaTime;
 
             // Scroll Zoom (Discrete steps but scaled)
             int scroll = inputService->GetMouseScroll();
+            // Scroll also uses proportional change? 
+            // "Speed: camera->zoom * 2.0f * deltaTime" applies to continuous keys?
+            // For scroll, let's use a small percentage per click, e.g. 10%.
             if (scroll != 0) camera->zoom -= scroll * (camera->zoom * 0.1f); 
 
             // Key Zoom (Q/E)
@@ -174,7 +178,7 @@ void Game::Run()
 
             // Clamp (0.15 to 0.25)
             if (camera->zoom < 0.15f) camera->zoom = 0.15f;
-            if (camera->zoom > 0.25f) camera->zoom = 0.25f;
+            if (camera->zoom > 1.0f) camera->zoom = 1.0f;
 
             // Debug Output
             if (abs(camera->zoom - previousZoom) > 0.0001f)
