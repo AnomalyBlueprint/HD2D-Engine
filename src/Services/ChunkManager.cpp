@@ -24,31 +24,24 @@ void ChunkManager::Clean()
     m_activeChunks.clear();
 }
 
-void ChunkManager::Update(glm::vec2 cameraPosition)
+void ChunkManager::Update(glm::vec3 focusPoint)
 {
-    // Calculate Current Chunk
-    // Camera pos is in World Pixels.
-    // Chunk Size in Pixels = 16 * 32 = 512.
-    // If CamX = 512, ChunkX = 1.
-    int chunkX = (int)floor(cameraPosition.x / CHUNK_PIXEL_SIZE);
-    int chunkY = (int)floor(cameraPosition.y / CHUNK_PIXEL_SIZE); // Z in 3D is Y in Top-Down map? 
-    // Wait. In Game.cpp:
-    // camera->position = glm::vec2(256.0f, 256.0f);
-    // World Generation uses X and Z.
-    // Camera is 2D (X, Y). 
-    // Usually in this engine: X=WorldX, Y=WorldY (which maps to 3D Z).
-    // Let's assume Camera.y maps to World Z.
-    
+    // Calculate Center Chunk from World Focus Point (X, 0, Z)
+    // ChunkSize = 16 * 32 = 512.
+    int chunkX = (int)floor(focusPoint.x / CHUNK_PIXEL_SIZE);
+    int chunkZ = (int)floor(focusPoint.z / CHUNK_PIXEL_SIZE);
+
     int currentX = chunkX;
-    int currentZ = chunkY; // Mapping Y to Z
+    int currentZ = chunkZ;
 
     auto worldService = ServiceLocator::Get().GetService<IWorldService>();
     auto atlasService = ServiceLocator::Get().GetService<TextureAtlasService>();
 
-    // Load new chunks
-    for (int x = -m_renderDistance; x <= m_renderDistance; x++)
+    // Load new chunks in 5x5 Grid (Radius 2)
+    int radius = 2; // As requested: -2 to +2
+    for (int x = -radius; x <= radius; x++)
     {
-        for (int z = -m_renderDistance; z <= m_renderDistance; z++)
+        for (int z = -radius; z <= radius; z++)
         {
             int targetX = currentX + x;
             int targetZ = currentZ + z;
@@ -59,6 +52,7 @@ void ChunkManager::Update(glm::vec2 cameraPosition)
             {
                 // Instantiate
                 auto chunk = std::make_shared<Chunk>();
+                chunk->SetCoordinates(targetX, targetZ);
                 
                 // Generate Data
                 worldService->GenerateChunk(chunk.get(), targetX, targetZ);
@@ -66,51 +60,15 @@ void ChunkManager::Update(glm::vec2 cameraPosition)
                 // Mesh
                 std::vector<Vertex> vertices;
                 std::vector<unsigned int> indices;
-                chunk->RebuildMesh(vertices, indices, atlasService.get());
+                
+                // Pass WorldService to RebuildMesh for Neighbor Checks
+                chunk->RebuildMesh(vertices, indices, atlasService.get(), worldService.get());
                 
                 // Upload
                 if (!vertices.empty())
                 {
-                    // Convert to float for CreateMesh
-                    // TODO: Optimize this copy
+                     // Convert to float for CreateMesh
                     std::vector<float> floatVertices;
-                    floatVertices.reserve(vertices.size() * 10);
-                    for(const auto& v : vertices)
-                    {
-                        floatVertices.push_back(v.position.x);
-                        floatVertices.push_back(v.position.y);
-                        floatVertices.push_back(v.position.z);
-                        floatVertices.push_back(v.color.r);
-                        floatVertices.push_back(v.color.g);
-                        floatVertices.push_back(v.color.b);
-                        floatVertices.push_back(v.color.a);
-                        floatVertices.push_back(v.texCoord.x);
-                        floatVertices.push_back(v.texCoord.y);
-                        floatVertices.push_back(v.textureID);
-                    }
-                    
-                    // Renderer CreateMesh needs to be accessible?
-                    // We don't have Renderer here in Update.
-                    // Implementation Plan checks "Update" does upload?
-                    // But we only get Renderer in Render().
-                    // We need Renderer service access here.
-                    // RenderService is not registered as IService? 
-                    // In Game.cpp: Registry<RenderService>(...). 
-                    // Let's assume we can get it via Locator or pass it in Update?
-                    // Plan says: "Call WorldService->Generate... Upload to GPU (renderer->CreateMesh)."
-                    // I will use ServiceLocator to get RenderService. It might need casting if registered as generic.
-                    
-                    // Actually, Game.cpp registers it:
-                    // ServiceLocator::Get().Register<RenderService>(renderer);
-                }
-                 
-                // WAIT. I need to upload mesh.
-                // I will fetch RenderService from locator.
-                auto renderer = ServiceLocator::Get().GetService<RenderService>();
-                if (renderer)
-                {
-                    // Copy code from above
-                     std::vector<float> floatVertices;
                     floatVertices.reserve(vertices.size() * 10);
                     for(const auto& v : vertices)
                     {
@@ -120,31 +78,44 @@ void ChunkManager::Update(glm::vec2 cameraPosition)
                         floatVertices.push_back(v.textureID);
                     }
                     
-                    unsigned int meshID = renderer->CreateMesh(floatVertices, indices);
-                    chunk->SetMesh(meshID, indices.size());
+                    auto renderer = ServiceLocator::Get().GetService<RenderService>();
+                    if (renderer)
+                    {
+                        unsigned int meshID = renderer->CreateMesh(floatVertices, indices);
+                        chunk->SetMesh(meshID, indices.size());
+                    }
                 }
-
+                 
                 m_activeChunks[key] = chunk;
             }
         }
     }
     
-    // Cleanup old chunks (Simple distance check)
-    // Iterate and remove if dist > renderDistance + 1
+    // Cleanup old chunks (Distance > Radius + 1 buffer)
     for (auto it = m_activeChunks.begin(); it != m_activeChunks.end(); )
     {
         int cx = it->first.first;
         int cz = it->first.second;
         
-        if (abs(cx - currentX) > m_renderDistance + 1 || abs(cz - currentZ) > m_renderDistance + 1)
+        if (abs(cx - currentX) > radius + 1 || abs(cz - currentZ) > radius + 1)
         {
-            it = m_activeChunks.erase(it); // Chunk destructor handles glDelete
+            it = m_activeChunks.erase(it);
         }
         else
         {
             ++it;
         }
     }
+}
+
+std::shared_ptr<Chunk> ChunkManager::GetChunk(int x, int y)
+{
+    auto key = GetChunkKey(x, y);
+    if (m_activeChunks.find(key) != m_activeChunks.end())
+    {
+        return m_activeChunks[key];
+    }
+    return nullptr;
 }
 
 void ChunkManager::Render(RenderService* renderer, IShaderService* shader)

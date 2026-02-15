@@ -25,6 +25,37 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Core/Sprite.h"
 
+// --- Raycasting Helper ---
+glm::vec3 GetWorldCenter(int screenW, int screenH, const glm::mat4& view, const glm::mat4& proj)
+{
+    // Define Viewport
+    glm::vec4 viewport(0.0f, 0.0f, (float)screenW, (float)screenH);
+    
+    // Unproject Near and Far points at Screen Center
+    // Note: SDL uses Top-Left (0,0). OpenGL uses Bottom-Left.
+    // However, Center (W/2, H/2) is the same.
+    glm::vec3 screenNear(screenW / 2.0f, screenH / 2.0f, 0.0f); // Z=0 (Near)
+    glm::vec3 nearPoint = glm::unProject(screenNear, view, proj, viewport);
+    
+    glm::vec3 screenFar(screenW / 2.0f, screenH / 2.0f, 1.0f); // Z=1 (Far)
+    glm::vec3 farPoint = glm::unProject(screenFar, view, proj, viewport);
+
+    // Ray Direction
+    glm::vec3 rayDir = glm::normalize(farPoint - nearPoint);
+    glm::vec3 rayOrigin = nearPoint;
+
+    // Plane Y=0 Intersection (Ground Plane)
+    // t = (0 - origin.y) / dir.y
+    if (std::abs(rayDir.y) < 0.001f) // Parallel to plane
+    {
+        return nearPoint; 
+    }
+
+    float t = -rayOrigin.y / rayDir.y;
+    return rayOrigin + rayDir * t;
+}
+
+
 void Game::Init()
 {
     // 1. Logger (First!)
@@ -194,20 +225,16 @@ void Game::Run()
         // 3. Simple Camera Movement (Arrow Keys / WASD)
         
         // Speed needs to be higher now that we are in Pixel Coordinates
-        float speed = 300.0f * deltaTime; // Move 300 pixels per second
+        // Speed needs to be higher now that we are in Pixel Coordinates
+        float speed = 500.0f * deltaTime; // Updated Speed as requested
         
         if (inputService->IsKeyDown(SDL_SCANCODE_W)) camera->position.y += speed;
         if (inputService->IsKeyDown(SDL_SCANCODE_S)) camera->position.y -= speed;
         if (inputService->IsKeyDown(SDL_SCANCODE_A)) camera->position.x -= speed;
         if (inputService->IsKeyDown(SDL_SCANCODE_D)) camera->position.x += speed;
 
-        // Limit Camera (Keep Chunk in View)
-        // Chunk is 0..512 in X and Y.
-        // Let's allow seeing a bit outside (-500 to 1000)
-        if (camera->position.x < -500.0f) camera->position.x = -500.0f;
-        if (camera->position.x > 1000.0f) camera->position.x = 1000.0f;
-        if (camera->position.y < -500.0f) camera->position.y = -500.0f;
-        if (camera->position.y > 1000.0f) camera->position.y = 1000.0f;
+        // Limit Camera Checks REMOVED for Infinite Scrolling
+
 
         // 4. Render
         if (renderer)
@@ -243,11 +270,19 @@ void Game::Run()
                 glm::mat4 identityModel(1.0f);
                 if (modelLoc >= 0) glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &identityModel[0][0]);
 
+                // NEW: Calculate World Center for Chunk Loading
+                int w, h;
+                SDL_GetWindowSize(window, &w, &h);
+                // We need the ACTUAL view matrix used for rendering (with rotation) to unproject correctly.
+                // The 'view' variable here HAS the rotation applied.
+                glm::vec3 worldFocus = GetWorldCenter(w, h, view, projection);
+
                 // --- CHUNK MANAGER ---
                 auto chunkManager = ServiceLocator::Get().GetService<ChunkManager>();
                 if (chunkManager)
                 {
-                    chunkManager->Update(camera->position);
+                    chunkManager->Update(worldFocus);
+
                     
                     // Bind Atlas
                     renderer->UseTexture(textureID);

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <GL/glew.h>
 #include <cstring>
+#include "Services/IWorldService.h"
 
 Chunk::Chunk()
 {
@@ -51,13 +52,27 @@ uint8_t Chunk::GetBlock(int x, int y, int z) const
     {
         return m_blocks[GetIndex(x, y, z)];
     }
-    return 0; // Return 0 (Air) if out of bounds
+    return 0; // Air (or could return dirt if OOB?)
 }
 
-void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, TextureAtlasService* atlas)
+void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, TextureAtlasService* atlas, IWorldService* world)
 {
     vertices.clear();
     indices.clear();
+
+    // Helper to check neighbors across chunks
+    auto GetBlockCheck = [&](int lx, int ly, int lz) -> uint8_t {
+        if (IsInBounds(lx, ly, lz)) return GetBlock(lx, ly, lz);
+        
+        if (world)
+        {
+            int gx = m_chunkX * SIZE + lx;
+            int gz = m_chunkZ * SIZE + lz;
+            // ly is same as gy
+            return world->GetBlockAt(gx, ly, gz);
+        }
+        return 0; 
+    };
 
     for (int x = 0; x < SIZE; x++)
     {
@@ -65,28 +80,18 @@ void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>
         {
             for (int z = 0; z < SIZE; z++)
             {
-                uint8_t block = GetBlock(x, y, z);
-                if (block == 0) continue; // Skip Air
-
+                uint8_t blockType = GetBlock(x, y, z);
+                if (blockType == 0) continue; // Air
+                
                 // Map Block ID to KenneyID
                 KenneyIDs texID = KenneyIDs::Floor_Ground_Dirt; // 1 = Dirt
-                if (block == 2) texID = KenneyIDs::Floor_Ground_Grass;
-                else if (block == 3) texID = KenneyIDs::Floor_Ground_Sand;
-                else if (block == 4) texID = KenneyIDs::Floor_Stone_Pattern_Small; // Snow placeholder (White/Stone)? Or KenneyIDs::Snow? 
-                // Let's check KenneyIDs.h ... No "Snow" explicitly? 
-                // Maybe "Floor_Tiles_Tan_Large"? or "Floor_Stone_Sand_Trimsheet"?
-                // Let's use "Floor_Stone_Pattern" for Snow (abstractly) or look for something white.
-                // Or just use Sand for now if Snow is missing.
-                // Wait, KenneyIDs has "Floor_Tiles_Blue_Small" (maybe ice?).
-                // Let's use "Floor_Stone_Sand_Random" -> Looks like Snow/Sand mix?
-                // Actually, let's use "Floor_Stone" for Stone (ID 6) and "Floor_Tiles_Blue_Small" for Water (ID 5).
-                // For "Snow" (ID 4), let's use "Floor_Tiles_Tan_Small" (looks distinct).
                 
-                if (block == 3) texID = KenneyIDs::Floor_Ground_Sand;
-                if (block == 4) texID = KenneyIDs::Floor_Stone_Pattern_Small; // Snowish
-                if (block == 5) texID = KenneyIDs::Floor_Ground_Water;
-                if (block == 6) texID = KenneyIDs::Wall_Stone; // Stone
-                
+                if (blockType == 2) texID = KenneyIDs::Floor_Ground_Grass;
+                else if (blockType == 3) texID = KenneyIDs::Floor_Ground_Sand;
+                else if (blockType == 4) texID = KenneyIDs::Floor_Tiles_Tan_Small; // Snow placeholder
+                else if (blockType == 5) texID = KenneyIDs::Floor_Ground_Water;
+                else if (blockType == 6) texID = KenneyIDs::Wall_Stone; // Stone
+
                 // Get UVs
                 UVRect uv = {0,0,1,1};
                 if (atlas)
@@ -97,35 +102,35 @@ void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>
                 // Color is White (Tint)
                 glm::vec4 color(1.0f);
 
-                // Check neighbors for culling
+                // Check neighbors for culling (DISABLED as per user request)
                 
                 // TOP (Y+1)
-                if (GetBlock(x, y + 1, z) == 0)
+                // if (GetBlockCheck(x, y + 1, z) == 0)
                 {
                     AddFace(vertices, indices, x, y, z, 0, color, uv);
                 }
                 // BOTTOM (Y-1)
-                if (GetBlock(x, y - 1, z) == 0)
+                // if (GetBlockCheck(x, y - 1, z) == 0)
                 {
                     AddFace(vertices, indices, x, y, z, 1, color, uv);
                 }
                 // LEFT (X-1)
-                if (GetBlock(x - 1, y, z) == 0)
+                // if (GetBlockCheck(x - 1, y, z) == 0)
                 {
                     AddFace(vertices, indices, x, y, z, 2, color, uv);
                 }
                 // RIGHT (X+1)
-                if (GetBlock(x + 1, y, z) == 0)
+                // if (GetBlockCheck(x + 1, y, z) == 0)
                 {
                     AddFace(vertices, indices, x, y, z, 3, color, uv);
                 }
                 // FRONT (Z+1)
-                if (GetBlock(x, y, z + 1) == 0)
+                // if (GetBlockCheck(x, y, z + 1) == 0)
                 {
                     AddFace(vertices, indices, x, y, z, 4, color, uv);
                 }
                 // BACK (Z-1)
-                if (GetBlock(x, y, z - 1) == 0)
+                // if (GetBlockCheck(x, y, z - 1) == 0)
                 {
                     AddFace(vertices, indices, x, y, z, 5, color, uv);
                 }

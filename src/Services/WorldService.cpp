@@ -1,6 +1,7 @@
 #include "Services/WorldService.h"
 #include "Services/ServiceLocator.h"
 #include "Services/ILoggerService.h"
+#include "Services/ChunkManager.h"
 #include <iostream>
 
 WorldService::WorldService()
@@ -37,10 +38,12 @@ void WorldService::GenerateChunk(Chunk* chunk, int worldX, int worldY)
         for (int z = 0; z < Chunk::SIZE; z++)
         {
             // Global Coordinates
+            // CRITICAL: Must use (Chunk Coord * Size) + Local Coord
             float globalX = (float)(baseX + x);
             float globalZ = (float)(baseZ + z);
 
-            // 1. Get Noise (-1 to 1)
+            // 1. Get Noise (-1 to 1) 
+            // Using global coords ensures seamless continuity across chunks
             float rawNoise = m_noise.GetNoise(globalX, globalZ); 
             
             // 2. Normalize (0 to 1)
@@ -64,17 +67,6 @@ void WorldService::GenerateChunk(Chunk* chunk, int worldX, int worldY)
                 finalY = baseHeight + addedHeight;
             }
 
-            // Fill Column
-            // We iterate up to finalY
-            // Chunk Y is 0..15 usually.
-            // With MaxHeight 20, we need to be careful if Chunk height is limited.
-            // Chunk::SIZE is 16.
-            // If finalY > 15, we clamp OR we need vertical chunks.
-            // For now, let's Clamp to 15 to stay within bounds of a single chunk system 
-            // OR if IsInBounds checks Y, we are fine?
-            // Chunk::IsInBounds checks 0..SIZE (16).
-            // So we MUST clamp to 15.
-            
             int clampedY = finalY;
             if (clampedY >= Chunk::SIZE) clampedY = Chunk::SIZE - 1;
 
@@ -87,10 +79,7 @@ void WorldService::GenerateChunk(Chunk* chunk, int worldX, int worldY)
                      // Biome / Block Type
                     if (y <= baseHeight && n < 0.3f)
                     {
-                         // Water Body
                          block = 5; // Water
-                         // Optional: Sand at edges? (Complex without neighbor check)
-                         // Simple: If close to 0.3?
                          if (n > 0.28f) block = 3; // Sand
                     }
                     else
@@ -109,4 +98,71 @@ void WorldService::GenerateChunk(Chunk* chunk, int worldX, int worldY)
             }
         }
     }
+}
+
+uint8_t WorldService::GetBlockAt(int globalX, int globalY, int globalZ)
+{
+    // 1. Determine Chunk
+    int chunkX = (int)floor((float)globalX / Chunk::SIZE);
+    int chunkZ = (int)floor((float)globalZ / Chunk::SIZE);
+    
+    // 2. Query ChunkManager
+    auto chunkManager = ServiceLocator::Get().GetService<ChunkManager>();
+    if (chunkManager)
+    {
+        auto chunk = chunkManager->GetChunk(chunkX, chunkZ);
+        if (chunk)
+        {
+            // Calculate Local Coords
+            int localX = globalX % Chunk::SIZE;
+            int localZ = globalZ % Chunk::SIZE;
+            
+            // Handle negative modulo correctly
+            if (localX < 0) localX += Chunk::SIZE;
+            if (localZ < 0) localZ += Chunk::SIZE;
+
+            if (Chunk::IsInBounds(localX, globalY, localZ))
+            {
+                return chunk->GetBlock(localX, globalY, localZ);
+            }
+            return 0; // Air if out of vertical bounds of chunk
+        }
+    }
+
+    // 3. Fallback: Generate Noise (if chunk not loaded)
+    // We duplicate the generation logic for a single block column
+
+    float rawNoise = m_noise.GetNoise((float)globalX, (float)globalZ); 
+    float n = (rawNoise + 1.0f) * 0.5f;
+    
+    int baseHeight = 5;
+    int maxHeight = 20;
+    int finalY = baseHeight;
+
+    if (n < 0.3f) 
+    {
+        finalY = baseHeight;
+    }
+    else
+    {
+        float potential = (n - 0.3f) / 0.7f;
+        int addedHeight = (int)(potential * (maxHeight - baseHeight));
+        finalY = baseHeight + addedHeight;
+    }
+
+    if (globalY <= finalY)
+    {
+        if (globalY <= baseHeight && n < 0.3f)
+        {
+             if (n > 0.28f) return 3; // Sand
+             return 5; // Water
+        }
+        else
+        {
+            if (globalY == finalY) return 2; // Grass
+            return 1; // Dirt
+        }
+    }
+
+    return 0; // Air
 }

@@ -17,8 +17,12 @@ public:
     void Update() override {} // Unused, we use Update(vec2)
     void Clean() override;
 
-    void Update(glm::vec2 cameraPosition);
+    void Update(glm::vec3 focusPoint);
+
     void Render(RenderService* renderer, IShaderService* shader);
+
+    // Helper for WorldService to query active chunks
+    std::shared_ptr<Chunk> GetChunk(int x, int y);
 
 private:
     std::map<std::pair<int, int>, std::shared_ptr<Chunk>> m_activeChunks;

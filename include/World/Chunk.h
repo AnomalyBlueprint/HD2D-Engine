@@ -21,8 +21,14 @@ public:
     void SetBlock(int x, int y, int z, uint8_t id);
     uint8_t GetBlock(int x, int y, int z) const;
 
+    // Coordinates (Needed for Seamless Meshing)
+    void SetCoordinates(int x, int z) { m_chunkX = x; m_chunkZ = z; }
+    int GetChunkX() const { return m_chunkX; }
+    int GetChunkZ() const { return m_chunkZ; }
+
     // Rebuilds mesh and populates vertices/indices vectors
-    void RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, TextureAtlasService* atlas);
+    // Needs WorldService for neighbor checking
+    void RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, TextureAtlasService* atlas, class IWorldService* worldService);
 
     // Mesh Data
     unsigned int GetMeshID() const { return m_meshID; }
@@ -37,6 +43,9 @@ private:
     
     unsigned int m_meshID = 0;
     int m_indexCount = 0;
+    
+    int m_chunkX = 0;
+    int m_chunkZ = 0;
 
     void AddFace(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, int x, int y, int z, int face, const glm::vec4& color, UVRect uv);
 };
