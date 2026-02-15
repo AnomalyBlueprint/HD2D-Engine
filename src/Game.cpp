@@ -14,6 +14,7 @@
 // NEW INCLUDES
 #include "Services/PathRegistryService.h"
 #include "Services/KenneyPathRepository.h"
+#include "Services/TextureAtlasService.h" // Added
 #include "Services/WorldService.h" // Added
 #include "World/Chunk.h" // Added
 #include "Data/KenneyIDs.h"
@@ -91,16 +92,18 @@ void Game::Init()
     worldService->Init();
     ServiceLocator::Get().Register<IWorldService>(worldService);
 
+    // 10. Texture Atlas Service (NEW)
+    auto atlasService = std::make_shared<TextureAtlasService>();
+    atlasService->LoadAtlas(kenneyRepo);
+    ServiceLocator::Get().Register<TextureAtlasService>(atlasService);
+
     // Test Shaders
     auto shaders = ServiceLocator::Get().GetService<IShaderService>();
     basicShaderID = shaders->LoadShader("assets/shaders/basic.vert", "assets/shaders/basic.frag");
 
     // Load Texture via KenneyIDs
-    std::string texturePath = kenneyRepo->GetPath((int)KenneyIDs::Floor_Ground_Dirt);
-    if (!texturePath.empty())
-    {
-        textureID = resources->GetTexture(texturePath);
-    }
+    // We now use Atlas (atlasService->GetTextureID())
+    textureID = atlasService->GetTextureID();
 
     // --- VOXEL CHUNK GENERATION ---
     Chunk* chunk = new Chunk();
@@ -109,21 +112,7 @@ void Game::Init()
     std::vector<Vertex> chunkVertices;
     std::vector<unsigned int> chunkIndices;
     
-    chunk->RebuildMesh(chunkVertices, chunkIndices);
-    
-    // We need CreateMesh to accept vector<Vertex>.
-    // But CreateMesh interface accepts vector<float>.
-    // Wait, I updated CreateMesh to EXPECT floats but use sizeof(Vertex).
-    // So I need to cast/copy Vertex vector to float vector?
-    // OR Update RenderService to accept vector<Vertex>?
-    // The user instruction said: "Refactor OpenGLRenderService and Game.cpp to implement these fixes."
-    // But CreateMesh signature in RenderService.h was:
-    // unsigned int CreateMesh(const std::vector<float> &vertices, const std::vector<unsigned int> &indices)
-    // I should cast it.
-    
-    // Reinterpret cast is dangerous if padding exists, but our struct is packed (floats).
-    // 3+4+2+1 = 10 floats. 10 * 4 = 40 bytes.
-    // Alignment is likely 4 bytes.
+    chunk->RebuildMesh(chunkVertices, chunkIndices, atlasService.get());
     
     // Safer:
     std::vector<float> floatVertices;
@@ -136,79 +125,20 @@ void Game::Init()
         floatVertices.push_back(v.textureID);
     }
     
-    // Wait, can I overload CreateMesh?
-    // The prompt for Task 2 said "Upload to GPU: chunkMeshID = renderer->CreateMesh(vertices, indices);"
-    // implying passing `vector<Vertex>`.
-    // I should probably overload CreateMesh in RenderService to accept `vector<Vertex>`.
-    // But I can't change RenderService interface easily without re-compiling everything.
-    // For now, I will do the conversion here to keep it simple and compile-safe.
-    
     chunkIndexCount = chunkIndices.size();
     chunkMeshID = renderer->CreateMesh(floatVertices, chunkIndices);
     
     logger()->Log("Chunk Generated. Indices: " + std::to_string(chunkIndexCount));
     
     // --- DEBUG CUBE (Task 3) ---
-    // Position: (8, 8, 0)
-    // Size: 1.0? 32.0? "Simple Test Cube". Let's assume 1 unit size (or 32 if scaled?).
-    // "Position: (8, 8, 0)". If I use 32.0 scale, 8 is tiny. 
-    // But if Voxel World is 0..16, and I want to see this cube, maybe it IS 1 unit.
-    // Or maybe 8,8,0 means 8 blocks, 8 blocks?
-    // Let's use 10.0f size for visibility.
+    // REMOVED (Replaced by Atlas rendering integration)
     
-    // Vertex Format: Pos(3), Color(4), UV(2), TexID(1)
-    // Red: 1,0,0,1. TexID: 0 (White Texture).
-    
+    /*
     float size = 10.0f;
     float x = 8.0f; float y = 8.0f; float z = 0.0f;
-    
-    std::vector<float> debugCubeVerts = {
-        // Front Face
-        x, y, z+size,         1.0f, 0.0f, 0.0f, 1.0f,   0.0f, 0.0f,  0.0f,
-        x+size, y, z+size,    1.0f, 0.0f, 0.0f, 1.0f,   1.0f, 0.0f,  0.0f,
-        x+size, y+size, z+size, 1.0f, 0.0f, 0.0f, 1.0f,   1.0f, 1.0f,  0.0f,
-        x, y+size, z+size,    1.0f, 0.0f, 0.0f, 1.0f,   0.0f, 1.0f,  0.0f,
-        // (Just one face for now is enough to see it, but let's do a cube?)
-        // Let's just do a Quad for simplicity given the "Test Cube" request often implies just seeing SOMETHING.
-        // Okay, let's do a full cube (6 faces * 4 verts = 24 verts).
-        // Actually, CreateMesh expects indices.
-    };
-    
-    // Let's just create a single Quad at 8,8,0 facing camera to be sure.
-    // Wait, Isometric view. A cube is better.
-    // I'll make a helper function? No, inline for speed.
-    // ...
-    // Let's just utilize the CHUNK logic to spawn a single block chunk? 
-    // No, user wants MANUAL creation.
-    
-    // OK, MANUAL CUBE VERTICES (Front Face only for brevity, user just wants to see it)
-    // Wait, "Test Cube". I should verify 3D.
-    // I will add TOP and SIDE faces too.
-    
-    // Front (Z+)
-    // Top (Y+)
-    // Right (X+)
-    
-    auto PushQuad = [&](float x, float y, float z, int axis, float r, float g, float b) {
-       // axis 0=Z (Front), 1=Y (Top), 2=X (Right)
-       // ...
-       // Simplified: Just 3 faces.
-       // Front
-       debugCubeVerts.insert(debugCubeVerts.end(), {
-           x, y, z+size, r,g,b,1, 0,0,0,
-           x+size,y,z+size, r,g,b,1, 1,0,0,
-           x+size,y+size,z+size, r,g,b,1, 1,1,0,
-           x,y+size,z+size, r,g,b,1, 0,1,0
-       });
-    };
-    
-    PushQuad(x,y,z, 0, 1.0f, 0.0f, 0.0f); // Front Red
-    
-    std::vector<unsigned int> debugIndices = {0, 1, 2, 2, 3, 0};
-    debugIndexCount = debugIndices.size();
-    debugMeshID = renderer->CreateMesh(debugCubeVerts, debugIndices);
-    
-    logger()->Log("Debug Cube Created.");
+    ...
+    */
+    // debugMeshID = 0; // Disable debug cube
 
     lastTime = SDL_GetTicks();
     isRunning = true;
@@ -318,16 +248,11 @@ void Game::Run()
                 // Draw Chunk
                 if (chunkMeshID > 0)
                 {
-                    renderer->UseTexture(0); // Use White Texture (Colors come from Vertices)
+                    renderer->UseTexture(textureID); // Bind Atlas
                     renderer->DrawMesh(chunkMeshID, chunkIndexCount);
                 }
 
-                // Draw Debug Cube (Task 3)
-                if (debugMeshID > 0)
-                {
-                    renderer->UseTexture(0); // Use White Texture (Default)
-                    renderer->DrawMesh(debugMeshID, debugIndexCount);
-                }
+                /* Debug Cube Removed */
             }
             renderer->End();
             renderer->SwapBuffers();

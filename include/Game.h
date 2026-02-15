@@ -26,8 +26,9 @@ private:
     int chunkIndexCount = 0;
 
     // Debug Cube Data
-    unsigned int debugMeshID = 0;
-    int debugIndexCount = 0;
+    // Debug Cube Removed
+    // unsigned int debugMeshID = 0;
+    // int debugIndexCount = 0;
     
     Uint32 lastTime = 0; // Tracks the last frame's time
     float deltaTime = 0.0f; // Seconds per frame

@@ -4,6 +4,7 @@
 #include <cstring>
 #include <glm/glm.hpp>
 #include "Core/Vertex.h"
+#include "Services/TextureAtlasService.h"
 
 class Chunk
 {
@@ -21,10 +22,10 @@ public:
     uint8_t GetBlock(int x, int y, int z) const;
 
     // Rebuilds mesh and populates vertices/indices vectors
-    void RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices);
+    void RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, TextureAtlasService* atlas);
 
 private:
     uint8_t m_blocks[SIZE * SIZE * SIZE];
 
-    void AddFace(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, int x, int y, int z, int face, const glm::vec4& color);
+    void AddFace(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, int x, int y, int z, int face, const glm::vec4& color, UVRect uv);
 };

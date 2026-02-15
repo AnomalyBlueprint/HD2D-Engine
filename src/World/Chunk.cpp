@@ -34,7 +34,7 @@ uint8_t Chunk::GetBlock(int x, int y, int z) const
     return 0; // Return 0 (Air) if out of bounds
 }
 
-void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices)
+void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, TextureAtlasService* atlas)
 {
     vertices.clear();
     indices.clear();
@@ -48,51 +48,58 @@ void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>
                 uint8_t block = GetBlock(x, y, z);
                 if (block == 0) continue; // Skip Air
 
-                // Color Selection
+                // Map Block ID to KenneyID
+                KenneyIDs texID = KenneyIDs::Floor_Ground_Dirt; // Default
+                if (block == 2) texID = KenneyIDs::Floor_Ground_Grass;
+                
+                // Get UVs
+                UVRect uv = {0,0,1,1};
+                if (atlas)
+                {
+                    uv = atlas->GetUVs(texID);
+                }
+
+                // Color is White (Tint)
                 glm::vec4 color(1.0f);
-                if (block == 1) // Dirt
-                    color = glm::vec4(0.6f, 0.3f, 0.0f, 1.0f);
-                else if (block == 2) // Grass
-                    color = glm::vec4(0.0f, 0.8f, 0.0f, 1.0f);
 
                 // Check neighbors for culling
                 
                 // TOP (Y+1)
                 if (GetBlock(x, y + 1, z) == 0)
                 {
-                    AddFace(vertices, indices, x, y, z, 0, color);
+                    AddFace(vertices, indices, x, y, z, 0, color, uv);
                 }
                 // BOTTOM (Y-1)
                 if (GetBlock(x, y - 1, z) == 0)
                 {
-                    AddFace(vertices, indices, x, y, z, 1, color);
+                    AddFace(vertices, indices, x, y, z, 1, color, uv);
                 }
                 // LEFT (X-1)
                 if (GetBlock(x - 1, y, z) == 0)
                 {
-                    AddFace(vertices, indices, x, y, z, 2, color);
+                    AddFace(vertices, indices, x, y, z, 2, color, uv);
                 }
                 // RIGHT (X+1)
                 if (GetBlock(x + 1, y, z) == 0)
                 {
-                    AddFace(vertices, indices, x, y, z, 3, color);
+                    AddFace(vertices, indices, x, y, z, 3, color, uv);
                 }
                 // FRONT (Z+1)
                 if (GetBlock(x, y, z + 1) == 0)
                 {
-                    AddFace(vertices, indices, x, y, z, 4, color);
+                    AddFace(vertices, indices, x, y, z, 4, color, uv);
                 }
                 // BACK (Z-1)
                 if (GetBlock(x, y, z - 1) == 0)
                 {
-                    AddFace(vertices, indices, x, y, z, 5, color);
+                    AddFace(vertices, indices, x, y, z, 5, color, uv);
                 }
             }
         }
     }
 }
 
-void Chunk::AddFace(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, int x, int y, int z, int face, const glm::vec4& baseColor)
+void Chunk::AddFace(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, int x, int y, int z, int face, const glm::vec4& baseColor, UVRect uv)
 {
     // Face IDs: 0=Top, 1=Bottom, 2=Left, 3=Right, 4=Front, 5=Back
     float fx = (float)x * BLOCK_RENDER_SIZE;
@@ -147,50 +154,50 @@ void Chunk::AddFace(std::vector<Vertex>& vertices, std::vector<unsigned int>& in
     // Top: Y+1
     if(face == 0) // Top
     {
-        PushVert(fx, fy+fs, fz,   0, 0);
-        PushVert(fx+fs, fy+fs, fz, 1, 0);
-        PushVert(fx+fs, fy+fs, fz+fs, 1, 1);
-        PushVert(fx, fy+fs, fz+fs, 0, 1);
+        PushVert(fx, fy+fs, fz,       uv.uMin, uv.vMin); // TL
+        PushVert(fx+fs, fy+fs, fz,    uv.uMax, uv.vMin); // TR
+        PushVert(fx+fs, fy+fs, fz+fs, uv.uMax, uv.vMax); // BR
+        PushVert(fx, fy+fs, fz+fs,    uv.uMin, uv.vMax); // BL
     }
     // Bottom: Y
     else if(face == 1) // Bottom
     {
-        PushVert(fx, fy, fz+fs, 0, 0);
-        PushVert(fx+fs, fy, fz+fs, 1, 0);
-        PushVert(fx+fs, fy, fz, 1, 1);
-        PushVert(fx, fy, fz, 0, 1);
+        PushVert(fx, fy, fz+fs,    uv.uMin, uv.vMin); 
+        PushVert(fx+fs, fy, fz+fs, uv.uMax, uv.vMin);
+        PushVert(fx+fs, fy, fz,    uv.uMax, uv.vMax);
+        PushVert(fx, fy, fz,       uv.uMin, uv.vMax);
     }
     // Left: X
     else if(face == 2)
     {
-        PushVert(fx, fy+fs, fz+fs, 1, 0);
-        PushVert(fx, fy+fs, fz, 0, 0);
-        PushVert(fx, fy, fz, 0, 1);
-        PushVert(fx, fy, fz+fs, 1, 1);
+        PushVert(fx, fy+fs, fz+fs, uv.uMax, uv.vMin);
+        PushVert(fx, fy+fs, fz,    uv.uMin, uv.vMin);
+        PushVert(fx, fy, fz,       uv.uMin, uv.vMax);
+        PushVert(fx, fy, fz+fs,    uv.uMax, uv.vMax);
     }
     // Right: X+1
     else if(face == 3)
     {
-        PushVert(fx+fs, fy+fs, fz, 1, 0);
-        PushVert(fx+fs, fy+fs, fz+fs, 0, 0);
-        PushVert(fx+fs, fy, fz+fs, 0, 1);
-        PushVert(fx+fs, fy, fz, 1, 1);
+        PushVert(fx+fs, fy+fs, fz,    uv.uMax, uv.vMin);
+        PushVert(fx+fs, fy+fs, fz+fs, uv.uMin, uv.vMin);
+        PushVert(fx+fs, fy, fz+fs,    uv.uMin, uv.vMax);
+        PushVert(fx+fs, fy, fz,       uv.uMax, uv.vMax);
     }
     // Front: Z+1
     else if(face == 4)
     {
-        PushVert(fx+fs, fy+fs, fz+fs, 1, 0);
-        PushVert(fx, fy+fs, fz+fs, 0, 0);
-        PushVert(fx, fy, fz+fs, 0, 1);
-        PushVert(fx+fs, fy, fz+fs, 1, 1);
+        PushVert(fx, fy+fs, fz+fs,    uv.uMin, uv.vMin); // TL
+        PushVert(fx+fs, fy+fs, fz+fs, uv.uMax, uv.vMin); // TR
+        PushVert(fx+fs, fy, fz+fs,    uv.uMax, uv.vMax); // BR
+        PushVert(fx, fy, fz+fs,       uv.uMin, uv.vMax); // BL
     }
     // Back: Z
     else if(face == 5)
     {
-        PushVert(fx, fy+fs, fz, 1, 0);
-        PushVert(fx+fs, fy+fs, fz, 0, 0);
-        PushVert(fx+fs, fy, fz, 0, 1);
-        PushVert(fx, fy, fz, 1, 1);
+        PushVert(fx+fs, fy+fs, fz,    uv.uMin, uv.vMin); 
+        PushVert(fx, fy+fs, fz,       uv.uMax, uv.vMin);
+        PushVert(fx, fy, fz,          uv.uMax, uv.vMax);
+        PushVert(fx+fs, fy, fz,       uv.uMin, uv.vMax);
     }
 
     // Indices (0, 1, 2, 2, 3, 0)
