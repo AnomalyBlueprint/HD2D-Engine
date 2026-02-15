@@ -1,35 +1,60 @@
 #pragma once
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include "Services/IInputService.h"
+#include <SDL.h>
 
 class Camera
 {
 public:
-    glm::vec2 position;
-    float zoom;
-    float aspectRatio;
+    // Orbit Camera Properties
+    glm::vec3 position; // Calculated
+    glm::vec3 target;   // Player Position
+    float distance;
+    float height;
+    float orbitAngle;   // Radians
 
-    Camera(float aspect) : position(0.0f, 0.0f), zoom(1.0f), aspectRatio(aspect) {}
+    Camera(float aspect) 
+        : distance(20.0f), height(15.0f), orbitAngle(0.0f), aspect(aspect) 
+    {
+    }
 
-    // 1. Get Projection (How much world we see)
-    // Zoom: Smaller number = Zoom In. Larger = Zoom Out.
-    // 1. Get Projection (How much world we see)
-    // Zoom: 1.0 = Default (1280x720 units visible). 0.5 = Zoom In (640x360). 2.0 = Zoom Out.
+    void Update(glm::vec3 playerPos, float deltaTime, IInputService* input)
+    {
+        target = playerPos;
+
+        // Orbit Rotation (Q / E)
+        if (input->IsKeyDown(SDL_SCANCODE_Q)) orbitAngle -= 2.0f * deltaTime;
+        if (input->IsKeyDown(SDL_SCANCODE_E)) orbitAngle += 2.0f * deltaTime;
+
+        // Zoom (Scroll)
+        int scroll = input->GetMouseScroll();
+        if (scroll != 0)
+        {
+            distance -= scroll * 100.0f; // Faster zoom
+            if (distance < 50.0f) distance = 50.0f;
+            if (distance > 3000.0f) distance = 3000.0f;
+        }
+
+        // Calculate Position
+        // Look down at 45 degrees: Height should match Distance roughly
+        height = distance;
+
+        float camX = target.x - (sin(orbitAngle) * distance);
+        float camZ = target.z - (cos(orbitAngle) * distance);
+        position = glm::vec3(camX, target.y + height, camZ);
+    }
+
     glm::mat4 GetProjectionMatrix()
     {
-        // Base resolution: 1280x720 (or whatever window size is passed)
-        // Let's assume a virtual resolution of 1280 (width)
-        // Height is derived from aspect ratio.
-        float width = 1280.0f * zoom; 
-        float height = width / aspectRatio;
-
-        return glm::ortho(-width / 2.0f, width / 2.0f, -height / 2.0f, height / 2.0f, -2000.0f, 5000.0f);
+        return glm::perspective(glm::radians(45.0f), aspect, 0.1f, 5000.0f);
     }
 
-    // 2. Get View (Where the camera is)
     glm::mat4 GetViewMatrix()
     {
-        // We move the WORLD opposite to the camera
-        return glm::translate(glm::mat4(1.0f), glm::vec3(-position.x, -position.y, 0.0f));
+        return glm::lookAt(position, target, glm::vec3(0.0f, 1.0f, 0.0f));
     }
+
+private:
+    float aspect;
 };

@@ -3,6 +3,8 @@
 #include <memory>
 #include <string>
 #include "Camera.h"
+#include "Core/Player.h"
+#include "Services/ChunkManager.h"
 
 class Game
 {
@@ -21,6 +23,8 @@ private:
     unsigned int basicShaderID = 0;
     unsigned int textureID = 0;
     
+    std::unique_ptr<Player> m_player;
+
     // Voxel Chunk Data
     unsigned int chunkMeshID = 0;
     int chunkIndexCount = 0;
