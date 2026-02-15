@@ -3,9 +3,15 @@
 #include "Services/IWorldService.h"
 #include "Services/TextureAtlasService.h"
 #include "Services/ILoggerService.h"
+#include "Services/RenderService.h" 
+#include "World/Chunk.h"
+#include "Core/Vertex.h"
 #include <iostream>
+#include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
-#include <GL/glew.h> 
+#include <GL/glew.h>
+
+const float CHUNK_PIXEL_SIZE = 32.0f * 32.0f; // 1024.0f
 
 ChunkManager::ChunkManager() {}
 
@@ -16,7 +22,8 @@ ChunkManager::~ChunkManager()
 
 void ChunkManager::Init()
 {
-    ServiceLocator::Get().GetService<ILoggerService>()->Log("Chunk Manager Initialized.");
+    auto logger = ServiceLocator::Get().GetService<ILoggerService>();
+    if(logger) logger->Log("Chunk Manager Initialized.");
 }
 
 void ChunkManager::Clean()
@@ -24,10 +31,11 @@ void ChunkManager::Clean()
     m_activeChunks.clear();
 }
 
+// REMOVED: GetChunkKey implementation because it is already defined in the header file.
+
 void ChunkManager::Update(glm::vec3 focusPoint)
 {
-    // Calculate Center Chunk from World Focus Point (X, 0, Z)
-    // ChunkSize = 16 * 32 = 512.
+    // Calculate Center Chunk from World Focus Point
     int chunkX = (int)floor(focusPoint.x / CHUNK_PIXEL_SIZE);
     int chunkZ = (int)floor(focusPoint.z / CHUNK_PIXEL_SIZE);
 
@@ -37,8 +45,9 @@ void ChunkManager::Update(glm::vec3 focusPoint)
     auto worldService = ServiceLocator::Get().GetService<IWorldService>();
     auto atlasService = ServiceLocator::Get().GetService<TextureAtlasService>();
 
-    // Load new chunks in 5x5 Grid (Radius 2)
-    int radius = 2; // As requested: -2 to +2
+    // FIX: Use the class member m_renderDistance (fixes unused variable warning)
+    int radius = m_renderDistance; 
+
     for (int x = -radius; x <= radius; x++)
     {
         for (int z = -radius; z <= radius; z++)
@@ -50,26 +59,28 @@ void ChunkManager::Update(glm::vec3 focusPoint)
             
             if (m_activeChunks.find(key) == m_activeChunks.end())
             {
-                // Instantiate
                 auto chunk = std::make_shared<Chunk>();
+                // CRITICAL: Set ID so Chunk knows its global position for seam stitching
                 chunk->SetCoordinates(targetX, targetZ);
                 
-                // Generate Data
-                worldService->GenerateChunk(chunk.get(), targetX, targetZ);
+                // Generate
+                if (worldService) {
+                    worldService->GenerateChunk(chunk.get(), targetX, targetZ);
+                }
                 
-                // Mesh
+                // Meshing
                 std::vector<Vertex> vertices;
                 std::vector<unsigned int> indices;
                 
-                // Pass WorldService to RebuildMesh for Neighbor Checks
+                // PASS SERVICES: worldService allows Chunk to peek at neighbors
                 chunk->RebuildMesh(vertices, indices, atlasService.get(), worldService.get());
                 
                 // Upload
                 if (!vertices.empty())
                 {
-                     // Convert to float for CreateMesh
                     std::vector<float> floatVertices;
                     floatVertices.reserve(vertices.size() * 10);
+                    
                     for(const auto& v : vertices)
                     {
                         floatVertices.push_back(v.position.x); floatVertices.push_back(v.position.y); floatVertices.push_back(v.position.z);
@@ -91,13 +102,13 @@ void ChunkManager::Update(glm::vec3 focusPoint)
         }
     }
     
-    // Cleanup old chunks (Distance > Radius + 1 buffer)
+    // Unload far chunks
     for (auto it = m_activeChunks.begin(); it != m_activeChunks.end(); )
     {
         int cx = it->first.first;
         int cz = it->first.second;
         
-        if (abs(cx - currentX) > radius + 1 || abs(cz - currentZ) > radius + 1)
+        if (std::abs(cx - currentX) > radius + 1 || std::abs(cz - currentZ) > radius + 1)
         {
             it = m_activeChunks.erase(it);
         }
@@ -120,51 +131,6 @@ std::shared_ptr<Chunk> ChunkManager::GetChunk(int x, int y)
 
 void ChunkManager::Render(RenderService* renderer, IShaderService* shader)
 {
-    // Need to set Texture Atlas?
-    // Game.cpp does `renderer->UseTexture(atlasID)`.
-    // It's efficient to do it once before calling this Render, or here.
-    // Let's assume Game.cpp sets the texture state.
-
-    // Shader Uniforms:
-    // We need to set MODEL MATRIX for each chunk.
-    // "basic.vert" has `uniform mat4 model;` ? 
-    // I previously checked and it DOES NOT have model matrix in the provided file content?
-    // Wait, let's re-read basic.vert.
-    // "gl_Position = projection * view * vec4(aPos, 1.0);"
-    // It assumes aPos is World Space.
-    // But our Chunks are generated in Local Coordinates (0..16).
-    // If we want multiple chunks, we MUST translate them.
-    // EITHER:
-    // 1. Generate vertices in World Space (in GenerateChunk/RebuildMesh).
-    // 2. Use Model Matrix in Shader.
-    
-    // Plan Task 1 says: "Crucial: You must apply a Model Matrix translation... glm::translate(...)"
-    // This implies we SHOULD use Model Matrix.
-    // BUT basic.vert I viewed earlier (in Step 526) showed:
-    // "gl_Position = projection * view * vec4(aPos, 1.0);"
-    // It was MISSING `model`.
-    
-    // I MUST UPDATE basic.vert TO SUPPORT MODEL MATRIX.
-    // I will add that to the Execution steps.
-    
-    // For now, I will write the code to set the uniform assuming the shader supports it.
-    
-    // unsigned int shaderID = 0; // We define it or get it? 
-    // IShaderService interface might not expose "GetProgramID"?
-    // In Game.cpp `basicShaderID` is stored.
-    // This `Render` method takes `IShaderService*`, but maybe we need the Program ID directly
-    // or `IShaderService` has `SetMat4`?
-    // Let's check `OpenGLShaderService`.
-    
-    // Assuming we can set uniforms via GL directly for now using `glUniformMatrix4fv`.
-    // We need the program ID used.
-    // `renderer` doesn't expose it.
-    // We might need to pass `GLuint shaderProgramID` to Render.
-    // Or simpler: Just rely on ServiceLocator to get ShaderService cast to OpenGLShaderService which implies we know the implementation.
-    
-    // Let's look at `IShaderService.h`? 
-    // Or just use `glGetIntegerv(GL_CURRENT_PROGRAM, &id);` inside the loop (slow but works).
-    
     GLint currentProgram;
     glGetIntegerv(GL_CURRENT_PROGRAM, &currentProgram);
     
@@ -177,9 +143,9 @@ void ChunkManager::Render(RenderService* renderer, IShaderService* shader)
         
         if (chunk->GetMeshID() == 0) continue;
         
-        // Calculate Translation
+        // Translate Mesh
         float posX = key.first * CHUNK_PIXEL_SIZE;
-        float posZ = key.second * CHUNK_PIXEL_SIZE; // Y in 2D map -> Z in 3D
+        float posZ = key.second * CHUNK_PIXEL_SIZE;
         
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(posX, 0.0f, posZ));
