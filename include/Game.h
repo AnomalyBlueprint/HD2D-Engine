@@ -21,4 +21,6 @@ private:
     unsigned int triangleMeshID = 0;
     unsigned int basicShaderID = 0;
     unsigned int textureID = 0;
+    Uint32 lastTime = 0; // Tracks the last frame's time
+    float deltaTime = 0.0f; // Seconds per frame
 };

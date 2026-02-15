@@ -83,7 +83,7 @@ void Game::Init()
     triangleMeshID = renderer->CreateMesh(vertices, indices);
 
     logger()->Log("Quad Mesh Created! ID: " + std::to_string(triangleMeshID));
-
+    lastTime = SDL_GetTicks();
     isRunning = true;
     logger()->Log("Game Initialized.");
 }
@@ -92,6 +92,9 @@ void Game::Run()
 {
     while (isRunning)
     {
+        Uint32 currentTime = SDL_GetTicks();
+        deltaTime = (currentTime - lastTime) / 1000.0f; // Convert ms to seconds
+        lastTime = currentTime;
         // 1. Input
         SDL_Event e;
         while (SDL_PollEvent(&e))
@@ -106,14 +109,12 @@ void Game::Run()
 
         // 3. Simple Camera Movement (Arrow Keys / WASD)
         const Uint8 *state = SDL_GetKeyboardState(NULL);
-        if (state[SDL_SCANCODE_W])
-            camera->position.y += 0.01f;
-        if (state[SDL_SCANCODE_S])
-            camera->position.y -= 0.01f;
-        if (state[SDL_SCANCODE_A])
-            camera->position.x -= 0.01f;
-        if (state[SDL_SCANCODE_D])
-            camera->position.x += 0.01f;
+        float speed = 2.5f * deltaTime; // Move 2.5 units per second
+        
+        if (state[SDL_SCANCODE_W]) camera->position.y += speed;
+        if (state[SDL_SCANCODE_S]) camera->position.y -= speed;
+        if (state[SDL_SCANCODE_A]) camera->position.x -= speed;
+        if (state[SDL_SCANCODE_D]) camera->position.x += speed;
 
         // 4. Update Shader Matrices & Render
         if (renderer)
