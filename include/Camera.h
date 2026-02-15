@@ -13,12 +13,17 @@ public:
 
     // 1. Get Projection (How much world we see)
     // Zoom: Smaller number = Zoom In. Larger = Zoom Out.
+    // 1. Get Projection (How much world we see)
+    // Zoom: 1.0 = Default (1280x720 units visible). 0.5 = Zoom In (640x360). 2.0 = Zoom Out.
     glm::mat4 GetProjectionMatrix()
     {
-        float height = 2.0f * zoom; // Base height is 2.0 (-1 to 1)
-        float width = height * aspectRatio;
+        // Base resolution: 1280x720 (or whatever window size is passed)
+        // Let's assume a virtual resolution of 1280 (width)
+        // Height is derived from aspect ratio.
+        float width = 1280.0f * zoom; 
+        float height = width / aspectRatio;
 
-        return glm::ortho(-width / 2.0f, width / 2.0f, -height / 2.0f, height / 2.0f, -1.0f, 1.0f);
+        return glm::ortho(-width / 2.0f, width / 2.0f, -height / 2.0f, height / 2.0f, -1000.0f, 1000.0f);
     }
 
     // 2. Get View (Where the camera is)

@@ -14,4 +14,10 @@ public:
     
     // Check if a key was just pressed this frame (for things like Jump or Menu)
     virtual bool IsKeyPressed(SDL_Scancode key) = 0;
+
+    // Get current mouse position
+    virtual void GetMousePosition(int& x, int& y) = 0;
+
+    // Get mouse scroll delta (Y axis) for this frame
+    virtual int GetMouseScroll() = 0;
 };

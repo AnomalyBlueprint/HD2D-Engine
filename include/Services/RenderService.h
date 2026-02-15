@@ -2,6 +2,7 @@
 #include "IService.h"
 #include <SDL.h>
 #include <vector>
+#include "Core/Sprite.h"
 
 class RenderService : public IService
 {
@@ -24,4 +25,9 @@ public:
 
     // NEW: Bind a texture to be used by the next Draw call
     virtual void UseTexture(unsigned int textureID) = 0;
+
+    // Batch Rendering
+    virtual void Begin() = 0;
+    virtual void End() = 0;
+    virtual void DrawSprite(const struct Sprite& sprite) = 0;
 };
