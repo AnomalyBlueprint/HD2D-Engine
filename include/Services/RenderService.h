@@ -1,6 +1,7 @@
 #pragma once
 #include "IService.h"
 #include <SDL.h>
+#include <vector>
 
 class RenderService : public IService
 {
@@ -12,5 +13,15 @@ public:
     virtual void Clear() = 0;
     virtual void SwapBuffers() = 0;
 
-    // Future: virtual void DrawMesh(Mesh* mesh) = 0;
+    // UPDATED: Now takes 'indices' as well
+    virtual unsigned int CreateMesh(const std::vector<float> &vertices, const std::vector<unsigned int> &indices) = 0;
+
+    // UPDATED: Now takes 'indexCount' so we know how many points to draw
+    virtual void DrawMesh(unsigned int meshID, int indexCount) = 0;
+    
+    // NEW: Load a texture and return its ID
+    virtual unsigned int LoadTexture(const std::string &path) = 0;
+
+    // NEW: Bind a texture to be used by the next Draw call
+    virtual void UseTexture(unsigned int textureID) = 0;
 };
