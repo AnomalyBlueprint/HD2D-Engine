@@ -69,30 +69,40 @@ void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>
                 uint8_t currentBlock = GetBlock(x, y, z);
                 if (currentBlock == 0) continue; 
 
-                KenneyIDs texID = static_cast<KenneyIDs>(currentBlock); 
-                
-                // --- FIX: Handle UVRect Conversion Manually ---
-                std::array<glm::vec2, 4> uvs;
-                if (atlas) {
-                    UVRect r = atlas->GetUVs(texID); // Get struct first
-                    uvs[0] = glm::vec2(r.uMin, r.vMin); // Bottom-Left
-                    uvs[1] = glm::vec2(r.uMax, r.vMin); // Bottom-Right
-                    uvs[2] = glm::vec2(r.uMax, r.vMax); // Top-Right
-                    uvs[3] = glm::vec2(r.uMin, r.vMax); // Top-Left
-                } else {
-                    uvs = { glm::vec2(0,0), glm::vec2(1,0), glm::vec2(1,1), glm::vec2(0,1) };
-                }
+                // Helper: Get Texture ID based on Face
+                // 0=Front, 1=Back, 2=Right, 3=Left, 4=Top, 5=Bottom
+                auto GetTextureForFace = [&](int face) -> KenneyIDs {
+                    // 1: Dirt, 2: Grass, 3: Sand, 5: Water
+                    if (currentBlock == 2) // Grass Block
+                    {
+                        if (face == 4) return KenneyIDs::Floor_Ground_Grass; // Top
+                        return KenneyIDs::Floor_Ground_Dirt; // Sides/Bottom
+                    }
+                    if (currentBlock == 1) return KenneyIDs::Floor_Ground_Dirt;
+                    if (currentBlock == 3) return KenneyIDs::Floor_Ground_Sand;
+                    if (currentBlock == 5) return KenneyIDs::Floor_Ground_Water;
+                    
+                    return KenneyIDs::Floor_Ground_Dirt; // Default
+                };
+
+                // Helper: Get UVs
+                auto GetUVs = [&](KenneyIDs id) -> std::array<glm::vec2, 4> {
+                     if (atlas) {
+                        UVRect r = atlas->GetUVs(id);
+                        return { glm::vec2(r.uMin, r.vMin), glm::vec2(r.uMax, r.vMin), glm::vec2(r.uMax, r.vMax), glm::vec2(r.uMin, r.vMax) };
+                    }
+                    return { glm::vec2(0,0), glm::vec2(1,0), glm::vec2(1,1), glm::vec2(0,1) };
+                };
 
                 float fX = (float)x * BLOCK_RENDER_SIZE;
                 float fY = (float)y * BLOCK_RENDER_SIZE;
                 float fZ = (float)z * BLOCK_RENDER_SIZE;
                 float fS = BLOCK_RENDER_SIZE; 
-
                 glm::vec4 color(1.0f); 
 
                 // --- NEIGHBOR CHECKING ---
 
-                // 1. FRONT (Z+)
+                // 1. FRONT (Z+) - Face 0
                 bool drawFront = false;
                 if (z < SIZE - 1) {
                     if (IsTransparent(GetBlock(x, y, z + 1))) drawFront = true;
@@ -103,6 +113,7 @@ void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>
                 } else { drawFront = true; }
 
                 if (drawFront) {
+                    auto uvs = GetUVs(GetTextureForFace(0));
                     vertices.push_back({ glm::vec3(fX,      fY,      fZ + fS), color, uvs[0], 0.0f });
                     vertices.push_back({ glm::vec3(fX + fS, fY,      fZ + fS), color, uvs[1], 0.0f });
                     vertices.push_back({ glm::vec3(fX + fS, fY + fS, fZ + fS), color, uvs[2], 0.0f });
@@ -112,7 +123,7 @@ void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>
                     indexCount += 4;
                 }
 
-                // 2. BACK (Z-)
+                // 2. BACK (Z-) - Face 1
                 bool drawBack = false;
                 if (z > 0) {
                     if (IsTransparent(GetBlock(x, y, z - 1))) drawBack = true;
@@ -123,6 +134,7 @@ void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>
                 } else { drawBack = true; }
 
                 if (drawBack) {
+                    auto uvs = GetUVs(GetTextureForFace(1));
                     vertices.push_back({ glm::vec3(fX + fS, fY,      fZ), color, uvs[0], 0.0f }); 
                     vertices.push_back({ glm::vec3(fX,      fY,      fZ), color, uvs[1], 0.0f });
                     vertices.push_back({ glm::vec3(fX,      fY + fS, fZ), color, uvs[2], 0.0f });
@@ -132,7 +144,7 @@ void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>
                     indexCount += 4;
                 }
 
-                // 3. RIGHT (X+)
+                // 3. RIGHT (X+) - Face 2
                 bool drawRight = false;
                 if (x < SIZE - 1) {
                     if (IsTransparent(GetBlock(x + 1, y, z))) drawRight = true;
@@ -143,6 +155,7 @@ void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>
                 } else { drawRight = true; }
 
                 if (drawRight) {
+                     auto uvs = GetUVs(GetTextureForFace(2));
                     vertices.push_back({ glm::vec3(fX + fS, fY,      fZ + fS), color, uvs[0], 0.0f });
                     vertices.push_back({ glm::vec3(fX + fS, fY,      fZ),      color, uvs[1], 0.0f });
                     vertices.push_back({ glm::vec3(fX + fS, fY + fS, fZ),      color, uvs[2], 0.0f });
@@ -152,7 +165,7 @@ void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>
                     indexCount += 4;
                 }
 
-                // 4. LEFT (X-)
+                // 4. LEFT (X-) - Face 3
                 bool drawLeft = false;
                 if (x > 0) {
                     if (IsTransparent(GetBlock(x - 1, y, z))) drawLeft = true;
@@ -163,6 +176,7 @@ void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>
                 } else { drawLeft = true; }
 
                 if (drawLeft) {
+                    auto uvs = GetUVs(GetTextureForFace(3));
                     vertices.push_back({ glm::vec3(fX, fY,      fZ),      color, uvs[0], 0.0f });
                     vertices.push_back({ glm::vec3(fX, fY,      fZ + fS), color, uvs[1], 0.0f });
                     vertices.push_back({ glm::vec3(fX, fY + fS, fZ + fS), color, uvs[2], 0.0f });
@@ -172,13 +186,14 @@ void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>
                     indexCount += 4;
                 }
 
-                // 5. TOP (Y+)
+                // 5. TOP (Y+) - Face 4
                 bool drawTop = false;
                 if (y < SIZE - 1) {
                     if (IsTransparent(GetBlock(x, y + 1, z))) drawTop = true;
                 } else { drawTop = true; }
 
                 if (drawTop) {
+                    auto uvs = GetUVs(GetTextureForFace(4));
                     vertices.push_back({ glm::vec3(fX,      fY + fS, fZ + fS), color, uvs[0], 0.0f });
                     vertices.push_back({ glm::vec3(fX + fS, fY + fS, fZ + fS), color, uvs[1], 0.0f });
                     vertices.push_back({ glm::vec3(fX + fS, fY + fS, fZ),      color, uvs[2], 0.0f });
@@ -188,13 +203,14 @@ void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>
                     indexCount += 4;
                 }
 
-                // 6. BOTTOM (Y-)
+                // 6. BOTTOM (Y-) - Face 5
                 bool drawBottom = false;
                 if (y > 0) {
                     if (IsTransparent(GetBlock(x, y - 1, z))) drawBottom = true;
                 } 
 
                 if (drawBottom) {
+                    auto uvs = GetUVs(GetTextureForFace(5));
                     vertices.push_back({ glm::vec3(fX,      fY, fZ),      color, uvs[0], 0.0f });
                     vertices.push_back({ glm::vec3(fX + fS, fY, fZ),      color, uvs[1], 0.0f });
                     vertices.push_back({ glm::vec3(fX + fS, fY, fZ + fS), color, uvs[2], 0.0f });
