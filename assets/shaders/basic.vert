@@ -8,7 +8,8 @@ out vec2 TexCoord;
 out vec4 VertexColor;
 
 uniform mat4 projection;
-uniform mat4 view; 
+uniform mat4 view;
+uniform mat4 model; // Added for Model Space -> World Space
 
 void main()
 {
@@ -19,7 +20,7 @@ void main()
     // Yes, DrawSprite calculates World Pos.
     // So we don't need Model matrix here anymore for batched sprites.
     
-    gl_Position = projection * view * vec4(aPos, 1.0);
+    gl_Position = projection * view * model * vec4(aPos, 1.0);
     TexCoord = aTexCoord;
     VertexColor = aColor;
 }

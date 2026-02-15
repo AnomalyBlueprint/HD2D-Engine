@@ -24,8 +24,19 @@ public:
     // Rebuilds mesh and populates vertices/indices vectors
     void RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, TextureAtlasService* atlas);
 
+    // Mesh Data
+    unsigned int GetMeshID() const { return m_meshID; }
+    int GetIndexCount() const { return m_indexCount; }
+    void SetMesh(unsigned int id, int count);
+    
+    // Destructor to clean up GPU buffers
+    ~Chunk();
+
 private:
     uint8_t m_blocks[SIZE * SIZE * SIZE];
+    
+    unsigned int m_meshID = 0;
+    int m_indexCount = 0;
 
     void AddFace(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, int x, int y, int z, int face, const glm::vec4& color, UVRect uv);
 };

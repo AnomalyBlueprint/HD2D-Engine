@@ -16,6 +16,7 @@
 #include "Services/KenneyPathRepository.h"
 #include "Services/TextureAtlasService.h" // Added
 #include "Services/WorldService.h" // Added
+#include "Services/ChunkManager.h" // Added
 #include "World/Chunk.h" // Added
 #include "Data/KenneyIDs.h"
 
@@ -54,14 +55,20 @@ void Game::Init()
     // --- CAMERA SETUP ---
     int w, h;
     SDL_GetWindowSize(window, &w, &h);
-    // Safety check
-    if (h == 0)
-        h = 1;
+    if (h == 0) h = 1;
     float aspect = (float)w / (float)h;
 
     camera = std::make_shared<Camera>(aspect);
-    camera->position = glm::vec2(8.0f, 8.0f); 
-    camera->zoom = 15.0f; // Task 3: Zoom 15.0
+    
+    // FIX 1: Center position
+    // Chunk is 16 blocks * 32 pixels = 512 pixels wide/deep.
+    // Center is 256.
+    camera->position = glm::vec2(256.0f, 256.0f); 
+
+    // FIX 2: Massive Zoom Out
+    // We want to see about 20 blocks vertical (20 * 32 = 640 pixels).
+    // If your Camera math is "height = 2.0f * zoom", then zoom needs to be ~320.
+    camera->zoom = 0.2f;
     // --------------------
 
     // 4. Render Service (CRITICAL: This initializes GLEW!)
@@ -97,6 +104,11 @@ void Game::Init()
     atlasService->LoadAtlas(kenneyRepo);
     ServiceLocator::Get().Register<TextureAtlasService>(atlasService);
 
+    // 11. Chunk Manager (NEW)
+    auto chunkManager = std::make_shared<ChunkManager>();
+    chunkManager->Init();
+    ServiceLocator::Get().Register<ChunkManager>(chunkManager);
+
     // Test Shaders
     auto shaders = ServiceLocator::Get().GetService<IShaderService>();
     basicShaderID = shaders->LoadShader("assets/shaders/basic.vert", "assets/shaders/basic.frag");
@@ -105,39 +117,9 @@ void Game::Init()
     // We now use Atlas (atlasService->GetTextureID())
     textureID = atlasService->GetTextureID();
 
-    // --- VOXEL CHUNK GENERATION ---
-    Chunk* chunk = new Chunk();
-    worldService->GenerateChunk(chunk, 0, 0);
-    
-    std::vector<Vertex> chunkVertices;
-    std::vector<unsigned int> chunkIndices;
-    
-    chunk->RebuildMesh(chunkVertices, chunkIndices, atlasService.get());
-    
-    // Safer:
-    std::vector<float> floatVertices;
-    floatVertices.reserve(chunkVertices.size() * 10);
-    for(const auto& v : chunkVertices)
-    {
-        floatVertices.push_back(v.position.x); floatVertices.push_back(v.position.y); floatVertices.push_back(v.position.z);
-        floatVertices.push_back(v.color.r); floatVertices.push_back(v.color.g); floatVertices.push_back(v.color.b); floatVertices.push_back(v.color.a);
-        floatVertices.push_back(v.texCoord.x); floatVertices.push_back(v.texCoord.y);
-        floatVertices.push_back(v.textureID);
-    }
-    
-    chunkIndexCount = chunkIndices.size();
-    chunkMeshID = renderer->CreateMesh(floatVertices, chunkIndices);
-    
-    logger()->Log("Chunk Generated. Indices: " + std::to_string(chunkIndexCount));
-    
-    // --- DEBUG CUBE (Task 3) ---
-    // REMOVED (Replaced by Atlas rendering integration)
-    
-    /*
-    float size = 10.0f;
-    float x = 8.0f; float y = 8.0f; float z = 0.0f;
-    ...
-    */
+    // --- VOXEL CHUNK GENERATION (Removed - Handled by ChunkManager) ---
+    // Chunk* chunk = new Chunk(); ...
+
     // debugMeshID = 0; // Disable debug cube
 
     lastTime = SDL_GetTicks();
@@ -179,15 +161,25 @@ void Game::Run()
         // 2. Zoom Logic
         if (inputService)
         {
+            float previousZoom = camera->zoom;
+            float zoomChange = camera->zoom * 1.5f * deltaTime;
+
+            // Scroll Zoom (Discrete steps but scaled)
             int scroll = inputService->GetMouseScroll();
-            if (scroll != 0)
+            if (scroll != 0) camera->zoom -= scroll * (camera->zoom * 0.1f); 
+
+            // Key Zoom (Q/E)
+            if (inputService->IsKeyDown(SDL_SCANCODE_Q)) camera->zoom -= zoomChange; // Zoom In
+            if (inputService->IsKeyDown(SDL_SCANCODE_E)) camera->zoom += zoomChange; // Zoom Out
+
+            // Clamp (0.15 to 0.25)
+            if (camera->zoom < 0.15f) camera->zoom = 0.15f;
+            if (camera->zoom > 0.25f) camera->zoom = 0.25f;
+
+            // Debug Output
+            if (abs(camera->zoom - previousZoom) > 0.0001f)
             {
-                // Scroll UP (+1) -> Zoom IN (Value decreases)
-                // Scroll DOWN (-1) -> Zoom OUT (Value increases)
-                camera->zoom -= scroll * 0.1f;
-                // Clamp zoom
-                if (camera->zoom < 0.1f) camera->zoom = 0.1f;
-                if (camera->zoom > 5.0f) camera->zoom = 5.0f;
+                std::cout << "[DEBUG] Current Zoom Level: " << camera->zoom << std::endl;
             }
         }
 
@@ -224,36 +216,42 @@ void Game::Run()
                 shaders->UseShader(basicShaderID);
 
                 // Update Camera Matrices
-                shaders->SetMat4(basicShaderID, "projection", camera->GetProjectionMatrix());
+                glm::mat4 projection = camera->GetProjectionMatrix();
+                shaders->SetMat4(basicShaderID, "projection", projection);
                 
                 // ISOMETRIC VIEW SETUP
                 // 1. Get Base View (Translation)
                 glm::mat4 view = camera->GetViewMatrix();
                 
                 // 2. Apply Isometric Rotation
-                // Rotate around X axis (Pitch) approx 30-45 degrees to look down
-                // Rotate around Y axis (Yaw) 45 degrees to look diagonal
-                
-                // Note: We need to rotate around the CENTER of the screen/camera focus?
-                // Or just rotate the camera orientation.
-                // Camera View Matrix = Inverse of Camera Transform.
-                // If Camera is rotated X=30, Y=45... View Matrix rotates -45 Y, -30 X.
-                
+                // 2. Apply Isometric Rotation
                 view = glm::rotate(view, glm::radians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f)); 
                 view = glm::rotate(view, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
-                shaders->SetMat4(basicShaderID, "view", view);
+                int viewLoc = glGetUniformLocation(basicShaderID, "view");
+                int projLoc = glGetUniformLocation(basicShaderID, "projection");
+                int modelLoc = glGetUniformLocation(basicShaderID, "model"); 
 
-                // Draw Floor - DISABLED for Voxel View
-                // Draw Chunk
-                if (chunkMeshID > 0)
+                if (viewLoc >= 0) glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
+                if (projLoc >= 0) glUniformMatrix4fv(projLoc, 1, GL_FALSE, &projection[0][0]);
+                
+                // Set Identity Model for default
+                glm::mat4 identityModel(1.0f);
+                if (modelLoc >= 0) glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &identityModel[0][0]);
+
+                // --- CHUNK MANAGER ---
+                auto chunkManager = ServiceLocator::Get().GetService<ChunkManager>();
+                if (chunkManager)
                 {
-                    renderer->UseTexture(textureID); // Bind Atlas
-                    renderer->DrawMesh(chunkMeshID, chunkIndexCount);
+                    chunkManager->Update(camera->position);
+                    
+                    // Bind Atlas
+                    renderer->UseTexture(textureID);
+                    
+                    chunkManager->Render(renderer.get(), nullptr); 
                 }
-
-                /* Debug Cube Removed */
             }
+            
             renderer->End();
             renderer->SwapBuffers();
         }

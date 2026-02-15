@@ -1,10 +1,30 @@
 #include "World/Chunk.h"
+#include <iostream>
+#include <GL/glew.h>
 #include <cstring>
 
 Chunk::Chunk()
 {
     // Initialize as Air (0)
     std::memset(m_blocks, 0, sizeof(m_blocks));
+}
+
+Chunk::~Chunk()
+{
+    if (m_meshID > 0)
+    {
+        glDeleteBuffers(1, &m_meshID); // Wait, CreateMesh returns VAO ID usually? 
+        // In OpenGLRenderService::CreateMesh:
+        // glGenVertexArrays(1, &VAO); ... return VAO;
+        // So yes, we delete Vertex Arrays.
+        glDeleteVertexArrays(1, &m_meshID);
+    }
+}
+
+void Chunk::SetMesh(unsigned int id, int count)
+{
+    m_meshID = id;
+    m_indexCount = count;
 }
 
 bool Chunk::IsInBounds(int x, int y, int z)
@@ -49,8 +69,23 @@ void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>
                 if (block == 0) continue; // Skip Air
 
                 // Map Block ID to KenneyID
-                KenneyIDs texID = KenneyIDs::Floor_Ground_Dirt; // Default
+                KenneyIDs texID = KenneyIDs::Floor_Ground_Dirt; // 1 = Dirt
                 if (block == 2) texID = KenneyIDs::Floor_Ground_Grass;
+                else if (block == 3) texID = KenneyIDs::Floor_Ground_Sand;
+                else if (block == 4) texID = KenneyIDs::Floor_Stone_Pattern_Small; // Snow placeholder (White/Stone)? Or KenneyIDs::Snow? 
+                // Let's check KenneyIDs.h ... No "Snow" explicitly? 
+                // Maybe "Floor_Tiles_Tan_Large"? or "Floor_Stone_Sand_Trimsheet"?
+                // Let's use "Floor_Stone_Pattern" for Snow (abstractly) or look for something white.
+                // Or just use Sand for now if Snow is missing.
+                // Wait, KenneyIDs has "Floor_Tiles_Blue_Small" (maybe ice?).
+                // Let's use "Floor_Stone_Sand_Random" -> Looks like Snow/Sand mix?
+                // Actually, let's use "Floor_Stone" for Stone (ID 6) and "Floor_Tiles_Blue_Small" for Water (ID 5).
+                // For "Snow" (ID 4), let's use "Floor_Tiles_Tan_Small" (looks distinct).
+                
+                if (block == 3) texID = KenneyIDs::Floor_Ground_Sand;
+                if (block == 4) texID = KenneyIDs::Floor_Stone_Pattern_Small; // Snowish
+                if (block == 5) texID = KenneyIDs::Floor_Ground_Water;
+                if (block == 6) texID = KenneyIDs::Wall_Stone; // Stone
                 
                 // Get UVs
                 UVRect uv = {0,0,1,1};
