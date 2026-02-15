@@ -15,7 +15,7 @@ Player::~Player()
 
 void Player::Init()
 {
-    // Body: Red Cube (24x32x24)
+    // Body: Red Cube (Size 24x32x24)
     CreateCubeMesh(24.0f, 32.0f, 24.0f, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), m_bodyMeshID, m_bodyIndexCount);
 
     // Face: Yellow Cube (offset forward)
@@ -41,8 +41,12 @@ void Player::Update(float deltaTime, IInputService* input)
     if (input->IsKeyDown(SDL_SCANCODE_W)) m_position += forward * m_moveSpeed * deltaTime;
     if (input->IsKeyDown(SDL_SCANCODE_S)) m_position -= forward * m_moveSpeed * deltaTime; 
 
-    // Lock Height
-    m_position.y = 500.0f;
+    // Lock Height (Terrain max is ~640. Fly at 800)
+    // m_position.y = 800.0f; 
+
+    // lets add controls for z and c to go up and down in y axis too.
+    if (input->IsKeyDown(SDL_SCANCODE_Z)) m_position.y += m_moveSpeed * deltaTime;
+    if (input->IsKeyDown(SDL_SCANCODE_C)) m_position.y -= m_moveSpeed * deltaTime;
 }
 
 void Player::Render(RenderService* renderer, IShaderService* shaderService, unsigned int shaderID)

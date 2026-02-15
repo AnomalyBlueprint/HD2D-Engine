@@ -47,7 +47,7 @@ public:
 
     glm::mat4 GetProjectionMatrix()
     {
-        return glm::perspective(glm::radians(45.0f), aspect, 0.1f, 5000.0f);
+        return glm::perspective(glm::radians(45.0f), aspect, 0.1f, 10000.0f);
     }
 
     glm::mat4 GetViewMatrix()

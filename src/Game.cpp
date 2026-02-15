@@ -53,7 +53,7 @@ void Game::Init()
 
     camera = std::make_shared<Camera>(aspect);
     camera->target = glm::vec3(0.0f, 0.0f, 0.0f); 
-    camera->distance = 800.0f;
+    camera->distance = 1500.0f;
     camera->orbitAngle = 0.0f;
 
     auto renderer = std::make_shared<OpenGLRenderService>(window);
