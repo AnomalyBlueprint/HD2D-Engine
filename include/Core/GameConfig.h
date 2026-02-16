@@ -1,8 +1,14 @@
 #pragma once
 
+/// <summary>
+/// Global configuration constants for the game engine.
+/// </summary>
 namespace GameConfig {
-    static const int RENDER_RADIUS = 2; // 1 = 3x3, 2 = 5x5, 3 = 7x7
-    // Chunk Size in Pixels (32 blocks * 32 pixels)
+    static const int RENDER_RADIUS = 2; ///< Chunk render radius (e.g., 2 means 5x5 grid).
+    
+    /// <summary>
+    /// Size of a chunk in world pixels (32 blocks * 32 pixels/block).
+    /// </summary>
     static const float CHUNK_PIXEL_SIZE = 1024.0f;
     static constexpr float DAY_CYCLE_DURATION = 20.0f;
     
@@ -11,9 +17,11 @@ namespace GameConfig {
     static const float ZOOM_MAX = 5.0f;
     static const float ZOOM_SPEED = 2.0f;
 
-    // Alias for user preference
     static constexpr float DAY_CYCLE_SPEED = 20.0f; 
 
+    /// <summary>
+    /// Configuration for Cel-Shading and Post-Processing effects.
+    /// </summary>
     struct CelShading {
         static constexpr bool ENABLED = true;
         

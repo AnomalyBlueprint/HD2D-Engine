@@ -21,30 +21,25 @@ void OpenGLShaderService::UseShader(unsigned int shaderID)
     glUseProgram(shaderID);
 }
 
-// 1. READ FILE -> COMPILE -> LINK
 unsigned int OpenGLShaderService::LoadShader(const std::string &vertexPath, const std::string &fragmentPath)
 {
-    // A. Read Source Code
     std::string vCode = ReadFile(vertexPath);
     std::string fCode = ReadFile(fragmentPath);
 
     if (vCode.empty() || fCode.empty())
         return 0;
 
-    // B. Compile Shaders
     unsigned int vertex = CompileShader(GL_VERTEX_SHADER, vCode);
     unsigned int fragment = CompileShader(GL_FRAGMENT_SHADER, fCode);
 
     if (vertex == 0 || fragment == 0)
         return 0;
 
-    // C. Link Program
     unsigned int programID = glCreateProgram();
     glAttachShader(programID, vertex);
     glAttachShader(programID, fragment);
     glLinkProgram(programID);
 
-    // D. Check Linking Errors
     int success;
     char infoLog[512];
     glGetProgramiv(programID, GL_LINK_STATUS, &success);
@@ -55,7 +50,6 @@ unsigned int OpenGLShaderService::LoadShader(const std::string &vertexPath, cons
         return 0;
     }
 
-    // Cleanup (Shaders are linked now, we don't need the individual objects)
     glDeleteShader(vertex);
     glDeleteShader(fragment);
 
@@ -80,7 +74,6 @@ std::string OpenGLShaderService::ReadFile(const std::string &path)
     return buffer.str();
 }
 
-// Helper: Compile raw string
 unsigned int OpenGLShaderService::CompileShader(unsigned int type, const std::string &source)
 {
     unsigned int id = glCreateShader(type);
@@ -88,7 +81,6 @@ unsigned int OpenGLShaderService::CompileShader(unsigned int type, const std::st
     glShaderSource(id, 1, &src, NULL);
     glCompileShader(id);
 
-    // Check Errors
     int success;
     char infoLog[512];
     glGetShaderiv(id, GL_COMPILE_STATUS, &success);
@@ -104,12 +96,8 @@ unsigned int OpenGLShaderService::CompileShader(unsigned int type, const std::st
 }
 void OpenGLShaderService::SetMat4(unsigned int shaderID, const std::string &name, const glm::mat4 &mat)
 {
-    UseShader(shaderID); // Ensure shader is active before setting data
-
-    // Find where the variable "name" lives in the shader memory
+    UseShader(shaderID);
     int loc = glGetUniformLocation(shaderID, name.c_str());
-
-    // Send the data (1 matrix, false = don't transpose, pointer to data)
     glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mat));
 }
 

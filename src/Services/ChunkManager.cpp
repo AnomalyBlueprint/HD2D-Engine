@@ -12,8 +12,6 @@
 #include <GL/glew.h>
 #include "Core/GameConfig.h"
 
-// const float CHUNK_PIXEL_SIZE = 32.0f * 32.0f; // Moved to GameConfig
-
 ChunkManager::ChunkManager() {}
 
 ChunkManager::~ChunkManager() 
@@ -32,8 +30,6 @@ void ChunkManager::Clean()
     m_activeChunks.clear();
 }
 
-// REMOVED: GetChunkKey implementation because it is already defined in the header file.
-
 void ChunkManager::Update(glm::vec3 focusPoint)
 {
     // Calculate Center Chunk from World Focus Point
@@ -45,8 +41,8 @@ void ChunkManager::Update(glm::vec3 focusPoint)
 
     auto worldService = ServiceLocator::Get().GetService<IWorldService>();
     auto atlasService = ServiceLocator::Get().GetService<TextureAtlasService>();
+    auto blockRegistry = ServiceLocator::Get().GetService<IBlockRegistryService>();
 
-    // FIX: Use the class member m_renderDistance (fixes unused variable warning)
     int radius = GameConfig::RENDER_RADIUS; 
 
     for (int x = -radius; x <= radius; x++)
@@ -61,7 +57,6 @@ void ChunkManager::Update(glm::vec3 focusPoint)
             if (m_activeChunks.find(key) == m_activeChunks.end())
             {
                 auto chunk = std::make_shared<Chunk>();
-                // CRITICAL: Set ID so Chunk knows its global position for seam stitching
                 chunk->SetCoordinates(targetX, targetZ);
                 
                 // Generate
@@ -73,8 +68,7 @@ void ChunkManager::Update(glm::vec3 focusPoint)
                 std::vector<Vertex> vertices;
                 std::vector<unsigned int> indices;
                 
-                // PASS SERVICES: worldService allows Chunk to peek at neighbors
-                chunk->RebuildMesh(vertices, indices, atlasService.get(), worldService.get());
+                chunk->RebuildMesh(vertices, indices, atlasService.get(), worldService.get(), blockRegistry.get());
                 
                 // Upload
                 if (!vertices.empty())

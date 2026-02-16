@@ -3,6 +3,9 @@
 #include <vector>
 #include <iostream>
 
+/// <summary>
+/// Standard implementation of ILoggerService using std::cout.
+/// </summary>
 class LoggerService : public ILoggerService
 {
 public:
@@ -22,7 +25,6 @@ public:
         listeners.push_back(callback);
     }
 
-    // We only need to implement the master function
     void Log(const std::string &message, LogType type) override
     {
         switch (type)

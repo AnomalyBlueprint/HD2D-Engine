@@ -2,6 +2,10 @@
 #include "Services/IWorldService.h"
 #include "vendor/FastNoiseLite.h"
 
+/// <summary>
+/// Implementation of IWorldService using FastNoiseLite.
+/// Generates terraced terrain.
+/// </summary>
 class WorldService : public IWorldService
 {
 public:

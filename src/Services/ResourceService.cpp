@@ -21,9 +21,6 @@ void ResourceService::Init()
 
 void ResourceService::Clean()
 {
-    // We *could* iterate through textures and glDeleteTexture here,
-    // but typically RenderService/Context destruction handles GPU cleanup or we can be explicit.
-    // For now, let's just clear the map.
     m_textureCache.clear();
 }
 

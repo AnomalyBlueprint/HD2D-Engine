@@ -6,20 +6,29 @@
 #include <memory>
 #include <iostream>
 
+/// <summary>
+/// Service for managing multiple path repositories.
+/// Useful if we have different asset packs (Kenney, Marketplace, etc).
+/// </summary>
 class PathRegistryService : public IService
 {
 public:
-    void Init() override {} // Nothing specific to init
+    void Init() override {} 
     void Clean() override { m_repos.clear(); }
 
+    /// <summary>
+    /// Registers a specific repository type.
+    /// </summary>
     template <typename T>
     void RegisterRepository(std::shared_ptr<T> repo)
     {
-        // static_assert(std::is_base_of<IPathRepository, T>::value, "Must implement IPathRepository");
         m_repos[std::type_index(typeid(T))] = repo;
         repo->Init(); 
     }
 
+    /// <summary>
+    /// Retrieves a registered repository by type.
+    /// </summary>
     template <typename T>
     std::shared_ptr<T> GetRepository()
     {

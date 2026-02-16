@@ -4,30 +4,66 @@
 #include <vector>
 #include "Core/Sprite.h"
 
+/// <summary>
+/// Abstract base class for the Rendering System.
+/// Defines the contract for drawing meshes, sprites, and handling textures.
+/// </summary>
 class RenderService : public IService
 {
 public:
     virtual void Init() override = 0;
     virtual void Clean() override = 0;
 
-    // Abstract Render Commands (The "Adapter" part)
+    // --- Core Rendering ---
+
+    /// <summary>
+    /// Clears the screen buffers (Color & Depth).
+    /// </summary>
     virtual void Clear() = 0;
+
+    /// <summary>
+    /// Swaps the front and back buffers to display the frame.
+    /// </summary>
     virtual void SwapBuffers() = 0;
 
-    // UPDATED: Now takes 'indices' as well
+    // --- Mesh Rendering ---
+
+    /// <summary>
+    /// Uploads mesh data to the GPU and returns a handle (Mesh ID / VAO).
+    /// </summary>
     virtual unsigned int CreateMesh(const std::vector<float> &vertices, const std::vector<unsigned int> &indices) = 0;
 
-    // UPDATED: Now takes 'indexCount' so we know how many points to draw
+    /// <summary>
+    /// Draws a previously created mesh.
+    /// </summary>
     virtual void DrawMesh(unsigned int meshID, int indexCount) = 0;
     
-    // NEW: Load a texture and return its ID
+    // --- Texture Management ---
+
+    /// <summary>
+    /// Loads a texture from disk and returns its GPU ID.
+    /// </summary>
     virtual unsigned int LoadTexture(const std::string &path) = 0;
 
-    // NEW: Bind a texture to be used by the next Draw call
+    /// <summary>
+    /// Binds a specific texture for subsequent draw calls.
+    /// </summary>
     virtual void UseTexture(unsigned int textureID) = 0;
 
-    // Batch Rendering
+    // --- Batch Rendering (2D Sprites / UI) ---
+
+    /// <summary>
+    /// Begins a batch rendering frame. Resets buffers.
+    /// </summary>
     virtual void Begin() = 0;
+
+    /// <summary>
+    /// Ends the batch rendering frame and flushes remaining geometry.
+    /// </summary>
     virtual void End() = 0;
+
+    /// <summary>
+    /// Adds a sprite to the current batch.
+    /// </summary>
     virtual void DrawSprite(const struct Sprite& sprite) = 0;
 };

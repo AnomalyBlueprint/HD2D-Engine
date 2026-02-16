@@ -5,6 +5,10 @@
 #include <glm/glm.hpp>
 #include "Core/Vertex.h"
 
+/// <summary>
+/// OpenGL implementation of the Render Service.
+/// Handles SDL Window Context, GLEW initialization, and Batch Rendering.
+/// </summary>
 class OpenGLRenderService : public RenderService
 {
 public:
@@ -20,7 +24,6 @@ public:
     unsigned int LoadTexture(const std::string &path) override;
     void UseTexture(unsigned int textureID) override;
 
-    // Batch Rendering
     void Begin() override;
     void End() override;
     void DrawSprite(const Sprite& sprite) override;

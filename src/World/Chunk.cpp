@@ -1,12 +1,15 @@
 #include "World/Chunk.h"
 #include "Services/IWorldService.h"
 #include "Services/TextureAtlasService.h"
+#include "Services/IBlockRegistryService.h"
 #include "Data/KenneyIDs.h"
 #include "Core/Vertex.h"
 #include <vector>
 #include <array>
 #include <cstring> 
 #include <GL/glew.h>
+
+// ... includes ...
 
 Chunk::Chunk() {
     std::memset(m_blocks, 0, sizeof(m_blocks));
@@ -20,7 +23,6 @@ Chunk::~Chunk() {
     }
 }
 
-// Restored Helper
 bool Chunk::IsInBounds(int x, int y, int z) {
     return x >= 0 && x < SIZE && y >= 0 && y < SIZE && z >= 0 && z < SIZE;
 }
@@ -55,8 +57,9 @@ bool IsTransparent(uint8_t blockID) {
     return blockID == 0; 
 }
 
+
 void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, 
-                        TextureAtlasService* atlas, IWorldService* worldService) {
+                        TextureAtlasService* atlas, IWorldService* worldService, IBlockRegistryService* blockRegistry) {
     
     vertices.clear();
     indices.clear();
@@ -72,17 +75,12 @@ void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>
                 // Helper: Get Texture ID based on Face
                 // 0=Front, 1=Back, 2=Right, 3=Left, 4=Top, 5=Bottom
                 auto GetTextureForFace = [&](int face) -> KenneyIDs {
-                    // 1: Dirt, 2: Grass, 3: Sand, 5: Water
-                    if (currentBlock == 2) // Grass Block
+                    if (blockRegistry)
                     {
-                        if (face == 4) return KenneyIDs::Floor_Ground_Grass; // Top
-                        return KenneyIDs::Floor_Ground_Dirt; // Sides/Bottom
+                        return blockRegistry->GetTextureID(currentBlock, face);
                     }
-                    if (currentBlock == 1) return KenneyIDs::Floor_Ground_Dirt;
-                    if (currentBlock == 3) return KenneyIDs::Floor_Ground_Sand;
-                    if (currentBlock == 5) return KenneyIDs::Floor_Ground_Water;
-                    
-                    return KenneyIDs::Floor_Ground_Dirt; // Default
+                    // Fallback if no registry (should not happen in production)
+                    return KenneyIDs::Floor_Ground_Dirt;
                 };
 
                 // Helper: Get UVs
@@ -212,7 +210,16 @@ void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>
                 bool drawBottom = false;
                 if (y > 0) {
                     if (IsTransparent(GetBlock(x, y - 1, z))) drawBottom = true;
-                } 
+                } else if (worldService) {
+                    int globalX = (m_chunkX * SIZE) + x;
+                    int globalZ = (m_chunkZ * SIZE) + z;
+                    // Check logic? Actually WorldService.GetBlockAt takes Global Y. 
+                    // But our WorldService generates full columns. 
+                    // If y=0, bottom is y=-1. WorldService handles this (returns dirt usually).
+                    // Or we can just draw it if we assume bottom of world is void?
+                    // Let's check neighbor at Global Y - 1.
+                    if (IsTransparent(worldService->GetBlockAt(globalX, y - 1, globalZ))) drawBottom = true;
+                } else { drawBottom = true; }
 
                 if (drawBottom) {
                     auto uvs = GetUVs(GetTextureForFace(5));

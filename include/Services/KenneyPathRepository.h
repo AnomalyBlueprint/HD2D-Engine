@@ -3,6 +3,9 @@
 #include "Data/KenneyIDs.h"
 #include <unordered_map>
 
+/// <summary>
+/// Implementation of IPathRepository for Kenney assets.
+/// </summary>
 class KenneyPathRepository : public IPathRepository
 {
 public:

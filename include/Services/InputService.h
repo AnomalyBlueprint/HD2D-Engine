@@ -3,6 +3,9 @@
 #include <vector>
 #include <cstring> // for memcpy
 
+/// <summary>
+/// SVG input implementation using SDL2.
+/// </summary>
 class InputService : public IInputService
 {
 public:
@@ -17,11 +20,13 @@ public:
     bool IsKeyPressed(SDL_Scancode key) override;
     void GetMousePosition(int& x, int& y) override;
     int GetMouseScroll() override;
-    // Call this from Game Loop Event Polling
+    
+    /// <summary>
+    /// Processes SDL events (e.g. Mouse Wheel).
+    /// </summary>
     void OnEvent(const SDL_Event& e);
 
 private:
-    // SDL_NUM_SCANCODES is usually 512
     Uint8 m_currentKeyboardState[SDL_NUM_SCANCODES];
     Uint8 m_previousKeyboardState[SDL_NUM_SCANCODES];
     

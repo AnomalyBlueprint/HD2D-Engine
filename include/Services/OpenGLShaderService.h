@@ -5,6 +5,10 @@
 #include <GL/glew.h>
 #include <string>
 
+/// <summary>
+/// OpenGL implementation of the Shader Service.
+/// Handles standard text-based shader compilation.
+/// </summary>
 class OpenGLShaderService : public IShaderService
 {
 public:
@@ -21,7 +25,6 @@ public:
     void SetBool(unsigned int shaderID, const std::string &name, bool value) override;
 
 private:
-    // Helpers
     std::string ReadFile(const std::string &path);
     unsigned int CompileShader(unsigned int type, const std::string &source);
     auto logger() { return ServiceLocator::Get().GetService<ILoggerService>(); }

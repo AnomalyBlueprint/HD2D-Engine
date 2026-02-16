@@ -29,7 +29,7 @@ void PostProcessService::SetupFBO(int width, int height) {
     glGenFramebuffers(1, &m_fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
 
-    // 1. Color Attachment (RGB) - Texture 0
+    // 1. Color Attachment (RGB)
     glGenTextures(1, &m_colorTex);
     glBindTexture(GL_TEXTURE_2D, m_colorTex);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
@@ -37,7 +37,7 @@ void PostProcessService::SetupFBO(int width, int height) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_colorTex, 0);
 
-    // 2. Normal Attachment (RGB16F) - Texture 1
+    // 2. Normal Attachment (RGB16F)
     glGenTextures(1, &m_normalTex);
     glBindTexture(GL_TEXTURE_2D, m_normalTex);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, NULL);
@@ -45,7 +45,7 @@ void PostProcessService::SetupFBO(int width, int height) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, m_normalTex, 0);
 
-    // 3. Depth Attachment - GL_DEPTH_COMPONENT
+    // 3. Depth Attachment
     glGenTextures(1, &m_depthTex);
     glBindTexture(GL_TEXTURE_2D, m_depthTex);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);

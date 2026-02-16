@@ -16,6 +16,7 @@
 #include "Services/TextureAtlasService.h" 
 #include "Services/WorldService.h" 
 #include "Services/ChunkManager.h" 
+#include "Services/BlockRegistryService.h"
 #include "World/Chunk.h" 
 #include "Data/KenneyIDs.h"
 #include "Core/GameConfig.h"
@@ -29,12 +30,14 @@
 
 void Game::Init()
 {
+    // 1. Logger
     auto loggerServ = std::make_shared<LoggerService>();
     ServiceLocator::Get().Register<ILoggerService>(loggerServ);
 
     auto logger = [](){ return ServiceLocator::Get().GetService<ILoggerService>(); };
     logger()->Log("Engine Starting...");
 
+    // 2. SDL Setup
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         logger()->LogError("SDL Init Failed!");
         return;
@@ -52,17 +55,20 @@ void Game::Init()
     if (h == 0) h = 1;
     float aspect = (float)w / (float)h;
 
+    // 3. Camera
     camera = std::make_shared<Camera>(aspect);
     camera->target = glm::vec3(0.0f, 0.0f, 0.0f); 
     camera->distance = 1500.0f;
     camera->orbitAngle = 0.0f;
 
+    // 4. Input & Render Services
     auto renderer = std::make_shared<OpenGLRenderService>(window);
     ServiceLocator::Get().Register<RenderService>(renderer);
 
     auto input = std::make_shared<InputService>();
     ServiceLocator::Get().Register<IInputService>(input);
 
+    // 5. Asset & Path Services
     auto resources = std::make_shared<ResourceService>();
     ServiceLocator::Get().Register<IResourceService>(resources);
 
@@ -72,6 +78,7 @@ void Game::Init()
     auto kenneyRepo = std::make_shared<KenneyPathRepository>();
     pathRegistry->RegisterRepository<KenneyPathRepository>(kenneyRepo);
 
+    // 6. Shader & World Services
     auto shaderSystem = std::make_shared<OpenGLShaderService>();
     ServiceLocator::Get().Register<IShaderService>(shaderSystem);
     
@@ -87,10 +94,13 @@ void Game::Init()
     chunkManager->Init();
     ServiceLocator::Get().Register<ChunkManager>(chunkManager);
 
+    auto blockRegistry = std::make_shared<BlockRegistryService>();
+    ServiceLocator::Get().Register<IBlockRegistryService>(blockRegistry);
+
     auto postProcess = std::make_shared<PostProcessService>(w, h);
-    // postProcess->Init() is called by Register inside ServiceLocator
     ServiceLocator::Get().Register<PostProcessService>(postProcess);
 
+    // 7. Player & Game State
     m_player = std::make_unique<Player>();
     m_player->Init();
 
@@ -164,15 +174,15 @@ void Game::Run()
             auto postProcess = ServiceLocator::Get().GetService<PostProcessService>();
             bool usePost = (m_currentStyle != RenderStyle::MINECRAFT);
 
-            // 1. Off-screen Rendering Pass (or Direct if Minecraft)
-            if (usePost && postProcess) postProcess->Bind();
-            else if (usePost) {} // No-op if postProcess null but requested
-            else {
-                 // Minecraft Style: Render directly to screen, so we need to clear default framebuffer
-                 // But wait, renderer->Clear() below does that?
-                 // Actually, if we bind 0 (default), then Clear() clears screen.
-                 // If we bind FBO, Clear() clears FBO.
-                 glBindFramebuffer(GL_FRAMEBUFFER, 0); // Ensure default if not using post
+            // 1. Off-screen Rendering Pass
+            if (usePost && postProcess) 
+            {
+                postProcess->Bind();
+            }
+            else 
+            {
+                 // Render directly to screen
+                 glBindFramebuffer(GL_FRAMEBUFFER, 0); 
             }
             
             renderer->Clear();

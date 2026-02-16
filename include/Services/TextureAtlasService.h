@@ -16,24 +16,33 @@ struct UVRect {
     float uMax, vMax;
 };
 
+/// <summary>
+/// Service that packs individual textures into a single Texture Atlas.
+/// Reduces draw calls by allowing batching of sprites sharing the same atlas.
+/// </summary>
 class TextureAtlasService : public IService
 {
 public:
     TextureAtlasService();
     ~TextureAtlasService();
 
-    // IService Implementation
-    void Init() override {} // Empty, as we need custom init with Repo
+    void Init() override {} 
     void Update() override {}
     void Clean() override {}
 
-    // Loads all textures from the repository and creates the Atlas
+    /// <summary>
+    /// Loads all textures from the repository and creates the Atlas texture.
+    /// </summary>
     void LoadAtlas(std::shared_ptr<KenneyPathRepository> repo);
 
-    // Returns the OpenGL Texture ID of the Atlas
+    /// <summary>
+    /// Returns the OpenGL Texture ID of the Atlas.
+    /// </summary>
     unsigned int GetTextureID() const { return m_atlasTextureID; }
 
-    // Returns UVs for a specific KenneyID
+    /// <summary>
+    /// Returns UV coordinates for a specific texture ID within the atlas.
+    /// </summary>
     UVRect GetUVs(KenneyIDs id);
 
 private:
@@ -41,7 +50,6 @@ private:
     int m_atlasWidth = 0;
     int m_atlasHeight = 0;
     
-    // Map of Enum -> UV Rect
     std::map<KenneyIDs, UVRect> m_uvMap;
 
     void PackTextures(const std::vector<std::pair<KenneyIDs, std::string>>& textures);

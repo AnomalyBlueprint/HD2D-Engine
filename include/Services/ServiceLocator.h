@@ -5,17 +5,27 @@
 #include <memory>
 #include <iostream>
 
+/// <summary>
+/// Global registry for accessing engine services.
+/// Implements the Service Locator pattern.
+/// </summary>
 class ServiceLocator
 {
 public:
-    // Singleton Access
+    /// <summary>
+    /// Gets the singleton instance of the ServiceLocator.
+    /// </summary>
     static ServiceLocator &Get()
     {
         static ServiceLocator instance;
         return instance;
     }
 
-    // Register a Service (e.g., Register<RenderService>(new OpenGLRenderService()))
+    /// <summary>
+    /// Registers a service implementation.
+    /// </summary>
+    /// <typeparam name="T">The service type (interface).</typeparam>
+    /// <param name="service">Shared pointer to the service instance.</param>
     template <typename T>
     void Register(std::shared_ptr<T> service)
     {
@@ -23,7 +33,11 @@ public:
         service->Init();
     }
 
-    // Get a Service (e.g., Get<RenderService>()->Draw())
+    /// <summary>
+    /// Retrieves a registered service.
+    /// </summary>
+    /// <typeparam name="T">The service type (interface) to retrieve.</typeparam>
+    /// <returns>Shared pointer to the service, or nullptr if not found.</returns>
     template <typename T>
     std::shared_ptr<T> GetService()
     {
@@ -36,7 +50,9 @@ public:
         return std::static_pointer_cast<T>(it->second);
     }
 
-    // Cleanup all services in reverse order (conceptually)
+    /// <summary>
+    /// Cleans up all registered services.
+    /// </summary>
     void Clean()
     {
         for (auto &pair : services)

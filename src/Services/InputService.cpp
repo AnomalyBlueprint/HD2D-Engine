@@ -5,7 +5,6 @@
 
 InputService::InputService()
 {
-    // Initialize arrays to 0
     std::memset(m_currentKeyboardState, 0, SDL_NUM_SCANCODES);
     std::memset(m_previousKeyboardState, 0, SDL_NUM_SCANCODES);
 }
@@ -23,17 +22,13 @@ void InputService::Init()
 
 void InputService::Update()
 {
-    // Reset per-frame inputs
     m_scrollDelta = 0;
 
-    // Update Previous Frame before fetching new state
     std::memcpy(m_previousKeyboardState, m_currentKeyboardState, SDL_NUM_SCANCODES);
 
-    // Get current state from SDL
     const Uint8* state = SDL_GetKeyboardState(NULL);
     std::memcpy(m_currentKeyboardState, state, SDL_NUM_SCANCODES);
 
-    // Update Mouse
     SDL_GetMouseState(&m_mouseX, &m_mouseY);
 }
 
@@ -47,18 +42,15 @@ void InputService::OnEvent(const SDL_Event& e)
 
 void InputService::Clean()
 {
-    // Nothing specific to clean for input
 }
 
 bool InputService::IsKeyDown(SDL_Scancode key)
 {
-    // 1 means pressed, 0 means released
     return m_currentKeyboardState[key] == 1;
 }
 
 bool InputService::IsKeyPressed(SDL_Scancode key)
 {
-    // It's a "press" if it is DOWN now, but was UP last frame
     return (m_currentKeyboardState[key] == 1) && (m_previousKeyboardState[key] == 0);
 }
 

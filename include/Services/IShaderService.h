@@ -3,15 +3,24 @@
 #include <string>
 #include <glm/glm.hpp>
 
+/// <summary>
+/// Interface for compiling and managing shaders.
+/// </summary>
 class IShaderService : public IService {
 public:
     virtual ~IShaderService() = default;
 
-    // Load a Vertex/Fragment pair and return the GPU ID
+    /// <summary>
+    /// Loads a Vertex/Fragment shader pair and returns the OpenGL Program ID.
+    /// </summary>
     virtual unsigned int LoadShader(const std::string& vertexPath, const std::string& fragmentPath) = 0;
     
-    // Tell the GPU to "Use" a specific shader
+    /// <summary>
+    /// Activates the specified shader program.
+    /// </summary>
     virtual void UseShader(unsigned int shaderID) = 0;
+
+    // Uniform Setters
     virtual void SetMat4(unsigned int shaderID, const std::string &name, const glm::mat4 &mat) = 0;
     virtual void SetVec3(unsigned int shaderID, const std::string &name, const glm::vec3 &value) = 0;
     virtual void SetVec4(unsigned int shaderID, const std::string &name, const glm::vec4 &value) = 0;

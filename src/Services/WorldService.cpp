@@ -38,15 +38,13 @@ void WorldService::GenerateChunk(Chunk* chunk, int worldX, int worldY)
         for (int z = 0; z < Chunk::SIZE; z++)
         {
             // Global Coordinates
-            // CRITICAL: Must use (Chunk Coord * Size) + Local Coord
             float globalX = (float)(baseX + x);
             float globalZ = (float)(baseZ + z);
 
-            // 1. Get Noise (-1 to 1) 
-            // Using global coords ensures seamless continuity across chunks
+            // Get Noise (-1 to 1) 
             float rawNoise = m_noise.GetNoise(globalX, globalZ); 
             
-            // 2. Normalize (0 to 1)
+            // Normalize (0 to 1)
             float n = (rawNoise + 1.0f) * 0.5f;
 
             // 3. Terrace Logic

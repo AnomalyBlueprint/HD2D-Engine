@@ -41,10 +41,7 @@ void Player::Update(float deltaTime, IInputService* input)
     if (input->IsKeyDown(SDL_SCANCODE_W)) m_position += forward * m_moveSpeed * deltaTime;
     if (input->IsKeyDown(SDL_SCANCODE_S)) m_position -= forward * m_moveSpeed * deltaTime; 
 
-    // Lock Height (Terrain max is ~640. Fly at 800)
-    // m_position.y = 800.0f; 
-
-    // lets add controls for z and c to go up and down in y axis too.
+    // Debug Movement (Up/Down)
     if (input->IsKeyDown(SDL_SCANCODE_Z)) m_position.y += m_moveSpeed * deltaTime;
     if (input->IsKeyDown(SDL_SCANCODE_C)) m_position.y -= m_moveSpeed * deltaTime;
 }
