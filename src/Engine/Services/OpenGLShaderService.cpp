@@ -6,7 +6,7 @@
 #include <iostream>
 #include <glm/gtc/type_ptr.hpp>
 
-void OpenGLShaderService::Init()
+void OpenGLShaderService::OnInitialize()
 {
     logger()->Log("Shader Service Initialized.");
 }

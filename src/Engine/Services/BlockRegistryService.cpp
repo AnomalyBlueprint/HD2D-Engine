@@ -2,7 +2,7 @@
 #include "Engine/Services/ServiceLocator.h"
 #include "Engine/Services/ILoggerService.h"
 
-void BlockRegistryService::Init()
+void BlockRegistryService::OnInitialize()
 {
     auto logger = ServiceLocator::Get().GetService<ILoggerService>();
     if(logger) logger->Log("Initializing Block Registry...");

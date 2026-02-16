@@ -12,7 +12,9 @@ public:
     WorldService();
     ~WorldService() = default;
 
-    void Init() override;
+protected:
+    void OnInitialize() override;
+public:
     void Clean() override;
     void GenerateChunk(Chunk* chunk, int worldX, int worldY) override;
     uint8_t GetBlockAt(int globalX, int globalY, int globalZ) override;

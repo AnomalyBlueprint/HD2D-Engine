@@ -1,6 +1,6 @@
 #include "Engine/Services/KenneyPathRepository.h"
 
-void KenneyPathRepository::Init()
+void KenneyPathRepository::OnInitialize()
 {
     std::string base = "assets/textures/kenney_retro-textures-1/PNG/";
 

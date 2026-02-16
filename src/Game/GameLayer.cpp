@@ -25,7 +25,6 @@ void GameLayer::OnAttach()
 {
     // Initialize Game Specific Services
     auto worldService = std::make_shared<WorldService>();
-    worldService->Init();
     ServiceLocator::Get().Register<IWorldService>(worldService);
 
     auto atlasService = std::make_shared<TextureAtlasService>();
@@ -37,11 +36,9 @@ void GameLayer::OnAttach()
     ServiceLocator::Get().Register<TextureAtlasService>(atlasService);
 
     auto blockRegistry = std::make_shared<BlockRegistryService>();
-    blockRegistry->Init();
     ServiceLocator::Get().Register<IBlockRegistryService>(blockRegistry);
 
     auto chunkManager = std::make_shared<ChunkManager>();
-    chunkManager->Init();
     ServiceLocator::Get().Register<ChunkManager>(chunkManager);
 
     // Get Window size for PostProcess (Optional: Engine could pass it)

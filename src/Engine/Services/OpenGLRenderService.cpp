@@ -13,7 +13,7 @@ OpenGLRenderService::~OpenGLRenderService()
     Clean();
 }
 
-void OpenGLRenderService::Init()
+void OpenGLRenderService::OnInitialize()
 {
     auto log = ServiceLocator::Get().GetService<ILoggerService>();
     

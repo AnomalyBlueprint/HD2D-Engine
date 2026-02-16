@@ -9,7 +9,9 @@
 class KenneyPathRepository : public IPathRepository
 {
 public:
-    void Init() override;
+protected:
+    void OnInitialize() override;
+public:
     void Clean() override { m_paths.clear(); }
     
     std::string GetPath(int assetID) override;

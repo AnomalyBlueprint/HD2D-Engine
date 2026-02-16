@@ -13,7 +13,9 @@
 class PathRegistryService : public IService
 {
 public:
-    void Init() override {} 
+protected:
+    void OnInitialize() override {} 
+public: 
     void Clean() override { m_repos.clear(); }
 
     /// <summary>

@@ -15,7 +15,9 @@ public:
     OpenGLRenderService(SDL_Window *window);
     ~OpenGLRenderService();
 
-    void Init() override;
+protected:
+    void OnInitialize() override;
+public:
     void Clean() override;
     void Clear() override;
     void SwapBuffers() override;

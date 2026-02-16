@@ -21,7 +21,9 @@ class IBlockRegistryService : public IService {
 public:
     virtual ~IBlockRegistryService() = default;
 
-    virtual void Init() override = 0;
+protected:
+    virtual void OnInitialize() override = 0;
+public:
     virtual void Clean() override = 0;
 
     /// <summary>

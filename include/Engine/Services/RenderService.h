@@ -11,7 +11,9 @@
 class RenderService : public IService
 {
 public:
-    virtual void Init() override = 0;
+protected:
+    virtual void OnInitialize() override = 0;
+public:
     virtual void Clean() override = 0;
 
     // --- Core Rendering ---

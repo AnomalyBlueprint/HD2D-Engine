@@ -13,7 +13,7 @@ ResourceService::~ResourceService()
     Clean();
 }
 
-void ResourceService::Init()
+void ResourceService::OnInitialize()
 {
     auto log = ServiceLocator::Get().GetService<ILoggerService>();
     log->Log("Resource Service Initialized.");

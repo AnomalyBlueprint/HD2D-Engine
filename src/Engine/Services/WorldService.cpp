@@ -8,7 +8,7 @@ WorldService::WorldService()
 {
 }
 
-void WorldService::Init()
+void WorldService::OnInitialize()
 {
     // Improved Noise Settings
     m_noise.SetNoiseType(FastNoiseLite::NoiseType::Perlin);

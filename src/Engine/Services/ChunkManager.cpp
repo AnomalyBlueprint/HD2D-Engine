@@ -19,7 +19,7 @@ ChunkManager::~ChunkManager()
     Clean();
 }
 
-void ChunkManager::Init()
+void ChunkManager::OnInitialize()
 {
     auto logger = ServiceLocator::Get().GetService<ILoggerService>();
     if(logger) logger->Log("Chunk Manager Initialized.");

@@ -26,7 +26,9 @@ public:
     TextureAtlasService();
     ~TextureAtlasService();
 
-    void Init() override {} 
+protected:
+    void OnInitialize() override {} 
+public: 
     void Update() override {}
     void Clean() override {}
 

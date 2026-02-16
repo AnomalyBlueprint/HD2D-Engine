@@ -15,7 +15,9 @@ public:
     PostProcessService(int width, int height);
     ~PostProcessService();
 
-    void Init() override;
+protected:
+    void OnInitialize() override;
+public:
     void Clean() override; 
 
     /// <summary>

@@ -13,7 +13,9 @@ private:
     void RegisterBlock(uint8_t id, BlockDef def);
 
 public:
-    void Init() override;
+protected:
+    void OnInitialize() override;
+public:
     void Clean() override {}
 
     const BlockDef& GetBlock(uint8_t id) override;

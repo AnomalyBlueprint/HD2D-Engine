@@ -15,15 +15,17 @@ public:
     ~ChunkManager();
 
     /// <summary>
-    /// Initializes the ChunkManager service.
-    /// </summary>
-    void Init() override;
-
-    /// <summary>
     /// Unused update method from IService. We use the overload with position instead.
     /// </summary>
     void Update() override {} 
 
+protected:
+    /// <summary>
+    /// Initializes the ChunkManager service.
+    /// </summary>
+    void OnInitialize() override; 
+
+public:
     /// <summary>
     /// Cleans up resources used by the ChunkManager.
     /// </summary>

@@ -9,7 +9,9 @@ public:
     ResourceService();
     ~ResourceService();
 
-    void Init() override;
+protected:
+    void OnInitialize() override;
+public:
     void Clean() override;
 
     unsigned int GetTexture(const std::string& path) override;

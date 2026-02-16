@@ -14,7 +14,7 @@ InputService::~InputService()
     Clean();
 }
 
-void InputService::Init()
+void InputService::OnInitialize()
 {
     auto log = ServiceLocator::Get().GetService<ILoggerService>();
     log->Log("Input Service Initialized.");

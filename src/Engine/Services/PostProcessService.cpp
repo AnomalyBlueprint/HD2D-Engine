@@ -11,7 +11,7 @@ PostProcessService::~PostProcessService() {
     Clean();
 }
 
-void PostProcessService::Init() {
+void PostProcessService::OnInitialize() {
     SetupFBO(m_screenWidth, m_screenHeight);
     SetupQuad();
 }

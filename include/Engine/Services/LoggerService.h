@@ -10,11 +10,13 @@ class LoggerService : public ILoggerService
 {
 public:
     using ILoggerService::Log;
-    void Init() override
+protected:
+    void OnInitialize() override
     {
         Log("Logger Service Initialized.");
     }
 
+public:
     void Clean() override
     {
         listeners.clear();

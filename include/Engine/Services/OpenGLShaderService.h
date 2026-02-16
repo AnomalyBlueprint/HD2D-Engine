@@ -12,7 +12,9 @@
 class OpenGLShaderService : public IShaderService
 {
 public:
-    void Init() override;
+protected:
+    void OnInitialize() override;
+public:
     void Clean() override;
 
     unsigned int LoadShader(const std::string &vertexPath, const std::string &fragmentPath) override;

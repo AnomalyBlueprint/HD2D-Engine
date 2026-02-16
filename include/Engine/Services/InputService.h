@@ -12,7 +12,9 @@ public:
     InputService();
     ~InputService();
 
-    void Init() override;
+protected:
+    void OnInitialize() override;
+public:
     void Update() override;
     void Clean() override;
 
