@@ -88,8 +88,13 @@ void OpenGLRenderService::Init()
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
 
     // TextureID (Float)
+    // TextureID (Float)
     glEnableVertexAttribArray(3);
     glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, textureID));
+
+    // Normal
+    glEnableVertexAttribArray(4);
+    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
 
     glBindVertexArray(0);
     // ----------------------------
@@ -183,6 +188,10 @@ unsigned int OpenGLRenderService::CreateMesh(const std::vector<float> &vertices,
     // TexID
     glEnableVertexAttribArray(3);
     glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, stride, (void *)offsetof(Vertex, textureID));
+
+    // Normal
+    glEnableVertexAttribArray(4);
+    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, stride, (void *)offsetof(Vertex, normal));
 
     glBindVertexArray(0);
     return VAO;
@@ -372,24 +381,28 @@ void OpenGLRenderService::DrawSprite(const Sprite& sprite)
     v0_tr.color = sprite.Color;
     v0_tr.texCoord = glm::vec2(u1, v1); // TR is 1,1
     v0_tr.textureID = (float)sprite.TextureID;
+    v0_tr.normal = glm::vec3(0.0f, 0.0f, 1.0f);
 
     Vertex v1_br;
     v1_br.position = glm::vec3(br);
     v1_br.color = sprite.Color;
     v1_br.texCoord = glm::vec2(u1, v0); // BR is 1,0
     v1_br.textureID = (float)sprite.TextureID;
+    v1_br.normal = glm::vec3(0.0f, 0.0f, 1.0f);
 
     Vertex v2_bl;
     v2_bl.position = glm::vec3(bl);
     v2_bl.color = sprite.Color;
     v2_bl.texCoord = glm::vec2(u0, v0); // BL is 0,0
     v2_bl.textureID = (float)sprite.TextureID;
+    v2_bl.normal = glm::vec3(0.0f, 0.0f, 1.0f);
 
     Vertex v3_tl;
     v3_tl.position = glm::vec3(tl);
     v3_tl.color = sprite.Color;
     v3_tl.texCoord = glm::vec2(u0, v1); // TL is 0,1
     v3_tl.textureID = (float)sprite.TextureID;
+    v3_tl.normal = glm::vec3(0.0f, 0.0f, 1.0f);
 
     m_vertices.push_back(v0_tr);
     m_vertices.push_back(v1_br);

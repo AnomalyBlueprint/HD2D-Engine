@@ -150,6 +150,26 @@ void Game::Run()
             {
                 shaders->UseShader(basicShaderID);
 
+                // --- Cel Shading Uniforms ---
+                // Rotating Light Source (1 rotation per 20 seconds)
+                // Rotating Light Source (1 rotation per 20 seconds)
+                float time = SDL_GetTicks() / 1000.0f;
+                // Use DAY_CYCLE_SPEED alias as requested
+                float angle = time * (glm::two_pi<float>() / GameConfig::DAY_CYCLE_SPEED);
+                float lightX = sin(angle);
+                float lightZ = cos(angle);
+                glm::vec3 lightDir = glm::normalize(glm::vec3(lightX, 1.0f, lightZ));
+
+                shaders->SetVec3(basicShaderID, "u_lightDir", lightDir);
+                
+                // Cel Shading Uniforms
+                shaders->SetInt(basicShaderID, "u_lightBands", GameConfig::CelShading::CEL_BANDS);
+                shaders->SetFloat(basicShaderID, "u_outlineThickness", GameConfig::CelShading::OUTLINE_WIDTH);
+                shaders->SetFloat(basicShaderID, "u_ambientStrength", GameConfig::CelShading::AMBIENT_STRENGTH);
+                shaders->SetBool(basicShaderID, "u_celEnabled", GameConfig::CelShading::ENABLED);
+                shaders->SetBool(basicShaderID, "u_outlinesEnabled", GameConfig::CelShading::OUTLINES_ENABLED);
+                // ---------------------------
+
                 // --- FIX: Send BOTH View and Projection Matrices ---
                 glm::mat4 projection = camera->GetProjectionMatrix();
                 glm::mat4 view = camera->GetViewMatrix(); 

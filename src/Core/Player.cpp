@@ -75,34 +75,67 @@ void Player::CreateCubeMesh(float width, float height, float depth, glm::vec4 co
     float h = height * 0.5f;
     float d = depth * 0.5f;
 
-    // 8 Vertices
-    std::vector<float> vertices = {
-        // Positions(3) + Color(4) + TexCoord(2) + TexID(1)
-        -w, -h,  d,  color.r, color.g, color.b, color.a, 0.0f, 0.0f, 0.0f, // 0: BL Front
-         w, -h,  d,  color.r, color.g, color.b, color.a, 1.0f, 0.0f, 0.0f, // 1: BR Front
-         w,  h,  d,  color.r, color.g, color.b, color.a, 1.0f, 1.0f, 0.0f, // 2: TR Front
-        -w,  h,  d,  color.r, color.g, color.b, color.a, 0.0f, 1.0f, 0.0f, // 3: TL Front
-        -w, -h, -d,  color.r, color.g, color.b, color.a, 1.0f, 0.0f, 0.0f, // 4: BL Back
-         w, -h, -d,  color.r, color.g, color.b, color.a, 0.0f, 0.0f, 0.0f, // 5: BR Back
-         w,  h, -d,  color.r, color.g, color.b, color.a, 0.0f, 1.0f, 0.0f, // 6: TR Back
-        -w,  h, -d,  color.r, color.g, color.b, color.a, 1.0f, 1.0f, 0.0f  // 7: TL Back
+    // 24 Vertices (4 per face * 6 faces) for Flat Shading
+    std::vector<float> vertices;
+    
+    // Helper to push a vertex
+    auto pushVert = [&](glm::vec3 p, glm::vec3 n, float u, float v) {
+        vertices.insert(vertices.end(), { p.x, p.y, p.z, color.r, color.g, color.b, color.a, u, v, 0.0f, n.x, n.y, n.z });
     };
 
-    // 36 Indices (CCW Winding Order)
-    std::vector<unsigned int> indices = {
-        // Front (Normal +Z)
-        0, 1, 2, 2, 3, 0,
-        // Back (Normal -Z)
-        5, 4, 7, 7, 6, 5,
-        // Left (Normal -X)
-        4, 0, 3, 3, 7, 4,
-        // Right (Normal +X)
-        1, 5, 6, 6, 2, 1,
-        // Top (Normal +Y) - FIXED WINDING (Was CW, now CCW)
-        3, 2, 6, 6, 7, 3, 
-        // Bottom (Normal -Y) - FIXED WINDING
-        4, 5, 1, 1, 0, 4
-    };
+    // Front (+Z)
+    glm::vec3 nFront(0, 0, 1);
+    pushVert({-w, -h, d}, nFront, 0, 0); // BL
+    pushVert({ w, -h, d}, nFront, 1, 0); // BR
+    pushVert({ w,  h, d}, nFront, 1, 1); // TR
+    pushVert({-w,  h, d}, nFront, 0, 1); // TL
+
+    // Back (-Z)
+    glm::vec3 nBack(0, 0, -1);
+    pushVert({ w, -h, -d}, nBack, 0, 0); // BR
+    pushVert({-w, -h, -d}, nBack, 1, 0); // BL
+    pushVert({-w,  h, -d}, nBack, 1, 1); // TL
+    pushVert({ w,  h, -d}, nBack, 0, 1); // TR
+
+    // Left (-X)
+    glm::vec3 nLeft(-1, 0, 0);
+    pushVert({-w, -h, -d}, nLeft, 0, 0); // BL Back
+    pushVert({-w, -h,  d}, nLeft, 1, 0); // BL Front
+    pushVert({-w,  h,  d}, nLeft, 1, 1); // TL Front
+    pushVert({-w,  h, -d}, nLeft, 0, 1); // TL Back
+
+    // Right (+X)
+    glm::vec3 nRight(1, 0, 0);
+    pushVert({ w, -h,  d}, nRight, 0, 0); // BR Front
+    pushVert({ w, -h, -d}, nRight, 1, 0); // BR Back
+    pushVert({ w,  h, -d}, nRight, 1, 1); // TR Back
+    pushVert({ w,  h,  d}, nRight, 0, 1); // TR Front
+
+    // Top (+Y)
+    glm::vec3 nTop(0, 1, 0);
+    pushVert({-w, h,  d}, nTop, 0, 0); // TL Front
+    pushVert({ w, h,  d}, nTop, 1, 0); // TR Front
+    pushVert({ w, h, -d}, nTop, 1, 1); // TR Back
+    pushVert({-w, h, -d}, nTop, 0, 1); // TL Back
+
+    // Bottom (-Y)
+    glm::vec3 nBottom(0, -1, 0);
+    pushVert({-w, -h, -d}, nBottom, 0, 0); // BL Back
+    pushVert({ w, -h, -d}, nBottom, 1, 0); // BR Back
+    pushVert({ w, -h,  d}, nBottom, 1, 1); // BR Front
+    pushVert({-w, -h,  d}, nBottom, 0, 1); // BL Front
+
+    // Indices (0,1,2, 2,3,0 for each face)
+    std::vector<unsigned int> indices;
+    for (int i = 0; i < 6; i++) {
+        int start = i * 4;
+        indices.push_back(start + 0);
+        indices.push_back(start + 1);
+        indices.push_back(start + 2);
+        indices.push_back(start + 2);
+        indices.push_back(start + 3);
+        indices.push_back(start + 0);
+    }
 
     indexCount = indices.size();
     auto renderer = ServiceLocator::Get().GetService<RenderService>();

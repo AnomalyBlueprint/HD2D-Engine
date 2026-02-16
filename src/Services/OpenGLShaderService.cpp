@@ -112,3 +112,27 @@ void OpenGLShaderService::SetMat4(unsigned int shaderID, const std::string &name
     // Send the data (1 matrix, false = don't transpose, pointer to data)
     glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mat));
 }
+
+void OpenGLShaderService::SetVec3(unsigned int shaderID, const std::string &name, const glm::vec3 &value)
+{
+    UseShader(shaderID);
+    glUniform3fv(glGetUniformLocation(shaderID, name.c_str()), 1, &value[0]);
+}
+
+void OpenGLShaderService::SetInt(unsigned int shaderID, const std::string &name, int value)
+{
+    UseShader(shaderID);
+    glUniform1i(glGetUniformLocation(shaderID, name.c_str()), value);
+}
+
+void OpenGLShaderService::SetFloat(unsigned int shaderID, const std::string &name, float value)
+{
+    UseShader(shaderID);
+    glUniform1f(glGetUniformLocation(shaderID, name.c_str()), value);
+}
+
+void OpenGLShaderService::SetBool(unsigned int shaderID, const std::string &name, bool value)
+{
+    UseShader(shaderID);
+    glUniform1i(glGetUniformLocation(shaderID, name.c_str()), (int)value);
+}

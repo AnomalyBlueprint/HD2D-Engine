@@ -80,7 +80,7 @@ void ChunkManager::Update(glm::vec3 focusPoint)
                 if (!vertices.empty())
                 {
                     std::vector<float> floatVertices;
-                    floatVertices.reserve(vertices.size() * 10);
+                    floatVertices.reserve(vertices.size() * 13);
                     
                     for(const auto& v : vertices)
                     {
@@ -88,6 +88,8 @@ void ChunkManager::Update(glm::vec3 focusPoint)
                         floatVertices.push_back(v.color.r); floatVertices.push_back(v.color.g); floatVertices.push_back(v.color.b); floatVertices.push_back(v.color.a);
                         floatVertices.push_back(v.texCoord.x); floatVertices.push_back(v.texCoord.y);
                         floatVertices.push_back(v.textureID);
+                        // Normal
+                        floatVertices.push_back(v.normal.x); floatVertices.push_back(v.normal.y); floatVertices.push_back(v.normal.z);
                     }
                     
                     auto renderer = ServiceLocator::Get().GetService<RenderService>();
@@ -130,12 +132,24 @@ std::shared_ptr<Chunk> ChunkManager::GetChunk(int x, int y)
     return nullptr;
 }
 
+std::pair<int, int> ChunkManager::GetChunkKey(int x, int y)
+{
+    return {x, y};
+}
+
 void ChunkManager::Render(RenderService* renderer, IShaderService* shader)
 {
     GLint currentProgram;
     glGetIntegerv(GL_CURRENT_PROGRAM, &currentProgram);
     
     int modelLoc = glGetUniformLocation(currentProgram, "model");
+
+    // Bind Atlas
+    auto atlas = ServiceLocator::Get().GetService<TextureAtlasService>();
+    if (atlas)
+    {
+        renderer->UseTexture(atlas->GetTextureID());
+    }
 
     for (const auto& pair : m_activeChunks)
     {

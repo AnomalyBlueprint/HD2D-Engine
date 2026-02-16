@@ -2,7 +2,7 @@
 #include <SDL.h>
 #include <memory>
 #include <string>
-#include "Camera.h"
+#include "Core/Camera.h"
 #include "Core/Player.h"
 #include "Services/ChunkManager.h"
 
@@ -24,10 +24,6 @@ private:
     unsigned int textureID = 0;
     
     std::unique_ptr<Player> m_player;
-
-    // Voxel Chunk Data
-    unsigned int chunkMeshID = 0;
-    int chunkIndexCount = 0;
 
     // Debug Cube Data
     // Debug Cube Removed

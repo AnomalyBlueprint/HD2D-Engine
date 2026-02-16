@@ -114,10 +114,11 @@ void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>
 
                 if (drawFront) {
                     auto uvs = GetUVs(GetTextureForFace(0));
-                    vertices.push_back({ glm::vec3(fX,      fY,      fZ + fS), color, uvs[0], 0.0f });
-                    vertices.push_back({ glm::vec3(fX + fS, fY,      fZ + fS), color, uvs[1], 0.0f });
-                    vertices.push_back({ glm::vec3(fX + fS, fY + fS, fZ + fS), color, uvs[2], 0.0f });
-                    vertices.push_back({ glm::vec3(fX,      fY + fS, fZ + fS), color, uvs[3], 0.0f });
+                    glm::vec3 normal(0.0f, 0.0f, 1.0f);
+                    vertices.push_back({ glm::vec3(fX,      fY,      fZ + fS), color, uvs[0], 0.0f, normal });
+                    vertices.push_back({ glm::vec3(fX + fS, fY,      fZ + fS), color, uvs[1], 0.0f, normal });
+                    vertices.push_back({ glm::vec3(fX + fS, fY + fS, fZ + fS), color, uvs[2], 0.0f, normal });
+                    vertices.push_back({ glm::vec3(fX,      fY + fS, fZ + fS), color, uvs[3], 0.0f, normal });
                     indices.push_back(indexCount + 0); indices.push_back(indexCount + 1); indices.push_back(indexCount + 2);
                     indices.push_back(indexCount + 2); indices.push_back(indexCount + 3); indices.push_back(indexCount + 0);
                     indexCount += 4;
@@ -135,10 +136,11 @@ void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>
 
                 if (drawBack) {
                     auto uvs = GetUVs(GetTextureForFace(1));
-                    vertices.push_back({ glm::vec3(fX + fS, fY,      fZ), color, uvs[0], 0.0f }); 
-                    vertices.push_back({ glm::vec3(fX,      fY,      fZ), color, uvs[1], 0.0f });
-                    vertices.push_back({ glm::vec3(fX,      fY + fS, fZ), color, uvs[2], 0.0f });
-                    vertices.push_back({ glm::vec3(fX + fS, fY + fS, fZ), color, uvs[3], 0.0f });
+                    glm::vec3 normal(0.0f, 0.0f, -1.0f);
+                    vertices.push_back({ glm::vec3(fX + fS, fY,      fZ), color, uvs[0], 0.0f, normal }); 
+                    vertices.push_back({ glm::vec3(fX,      fY,      fZ), color, uvs[1], 0.0f, normal });
+                    vertices.push_back({ glm::vec3(fX,      fY + fS, fZ), color, uvs[2], 0.0f, normal });
+                    vertices.push_back({ glm::vec3(fX + fS, fY + fS, fZ), color, uvs[3], 0.0f, normal });
                     indices.push_back(indexCount + 0); indices.push_back(indexCount + 1); indices.push_back(indexCount + 2);
                     indices.push_back(indexCount + 2); indices.push_back(indexCount + 3); indices.push_back(indexCount + 0);
                     indexCount += 4;
@@ -156,10 +158,11 @@ void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>
 
                 if (drawRight) {
                      auto uvs = GetUVs(GetTextureForFace(2));
-                    vertices.push_back({ glm::vec3(fX + fS, fY,      fZ + fS), color, uvs[0], 0.0f });
-                    vertices.push_back({ glm::vec3(fX + fS, fY,      fZ),      color, uvs[1], 0.0f });
-                    vertices.push_back({ glm::vec3(fX + fS, fY + fS, fZ),      color, uvs[2], 0.0f });
-                    vertices.push_back({ glm::vec3(fX + fS, fY + fS, fZ + fS), color, uvs[3], 0.0f });
+                     glm::vec3 normal(1.0f, 0.0f, 0.0f);
+                    vertices.push_back({ glm::vec3(fX + fS, fY,      fZ + fS), color, uvs[0], 0.0f, normal });
+                    vertices.push_back({ glm::vec3(fX + fS, fY,      fZ),      color, uvs[1], 0.0f, normal });
+                    vertices.push_back({ glm::vec3(fX + fS, fY + fS, fZ),      color, uvs[2], 0.0f, normal });
+                    vertices.push_back({ glm::vec3(fX + fS, fY + fS, fZ + fS), color, uvs[3], 0.0f, normal });
                     indices.push_back(indexCount + 0); indices.push_back(indexCount + 1); indices.push_back(indexCount + 2);
                     indices.push_back(indexCount + 2); indices.push_back(indexCount + 3); indices.push_back(indexCount + 0);
                     indexCount += 4;
@@ -177,10 +180,11 @@ void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>
 
                 if (drawLeft) {
                     auto uvs = GetUVs(GetTextureForFace(3));
-                    vertices.push_back({ glm::vec3(fX, fY,      fZ),      color, uvs[0], 0.0f });
-                    vertices.push_back({ glm::vec3(fX, fY,      fZ + fS), color, uvs[1], 0.0f });
-                    vertices.push_back({ glm::vec3(fX, fY + fS, fZ + fS), color, uvs[2], 0.0f });
-                    vertices.push_back({ glm::vec3(fX, fY + fS, fZ),      color, uvs[3], 0.0f });
+                    glm::vec3 normal(-1.0f, 0.0f, 0.0f);
+                    vertices.push_back({ glm::vec3(fX, fY,      fZ),      color, uvs[0], 0.0f, normal });
+                    vertices.push_back({ glm::vec3(fX, fY,      fZ + fS), color, uvs[1], 0.0f, normal });
+                    vertices.push_back({ glm::vec3(fX, fY + fS, fZ + fS), color, uvs[2], 0.0f, normal });
+                    vertices.push_back({ glm::vec3(fX, fY + fS, fZ),      color, uvs[3], 0.0f, normal });
                     indices.push_back(indexCount + 0); indices.push_back(indexCount + 1); indices.push_back(indexCount + 2);
                     indices.push_back(indexCount + 2); indices.push_back(indexCount + 3); indices.push_back(indexCount + 0);
                     indexCount += 4;
@@ -194,10 +198,11 @@ void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>
 
                 if (drawTop) {
                     auto uvs = GetUVs(GetTextureForFace(4));
-                    vertices.push_back({ glm::vec3(fX,      fY + fS, fZ + fS), color, uvs[0], 0.0f });
-                    vertices.push_back({ glm::vec3(fX + fS, fY + fS, fZ + fS), color, uvs[1], 0.0f });
-                    vertices.push_back({ glm::vec3(fX + fS, fY + fS, fZ),      color, uvs[2], 0.0f });
-                    vertices.push_back({ glm::vec3(fX,      fY + fS, fZ),      color, uvs[3], 0.0f });
+                    glm::vec3 normal(0.0f, 1.0f, 0.0f);
+                    vertices.push_back({ glm::vec3(fX,      fY + fS, fZ + fS), color, uvs[0], 0.0f, normal });
+                    vertices.push_back({ glm::vec3(fX + fS, fY + fS, fZ + fS), color, uvs[1], 0.0f, normal });
+                    vertices.push_back({ glm::vec3(fX + fS, fY + fS, fZ),      color, uvs[2], 0.0f, normal });
+                    vertices.push_back({ glm::vec3(fX,      fY + fS, fZ),      color, uvs[3], 0.0f, normal });
                     indices.push_back(indexCount + 0); indices.push_back(indexCount + 1); indices.push_back(indexCount + 2);
                     indices.push_back(indexCount + 2); indices.push_back(indexCount + 3); indices.push_back(indexCount + 0);
                     indexCount += 4;
@@ -211,10 +216,11 @@ void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>
 
                 if (drawBottom) {
                     auto uvs = GetUVs(GetTextureForFace(5));
-                    vertices.push_back({ glm::vec3(fX,      fY, fZ),      color, uvs[0], 0.0f });
-                    vertices.push_back({ glm::vec3(fX + fS, fY, fZ),      color, uvs[1], 0.0f });
-                    vertices.push_back({ glm::vec3(fX + fS, fY, fZ + fS), color, uvs[2], 0.0f });
-                    vertices.push_back({ glm::vec3(fX,      fY, fZ + fS), color, uvs[3], 0.0f });
+                    glm::vec3 normal(0.0f, -1.0f, 0.0f);
+                    vertices.push_back({ glm::vec3(fX,      fY, fZ),      color, uvs[0], 0.0f, normal });
+                    vertices.push_back({ glm::vec3(fX + fS, fY, fZ),      color, uvs[1], 0.0f, normal });
+                    vertices.push_back({ glm::vec3(fX + fS, fY, fZ + fS), color, uvs[2], 0.0f, normal });
+                    vertices.push_back({ glm::vec3(fX,      fY, fZ + fS), color, uvs[3], 0.0f, normal });
                     indices.push_back(indexCount + 0); indices.push_back(indexCount + 1); indices.push_back(indexCount + 2);
                     indices.push_back(indexCount + 2); indices.push_back(indexCount + 3); indices.push_back(indexCount + 0);
                     indexCount += 4;
