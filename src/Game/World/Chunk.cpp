@@ -59,12 +59,16 @@ void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>
     indices.clear();
     int indexCount = 0;
 
+    // Helper: Get Block Definition
+    auto GetDef = [&](uint8_t id) -> const BlockDef& {
+        if (blockRegistry) return blockRegistry->GetBlock(id);
+        static BlockDef air = { KenneyIDs::Floor_Ground_Dirt, KenneyIDs::Floor_Ground_Dirt, KenneyIDs::Floor_Ground_Dirt, true, false };
+        return air;
+    };
+
     auto IsBlockTransparent = [&](uint8_t id) {
-        if (id == 0) return true; // Air is always transparent
-        if (blockRegistry) {
-            return blockRegistry->GetBlockDef(id).IsTransparent;
-        }
-        return false; // Default opaque if no registry
+        if (id == 0) return true;
+        return GetDef(id).isTransparent;
     };
 
     for (int x = 0; x < SIZE; x++) {
@@ -74,15 +78,15 @@ void Chunk::RebuildMesh(std::vector<Vertex>& vertices, std::vector<unsigned int>
                 uint8_t currentBlock = GetBlock(x, y, z);
                 if (currentBlock == 0) continue; 
 
+                const BlockDef& def = GetDef(currentBlock);
+                if (def.isTransparent) { /* handle transparent logic if needed */ }
+
                 // Helper: Get Texture ID based on Face
                 // 0=Front, 1=Back, 2=Right, 3=Left, 4=Top, 5=Bottom
                 auto GetTextureForFace = [&](int face) -> KenneyIDs {
-                    if (blockRegistry)
-                    {
-                        return blockRegistry->GetTextureID(currentBlock, face);
-                    }
-                    // Fallback if no registry (should not happen in production)
-                    return KenneyIDs::Floor_Ground_Dirt;
+                     if (face == 4) return def.textureTop;
+                     if (face == 5) return def.textureBottom;
+                     return def.textureSide;
                 };
 
                 // Helper: Get UVs

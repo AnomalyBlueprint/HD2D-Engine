@@ -1,61 +1,30 @@
-# HD2D Engine - Universal Makefile (macOS Adapted)
-# Automatically finds sources in src/Engine and src/Game
+CXX      := g++
+CXXFLAGS := -std=c++17 -Wall -Wextra -g -Iinclude -Iinclude/vendor -I/usr/local/include -I/opt/local/include -I/opt/homebrew/include $(shell sdl2-config --cflags)
+LDFLAGS  := -framework OpenGL -L/usr/local/lib -L/opt/local/lib -L/opt/homebrew/lib -lGLEW $(shell sdl2-config --libs)
 
-# Compiler Settings
-CXX      := clang++
-# -MMD -MP: Generates dependency files (.d)
-# Includes for Homebrew (M1/M2/M3 Macs)
-CXXFLAGS := -std=c++17 -Wall -Wextra -g -D_THREAD_SAFE -MMD -MP \
-            -Iinclude -Iinclude/vendor \
-            -I/opt/homebrew/include -I/opt/homebrew/include/SDL2
-
-# Linker Flags for macOS
-LDFLAGS  := -L/opt/homebrew/lib -lSDL2 -lGLEW -framework OpenGL
-
-# Directories
-SRC_DIR   := src
-BUILD_DIR := build
-BIN_DIR   := bin
-
-# Automatically find all .cpp files in src/ and its subdirectories
-SRCS := $(shell find $(SRC_DIR) -name '*.cpp')
-
-# Generate corresponding .o file paths in build/ dir
-# Example: src/main.cpp -> build/src/main.cpp.o
-OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
-
-# Generate dependency files (.d) to track header changes
+# Recursive wildcard to find all .cpp files in src/Engine, src/Game, etc.
+rwildcard=$(foreach d,$(wildcard $(1)*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
+SRCS := $(call rwildcard,src/,*.cpp)
+OBJS := $(SRCS:src/%.cpp=build/%.o)
 DEPS := $(OBJS:.o=.d)
 
-# The Output Binary
-TARGET := $(BIN_DIR)/engine_3d
+TARGET := bin/engine_3d
 
-# --- Rules ---
-
-# Main Build Target
 $(TARGET): $(OBJS)
-	@echo "Linking..."
 	@mkdir -p $(dir $@)
+	@echo "Linking..."
 	$(CXX) $(OBJS) -o $@ $(LDFLAGS)
 	@echo "Build Complete: $(TARGET)"
 
-# Compile C++ Source
-# % matches "src/Path/To/File"
-$(BUILD_DIR)/%.cpp.o: %.cpp
+build/%.o: src/%.cpp
 	@mkdir -p $(dir $@)
 	@echo "Compiling $<..."
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -MMD -MP -c $< -o $@
 
-# Clean Build
 clean:
-	@echo "Cleaning build files..."
-	rm -rf $(BUILD_DIR) $(BIN_DIR)
+	rm -rf build bin
 
-# Run the Game
 run: $(TARGET)
 	./$(TARGET)
 
-# Include dependencies (so editing a .h file triggers a rebuild)
 -include $(DEPS)
-
-.PHONY: clean run

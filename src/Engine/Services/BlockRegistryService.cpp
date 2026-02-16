@@ -1,69 +1,33 @@
 #include "Engine/Services/BlockRegistryService.h"
-#include <iostream>
-
-void BlockRegistryService::RegisterBlock(uint8_t id, std::string name, bool transparent, bool collidable, 
-                                         KenneyIDs top, KenneyIDs side, KenneyIDs bottom)
-{
-    BlockDefinition def;
-    def.ID = id;
-    def.Name = name;
-    def.IsTransparent = transparent;
-    def.IsCollidable = collidable;
-    def.TextureTop = top;
-    def.TextureSide = side;
-    def.TextureBottom = bottom;
-    m_blocks[id] = def;
-}
+#include "Engine/Services/ServiceLocator.h"
+#include "Engine/Services/ILoggerService.h"
 
 void BlockRegistryService::Init()
 {
-    // Setup Default (Air/Error)
-    m_defaultBlock = { 0, "Air", true, false, KenneyIDs::Floor_Ground_Dirt, KenneyIDs::Floor_Ground_Dirt, KenneyIDs::Floor_Ground_Dirt };
+    auto logger = ServiceLocator::Get().GetService<ILoggerService>();
+    if(logger) logger->Log("Initializing Block Registry...");
 
     // Register Standard Blocks
-    // 1: Dirt
-    RegisterBlock(1, "Dirt", false, true, 
-        KenneyIDs::Floor_Ground_Dirt, KenneyIDs::Floor_Ground_Dirt, KenneyIDs::Floor_Ground_Dirt);
-    
-    // 2: Grass
-    RegisterBlock(2, "Grass", false, true, 
-        KenneyIDs::Floor_Ground_Grass, KenneyIDs::Floor_Ground_Dirt, KenneyIDs::Floor_Ground_Dirt);
-
-    // 3: Sand
-    RegisterBlock(3, "Sand", false, true, 
-        KenneyIDs::Floor_Ground_Sand, KenneyIDs::Floor_Ground_Sand, KenneyIDs::Floor_Ground_Sand);
-
-    // 4: Stone (using Wall_Brick_Small_Stone as substitute)
-    RegisterBlock(4, "Stone", false, true, 
-        KenneyIDs::Wall_Brick_Small_Stone, KenneyIDs::Wall_Brick_Small_Stone, KenneyIDs::Wall_Brick_Small_Stone);
-
-    // 5: Water
-    RegisterBlock(5, "Water", true, false, 
-        KenneyIDs::Floor_Ground_Water, KenneyIDs::Floor_Ground_Water, KenneyIDs::Floor_Ground_Water);
-    
-    // 6: Bedrock
-    RegisterBlock(6, "Bedrock", false, true, 
-        KenneyIDs::Wall_Rock, KenneyIDs::Wall_Rock, KenneyIDs::Wall_Rock);
+    // ID 1: Dirt
+    RegisterBlock(1, { KenneyIDs::Floor_Ground_Dirt, KenneyIDs::Floor_Ground_Dirt, KenneyIDs::Floor_Ground_Dirt, false, true });
+    // ID 2: Grass
+    RegisterBlock(2, { KenneyIDs::Floor_Ground_Grass, KenneyIDs::Floor_Ground_Dirt, KenneyIDs::Floor_Ground_Dirt, false, true });
+    // ID 3: Stone
+    RegisterBlock(3, { KenneyIDs::Wall_Stone, KenneyIDs::Wall_Stone, KenneyIDs::Wall_Stone, false, true });
+    // ID 4: Water
+    RegisterBlock(4, { KenneyIDs::Floor_Ground_Water, KenneyIDs::Floor_Ground_Water, KenneyIDs::Floor_Ground_Water, true, false });
 }
 
-KenneyIDs BlockRegistryService::GetTextureID(int blockID, int faceID)
+void BlockRegistryService::RegisterBlock(uint8_t id, BlockDef def)
 {
-    // 0=Front, 1=Back, 2=Right, 3=Left, 4=Top, 5=Bottom
-    if (m_blocks.find(blockID) != m_blocks.end())
-    {
-        const auto& def = m_blocks[blockID];
-        if (faceID == 4) return def.TextureTop;
-        if (faceID == 5) return def.TextureBottom;
-        return def.TextureSide;
-    }
-    return m_defaultBlock.TextureTop;
+    m_blocks[id] = def;
 }
 
-const BlockDefinition& BlockRegistryService::GetBlockDef(int blockID)
+const BlockDef& BlockRegistryService::GetBlock(uint8_t id)
 {
-    if (m_blocks.find(blockID) != m_blocks.end())
-    {
-        return m_blocks[blockID];
+    if (m_blocks.find(id) != m_blocks.end()) {
+        return m_blocks[id];
     }
-    return m_defaultBlock;
+    static BlockDef air = { KenneyIDs::Floor_Ground_Dirt, KenneyIDs::Floor_Ground_Dirt, KenneyIDs::Floor_Ground_Dirt, true, false };
+    return air;
 }
