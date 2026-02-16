@@ -1,16 +1,20 @@
-#include "Game.h"
+#include "Engine/Engine.h"
+#include "Game/GameLayer.h"
+#include <memory>
 
 /// <summary>
 /// Entry point of the Application.
 /// </summary>
 int main(int argc, char *argv[])
 {
-    Game *game = new Game();
+    auto engine = std::make_shared<Engine>();
+    engine->Init();
 
-    game->Init();
-    game->Run();
-    game->Clean();
+    auto gameLayer = std::make_shared<GameLayer>();
+    engine->AttachLayer(gameLayer);
 
-    delete game;
+    engine->Run();
+    engine->Clean();
+
     return 0;
 }
