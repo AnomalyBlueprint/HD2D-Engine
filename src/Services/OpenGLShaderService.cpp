@@ -119,6 +119,12 @@ void OpenGLShaderService::SetVec3(unsigned int shaderID, const std::string &name
     glUniform3fv(glGetUniformLocation(shaderID, name.c_str()), 1, &value[0]);
 }
 
+void OpenGLShaderService::SetVec4(unsigned int shaderID, const std::string &name, const glm::vec4 &value)
+{
+    UseShader(shaderID);
+    glUniform4fv(glGetUniformLocation(shaderID, name.c_str()), 1, &value[0]);
+}
+
 void OpenGLShaderService::SetInt(unsigned int shaderID, const std::string &name, int value)
 {
     UseShader(shaderID);

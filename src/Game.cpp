@@ -19,6 +19,7 @@
 #include "World/Chunk.h" 
 #include "Data/KenneyIDs.h"
 #include "Core/GameConfig.h"
+#include "Services/PostProcessService.h"
 #include <string>
 #include <iostream>
 #include <glm/glm.hpp>
@@ -86,11 +87,16 @@ void Game::Init()
     chunkManager->Init();
     ServiceLocator::Get().Register<ChunkManager>(chunkManager);
 
+    auto postProcess = std::make_shared<PostProcessService>(w, h);
+    // postProcess->Init() is called by Register inside ServiceLocator
+    ServiceLocator::Get().Register<PostProcessService>(postProcess);
+
     m_player = std::make_unique<Player>();
     m_player->Init();
 
     auto shaders = ServiceLocator::Get().GetService<IShaderService>();
     basicShaderID = shaders->LoadShader("assets/shaders/basic.vert", "assets/shaders/basic.frag");
+    postEdgeShaderID = shaders->LoadShader("assets/shaders/post_edge.vert", "assets/shaders/post_edge.frag");
 
     textureID = atlasService->GetTextureID();
 
@@ -137,12 +143,38 @@ void Game::Run()
             int cx = (int)floor(pPos.x / GameConfig::CHUNK_PIXEL_SIZE);
             int cz = (int)floor(pPos.z / GameConfig::CHUNK_PIXEL_SIZE);
             float fps = (deltaTime > 0) ? 1.0f / deltaTime : 0.0f;
-            std::string title = "HD2D Engine | Chunk: [" + std::to_string(cx) + ", " + std::to_string(cz) + "] | FPS: " + std::to_string((int)fps);
+            std::string styleName = "BORDERLANDS";
+            if (m_currentStyle == RenderStyle::MINECRAFT) styleName = "MINECRAFT";
+            if (m_currentStyle == RenderStyle::MOCO) styleName = "MOCO";
+            
+            std::string title = "HD2D Engine | Style: " + styleName + " | Chunk: [" + std::to_string(cx) + ", " + std::to_string(cz) + "] | FPS: " + std::to_string((int)fps);
             SDL_SetWindowTitle(window, title.c_str());
+        }
+
+        // --- Input Handling for Styles ---
+        if (inputService)
+        {
+            if (inputService->IsKeyDown(SDL_SCANCODE_1)) m_currentStyle = RenderStyle::MINECRAFT;
+            if (inputService->IsKeyDown(SDL_SCANCODE_2)) m_currentStyle = RenderStyle::BORDERLANDS;
+            if (inputService->IsKeyDown(SDL_SCANCODE_3)) m_currentStyle = RenderStyle::MOCO;
         }
 
         if (renderer)
         {
+            auto postProcess = ServiceLocator::Get().GetService<PostProcessService>();
+            bool usePost = (m_currentStyle != RenderStyle::MINECRAFT);
+
+            // 1. Off-screen Rendering Pass (or Direct if Minecraft)
+            if (usePost && postProcess) postProcess->Bind();
+            else if (usePost) {} // No-op if postProcess null but requested
+            else {
+                 // Minecraft Style: Render directly to screen, so we need to clear default framebuffer
+                 // But wait, renderer->Clear() below does that?
+                 // Actually, if we bind 0 (default), then Clear() clears screen.
+                 // If we bind FBO, Clear() clears FBO.
+                 glBindFramebuffer(GL_FRAMEBUFFER, 0); // Ensure default if not using post
+            }
+            
             renderer->Clear();
             renderer->Begin();
 
@@ -162,8 +194,41 @@ void Game::Run()
 
                 shaders->SetVec3(basicShaderID, "u_lightDir", lightDir);
                 
-                // Cel Shading Uniforms
-                shaders->SetInt(basicShaderID, "u_lightBands", GameConfig::CelShading::CEL_BANDS);
+                // --- Style Specific Uniforms ---
+                int lightBands = 256;
+                float rimStrength = 0.0f;
+
+                switch (m_currentStyle) {
+                    case RenderStyle::MINECRAFT:
+                        lightBands = 256; 
+                        rimStrength = 0.0f;
+                        break;
+                    case RenderStyle::BORDERLANDS:
+                        lightBands = 2; 
+                        rimStrength = 0.1f;
+                        break;
+                    case RenderStyle::MOCO:
+                        lightBands = 4; 
+                        rimStrength = 0.6f;
+                        break;
+                }
+
+                shaders->SetInt(basicShaderID, "u_lightBands", lightBands);
+                shaders->SetFloat(basicShaderID, "u_rimStrength", rimStrength);
+                shaders->SetVec3(basicShaderID, "u_viewPos", camera->GetPosition());
+
+                // Keep config values for these, or override? Prompt implies we override lightBands but maybe keep thickness?
+                // Prompt: "Uniforms: u_lightBands = ..."
+                // Let's use the switch values for bands and rim.
+                // Outline thickness wasn't specified to change per style in prompt (only color in post).
+                // Actually, Minecraft needs outlines DISABLED?
+                // Prompt: "Style 1 (Minecraft): Disable Post-Processing... u_lightBands = 256... u_rimStrength = 0.0".
+                // Does NOT say disable cel shading or outlines in basic shader, just post process.
+                // But usually Minecraft style implies standard look. 
+                // Wait, "Disable Post-Processing" means no edge detection.
+                // But basicShader might still do cel shading if u_celEnabled is true.
+                // I will keep Global Config for enabled/disabled for now as prompt didn't say to toggle u_celEnabled.
+                
                 shaders->SetFloat(basicShaderID, "u_outlineThickness", GameConfig::CelShading::OUTLINE_WIDTH);
                 shaders->SetFloat(basicShaderID, "u_ambientStrength", GameConfig::CelShading::AMBIENT_STRENGTH);
                 shaders->SetBool(basicShaderID, "u_celEnabled", GameConfig::CelShading::ENABLED);
@@ -191,7 +256,45 @@ void Game::Run()
                 }
             }
             
+
+            
             renderer->End();
+
+            // 2. Post-Processing Pass
+            if (usePost && postProcess)
+            {
+                postProcess->Unbind(); // Switch back to default framebuffer
+                renderer->Clear(); // Clear the screen (optional, but good practice)
+                
+                // Disable Depth Testing for Quad Rendering (usually)
+                glDisable(GL_DEPTH_TEST);
+                
+                if (postEdgeShaderID > 0)
+                {
+                    float normalThresh = 0.4f;
+                    float depthThresh = 0.02f;
+                    glm::vec4 outlineColor(0,0,0,1);
+
+                    switch (m_currentStyle) {
+                        case RenderStyle::BORDERLANDS:
+                            normalThresh = 0.4f;
+                            depthThresh = 0.02f;
+                            outlineColor = glm::vec4(0,0,0,1);
+                            break;
+                        case RenderStyle::MOCO:
+                            normalThresh = 0.6f;
+                            depthThresh = 0.02f; // Default
+                            outlineColor = glm::vec4(0.2f, 0.1f, 0.1f, 1.0f);
+                            break;
+                        default: break;
+                    }
+
+                    postProcess->RenderRect(shaders, postEdgeShaderID, normalThresh, depthThresh, outlineColor);
+                }
+                
+                glEnable(GL_DEPTH_TEST); // Re-enable for next frame's 3D rendering
+            }
+            
             renderer->SwapBuffers();
         }
     }

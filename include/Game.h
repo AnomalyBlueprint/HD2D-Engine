@@ -21,6 +21,7 @@ private:
     SDL_Window *window = nullptr;
     std::shared_ptr<Camera> camera;
     unsigned int basicShaderID = 0;
+    unsigned int postEdgeShaderID = 0;
     unsigned int textureID = 0;
     
     std::unique_ptr<Player> m_player;
@@ -32,4 +33,7 @@ private:
     
     Uint32 lastTime = 0; // Tracks the last frame's time
     float deltaTime = 0.0f; // Seconds per frame
+
+    enum class RenderStyle { MINECRAFT, BORDERLANDS, MOCO };
+    RenderStyle m_currentStyle = RenderStyle::BORDERLANDS;
 };

@@ -1,5 +1,6 @@
 #version 330 core
-out vec4 FragColor;
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec3 FragNormal;
 
 in vec2 TexCoord; 
 in vec4 VertexColor;
@@ -13,40 +14,43 @@ uniform float u_outlineThickness;
 uniform float u_ambientStrength;
 uniform bool u_celEnabled;
 uniform bool u_outlinesEnabled;
+uniform vec3 u_viewPos;
+uniform float u_rimStrength;
+
+in vec3 FragPos;
 
 void main()
 {
     vec4 texColor = texture(ourTexture, TexCoord) * VertexColor;
     
-    // 1. Outlines (UV Space)
-    if (u_outlinesEnabled) {
-        if (TexCoord.x < u_outlineThickness || TexCoord.x > 1.0 - u_outlineThickness ||
-            TexCoord.y < u_outlineThickness || TexCoord.y > 1.0 - u_outlineThickness) {
-            // Apply outline (Darken or Black)
-            // texColor = vec4(0.0, 0.0, 0.0, 1.0); // Pitch Black Outline
-            texColor.rgb *= 0.2; // Darken existing color
-        }
-    }
-
+    // NOTE: Old UV-based outlines removed. We now assume Post-Process handles it.
+    
     // 2. Cel Shading
     if (u_celEnabled) {
-        // Simple directional light
         vec3 norm = normalize(Normal);
-        vec3 lightDir = normalize(-u_lightDir); // Direction *FROM* light source? Usually u_lightDir is direction *TO* light. 
-        // Let's assume u_lightDir is direction *TO* light source.
-        // Prompt said: "Sun Direction" uniform (e.g., glm::vec3(0.5f, 1.0f, 0.3f))
-        
+        vec3 viewDir = normalize(u_viewPos - FragPos);
+
+        // Diffuse
         float diff = max(dot(norm, u_lightDir), 0.0);
         
         // Stepped Lighting
         float level = floor(diff * float(u_lightBands));
         float intensity = level / float(u_lightBands);
         
-        // Smoothing constant to avoid pitch black shadows?
-        // Add ambient
-        vec3 finalColor = (u_ambientStrength + intensity) * texColor.rgb;
+        // Rim Lighting (Fresnel)
+        float rim = 1.0 - max(dot(viewDir, norm), 0.0);
+        rim = smoothstep(0.6, 1.0, rim); // Sharpen rim
+        float rimIntensity = rim * u_rimStrength;
+
+        // Ambient Boost: Ensure shadows aren't pitch black (min 0.5)
+        float totalLight = max(u_ambientStrength + intensity, 0.5);
+
+        vec3 finalColor = (totalLight * texColor.rgb) + (vec3(rimIntensity) * texColor.rgb);
         FragColor = vec4(finalColor, texColor.a);
     } else {
         FragColor = texColor;
     }
+
+    // Output Raw Normal for Edge Detection
+    FragNormal = normalize(Normal);
 }

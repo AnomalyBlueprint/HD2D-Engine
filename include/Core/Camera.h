@@ -27,6 +27,8 @@ public:
     glm::mat4 GetProjectionMatrix();
     glm::mat4 GetViewMatrix();
 
+    glm::vec3 GetPosition() { return position; }
+
 private:
     float aspect;
 };
