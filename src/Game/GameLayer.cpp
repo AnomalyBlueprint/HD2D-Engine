@@ -494,9 +494,8 @@ void GameLayer::OnRender()
          glDisable(GL_DEPTH_TEST);
          glDisable(GL_CULL_FACE); // Ensure quad is not culled
          
-         static int blitLog = 0;
-         if (blitLog++ % 600 == 0) std::cout << "[GameLayer] Blitting UI to Screen (MainMenu)" << std::endl;
-
+         glDisable(GL_CULL_FACE); // Ensure quad is not culled
+         
          // Reset Viewport to Window Size (PostProcess might have changed it)
          int winW, winH;
          SDL_Window* window = SDL_GL_GetCurrentWindow();

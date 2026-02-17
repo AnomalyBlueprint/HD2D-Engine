@@ -126,7 +126,7 @@ void TextureAtlasService::PackTextures(const std::vector<std::pair<KenneyIDs, st
             images.push_back({pair.first, "", data, w, h});
             maxWidth = std::max(maxWidth, w);
             maxHeight = std::max(maxHeight, h);
-            log->Log("Loaded Texture: " + pair.second + " (" + std::to_string(w) + "x" + std::to_string(h) + ")");
+            // log->Log("Loaded Texture: " + pair.second + " (" + std::to_string(w) + "x" + std::to_string(h) + ")");
         }
         else
         {
@@ -147,7 +147,7 @@ void TextureAtlasService::PackTextures(const std::vector<std::pair<KenneyIDs, st
             images.push_back({(KenneyIDs)0, pair.first, data, w, h});
             maxWidth = std::max(maxWidth, w);
             maxHeight = std::max(maxHeight, h);
-            log->Log("Loaded UI Texture: " + pair.second + " (" + std::to_string(w) + "x" + std::to_string(h) + ")");
+            // log->Log("Loaded UI Texture: " + pair.second + " (" + std::to_string(w) + "x" + std::to_string(h) + ")");
         }
         else
         {
