@@ -50,6 +50,11 @@ public:
     void SetScene(const std::string& sceneName) override;
     void GetScreenSize(int& w, int& h) override;
     void Render(RenderService* renderer) override;
+    
+    // Input Handling
+    void Update(IInputService* input) override;
+    std::string GetLastAction() override;
+    void ConsumeAction() override;
 
 protected:
     void OnInitialize() override;
@@ -61,4 +66,7 @@ private:
     std::string m_activeScene;
     int m_width = 1280;
     int m_height = 720;
+    
+    std::string m_lastAction;
+    bool m_wasMouseDown = false;
 };

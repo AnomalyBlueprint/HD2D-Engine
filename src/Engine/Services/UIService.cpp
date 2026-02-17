@@ -2,6 +2,7 @@
 #include "Engine/Services/ServiceLocator.h"
 #include "Engine/Services/TextureAtlasService.h"
 #include "Engine/Services/IFontService.h"
+#include "Engine/Services/IInputService.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -21,11 +22,6 @@ void UIService::Clean()
 
 void UIService::LoadLayouts(const std::string& path)
 {
-    // Ensure we are loading the correct file (sanity check or override)
-    // The user explicit request: "Ensure explicit load of assets/ui/ui_layouts.json"
-    // Since argument 'path' is passed, we assume caller sends correct path, 
-    // but we can log it clearly.
-    
     std::ifstream file(path);
     if (!file.is_open())
     {
@@ -164,7 +160,6 @@ void UIService::Render(RenderService* renderer)
     const auto& elements = m_layouts[m_activeScene];
     for (const auto& el : elements)
     {
-        // 1. Draw Background (if bg color is not transparent)
         // 1. Draw Background or Image
         if (!el.style.image.empty() && atlas)
         {
@@ -190,28 +185,14 @@ void UIService::Render(RenderService* renderer)
             renderer->DrawSprite(bgSprite);
         }
 
-        // 2. Draw Border (Simulated with inner/outer rect or lines? For now, skip or simple border)
-        // If we want a border, we might draw a slightly larger rect behind, or using lines
-        // For simplicity, reusing Sprite for filled rects only for now.
-        
-        
-        // 3. Draw Text / Label
-        // TODO: Implement FontService (Load .ttf from assets/fonts/)
-        // For now, render 'LABEL' elements as colored rectangles so we can verify the layout.
-        // The user said: "For 'LABEL', prepare a placeholder or use the sprite system if text-rendering isn't ready yet."
-        // I will draw a small placeholder rect or debug line if it's a label? 
-        // Or just nothing if we can't see text. 
-        // Actually, let's draw a placeholder colored box for text areas if they have no bg?
+        // 2. Draw Text / Label
         if (el.type == "LABEL" || !el.properties.text.empty())
         {
              auto font = ServiceLocator::Get().GetService<IFontService>();
              if (font) {
-                 // Calculate position (Center or Left aligned?)
-                 // JSON says "align": "center" or "left".
                  float x = el.geometry.x;
                  float y = el.geometry.y + el.geometry.h / 2 + 10; // Approx vertical center offset
                  
-                 // If centered, offset x
                  float fontSizeLoaded = 32.0f; // Keep consistent with FontService
                  float scale = (el.properties.fontSize > 0) ? (el.properties.fontSize / fontSizeLoaded) : 1.0f;
 
@@ -222,8 +203,6 @@ void UIService::Render(RenderService* renderer)
                      x += 10;
                  }
                  
-                 // Render Text
-                 // Use text color from style, or default white/black
                  glm::vec4 textColor = el.style.color;
                  if (textColor.a == 0.0f) textColor = glm::vec4(1.0f);
                  
@@ -231,4 +210,58 @@ void UIService::Render(RenderService* renderer)
              }
         }
     }
+}
+
+void UIService::Update(IInputService* input)
+{
+    if (!input || m_activeScene.empty()) return;
+
+    // TODO: Get Mouse Position from InputService
+    // For now we assume InputService has GetMousePosition() or similar.
+    // Checked IInputService, it only has IsKeyDown. 
+    // We need to add mouse support to IInputService too!
+    // Or simpler: Use SDL_GetMouseState here for now if IInputService doesn't support it.
+    
+    int mx, my;
+    SDL_GetMouseState(&mx, &my);
+    
+    bool mouseDown = (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT));
+    
+    // On Click (Mouse Release?) or Press? 
+    // Usually Click = Down then Up.
+    // Let's trigger on Down for simplicity of prototype, or better Up if pressed on same element.
+    // Simple: Trigger on Down.
+    
+    if (mouseDown && !m_wasMouseDown)
+    {
+        // Click Event
+        // Check collision with buttons
+        const auto& elements = m_layouts[m_activeScene];
+        for (const auto& el : elements)
+        {
+            if (el.type == "BUTTON" && !el.properties.actionId.empty())
+            {
+                // AABB Check
+                if (mx >= el.geometry.x && mx <= el.geometry.x + el.geometry.w &&
+                    my >= el.geometry.y && my <= el.geometry.y + el.geometry.h)
+                {
+                    m_lastAction = el.properties.actionId;
+                    std::cout << "[UIService] Button Clicked: " << m_lastAction << std::endl;
+                    break;
+                }
+            }
+        }
+    }
+    
+    m_wasMouseDown = mouseDown;
+}
+
+std::string UIService::GetLastAction()
+{
+    return m_lastAction;
+}
+
+void UIService::ConsumeAction()
+{
+    m_lastAction = "";
 }

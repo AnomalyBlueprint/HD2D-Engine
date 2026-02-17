@@ -10,14 +10,29 @@ WorldService::WorldService()
 
 void WorldService::OnInitialize()
 {
+    // Defer generation to GenerateInitialWorld
+    ServiceLocator::Get().GetService<ILoggerService>()->Log("World Service Initialized (Waiting for Start).");
+}
+
+void WorldService::GenerateInitialWorld(int seed)
+{
     // Improved Noise Settings
     m_noise.SetNoiseType(FastNoiseLite::NoiseType::Perlin);
     m_noise.SetFractalType(FastNoiseLite::FractalType::FBm);
     m_noise.SetFrequency(0.01f); // Low frequency for large continents
     m_noise.SetFractalOctaves(4);
-    m_noise.SetSeed(1337);
+    m_noise.SetSeed(seed);
 
-    ServiceLocator::Get().GetService<ILoggerService>()->Log("World Service Initialized (Terraced).");
+    ServiceLocator::Get().GetService<ILoggerService>()->Log("World Generated with Seed: " + std::to_string(seed));
+}
+
+void WorldService::ClearWorld()
+{
+    auto chunkManager = ServiceLocator::Get().GetService<ChunkManager>();
+    if (chunkManager)
+    {
+        chunkManager->Clear(); 
+    }
 }
 
 void WorldService::Clean()

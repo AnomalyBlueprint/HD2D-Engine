@@ -19,6 +19,11 @@ public:
     void RenderAtlasDebug(class RenderService* renderer);
 
 private:
+    enum class RenderStyle { MINECRAFT, BORDERLANDS, MOCO };
+    enum class GameState { MainMenu, Gameplay, DebugOverlay };
+
+    void SwitchScene(GameState newState);
+
     std::shared_ptr<class Camera> m_camera;
     std::unique_ptr<Player> m_player;
 
@@ -27,11 +32,8 @@ private:
     unsigned int m_postEdgeShaderID = 0;
     unsigned int m_textureID = 0;
 
-    enum class RenderStyle { MINECRAFT, BORDERLANDS, MOCO };
     int m_debugMode = 0;
     
     RenderStyle m_currentStyle = RenderStyle::BORDERLANDS;
-
-    enum class GameState { MainMenu, Gameplay, DebugOverlay };
     GameState m_currentState = GameState::MainMenu;
 };

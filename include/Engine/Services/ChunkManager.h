@@ -27,6 +27,11 @@ protected:
 
 public:
     /// <summary>
+    /// Clears all active chunks.
+    /// </summary>
+    void Clear();
+
+    /// <summary>
     /// Cleans up resources used by the ChunkManager.
     /// </summary>
     void Clean() override;

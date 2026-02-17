@@ -27,6 +27,11 @@ void ChunkManager::OnInitialize()
 
 void ChunkManager::Clean()
 {
+    Clear();
+}
+
+void ChunkManager::Clear()
+{
     m_activeChunks.clear();
 }
 

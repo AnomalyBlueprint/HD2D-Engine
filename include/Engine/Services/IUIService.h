@@ -1,5 +1,6 @@
 #pragma once
 #include "Engine/Services/IService.h"
+#include "Engine/Services/IInputService.h"
 #include <string>
 
 class RenderService; // Forward declaration
@@ -35,5 +36,14 @@ public:
     /// Renders the active UI scene using the provided renderer.
     /// </summary>
     /// <param name="renderer">Pointer to the RenderService.</param>
+    /// <summary>
+    /// Renders the active UI scene using the provided renderer.
+    /// </summary>
+    /// <param name="renderer">Pointer to the RenderService.</param>
     virtual void Render(RenderService* renderer) = 0;
+
+    // Input Handling
+    virtual void Update(IInputService* input) = 0;
+    virtual std::string GetLastAction() = 0;
+    virtual void ConsumeAction() = 0;
 };

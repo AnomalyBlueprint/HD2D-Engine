@@ -11,7 +11,9 @@ class WorldService : public IWorldService
 public:
     WorldService();
     ~WorldService() = default;
-
+    // IWorldService
+    void GenerateInitialWorld(int seed) override;
+    void ClearWorld() override;
 protected:
     void OnInitialize() override;
 public:

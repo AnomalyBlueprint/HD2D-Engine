@@ -74,8 +74,7 @@ void GameLayer::OnAttach()
     m_textureID = atlasService->GetTextureID();
 
     // Initial State
-    m_currentState = GameState::MainMenu;
-    if (uiService) uiService->SetScene("main_menu");
+    SwitchScene(GameState::MainMenu);
 }
 
 void GameLayer::OnDetach()
@@ -136,11 +135,30 @@ void GameLayer::OnUpdate(float deltaTime)
         }
         s_f3Pressed = f3Down;
         
-        // Game Logic Update only if Gameplay or Debug (maybe?)
         if (m_currentState == GameState::Gameplay || m_currentState == GameState::DebugOverlay)
         {
             m_player->Update(deltaTime, inputService.get());
             m_camera->Update(m_player->GetPosition(), deltaTime, inputService.get());
+        }
+
+        // GUI Interactions
+        if (uiService)
+        {
+            uiService->Update(inputService.get());
+            std::string action = uiService->GetLastAction();
+            if (!action.empty())
+            {
+                if (action == "START_GAME")
+                {
+                    SwitchScene(GameState::Gameplay);
+                }
+                else if (action == "GEN_WORLD")
+                {
+                    // Regenerate with random seed?
+                    SwitchScene(GameState::Gameplay);
+                }
+                uiService->ConsumeAction();
+            }
         }
     }
 
@@ -199,6 +217,9 @@ void GameLayer::OnRender()
     // --- 1. World Pass (3D) ---
     if (renderWorld)
     {
+        // Safety check: if World is cleared, don't run this?
+        // But WorldService still exists. ChunkManager might be empty.
+        
         if (usePost) postProcess->SetTargetLayer("World");
         else glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -432,4 +453,32 @@ void GameLayer::RenderAtlasDebug(RenderService* renderer) {
    
    renderer->DrawSprite(atlasSprite);
    renderer->End();
+}
+
+void GameLayer::SwitchScene(GameState newState)
+{
+    auto uiService = ServiceLocator::Get().GetService<IUIService>();
+    auto worldService = ServiceLocator::Get().GetService<IWorldService>();
+
+    m_currentState = newState;
+
+    if (m_currentState == GameState::MainMenu)
+    {
+        if (uiService) uiService->SetScene("main_menu");
+        if (worldService) worldService->ClearWorld();
+        
+        // Reset Camera?
+        m_camera->target = glm::vec3(0.0f, 0.0f, 0.0f); 
+    }
+    else if (m_currentState == GameState::Gameplay)
+    {
+        if (uiService) uiService->SetScene("gameplay");
+        
+        // Generate World
+        if (worldService) worldService->GenerateInitialWorld(1234); // Fixed seed for now
+    }
+    else if (m_currentState == GameState::DebugOverlay)
+    {
+        if (uiService) uiService->SetScene("debug_overlay");
+    }
 }
