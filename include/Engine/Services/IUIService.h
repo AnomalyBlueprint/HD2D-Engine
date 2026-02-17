@@ -47,6 +47,7 @@ public:
     virtual void HandleClick(float normalizedX, float normalizedY) = 0;
     
     // Virtual Coordinate Mapping
+    virtual glm::vec2 NormalizeCoordinates(int screenX, int screenY) = 0;
     virtual glm::vec2 ScreenToUISpace(float screenX, float screenY, int windowW, int windowH) = 0;
 
     virtual std::string GetLastAction() = 0;

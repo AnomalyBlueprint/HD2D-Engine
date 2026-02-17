@@ -108,7 +108,7 @@
           "h": 20
         },
         "style": {
-          "color": "#737373"
+          "color": "#ffffff"
         },
         "properties": {
           "text": "SAVED WORLDS",
@@ -143,7 +143,7 @@
           "h": 20
         },
         "style": {
-          "color": "#e5e5e5"
+          "color": "#ffffff"
         },
         "properties": {
           "text": "Epoch_Run_004 (Year 210)",
@@ -196,7 +196,7 @@
           "h": 20
         },
         "style": {
-          "color": "#e5e5e5"
+          "color": "#ffffff"
         },
         "properties": {
           "text": "Iron_Fortress_01 (Year 45)",
@@ -286,7 +286,7 @@
           "h": 60
         },
         "style": {
-          "color": "#a3a3a3"
+          "color": "#ffffff"
         },
         "properties": {
           "text": "Are you sure you want to perform this action? This cannot be undone.",
@@ -547,7 +547,7 @@
         },
         "style": {
           "bg": "#4f46e5",
-          "color": "#fff",
+          "color": "#ffffff",
           "image": "tile_0072"
         },
         "properties": {
@@ -635,7 +635,7 @@
           "h": 20
         },
         "style": {
-          "color": "#333"
+          "color": "#ffffff"
         },
         "properties": {
           "text": "MACRO GRID VISUALIZATION (256x256)",
@@ -670,10 +670,10 @@
           "h": 20
         },
         "style": {
-          "color": "#fbbf24"
+          "color": "#ffffff"
         },
         "properties": {
-          "text": "VIEW MODES (F-Keys)",
+          "text": "VIEW MODES",
           "fontSize": 12,
           "align": "left"
         }
@@ -693,7 +693,8 @@
         },
         "properties": {
           "checked": true,
-          "label": "F1: Political Borders"
+          "label": "Political Borders",
+          "actionId": "TOGGLE_POLITICAL"
         }
       },
       {
@@ -706,7 +707,7 @@
           "h": 20
         },
         "style": {
-          "color": "#ccc"
+          "color": "#ffffff"
         },
         "properties": {
           "text": "Political Borders",
@@ -729,7 +730,8 @@
         },
         "properties": {
           "checked": false,
-          "label": "F2: Biomes"
+          "label": "Biomes",
+          "actionId": "TOGGLE_BIOMES"
         }
       },
       {
@@ -742,7 +744,7 @@
           "h": 20
         },
         "style": {
-          "color": "#ccc"
+          "color": "#ffffff"
         },
         "properties": {
           "text": "Biomes",
@@ -765,7 +767,8 @@
         },
         "properties": {
           "checked": false,
-          "label": "F3: Economy Heatmap"
+          "label": "Economy Heatmap",
+          "actionId": "TOGGLE_ECONOMY"
         }
       },
       {
@@ -778,7 +781,7 @@
           "h": 20
         },
         "style": {
-          "color": "#ccc"
+          "color": "#ffffff"
         },
         "properties": {
           "text": "Trade Wealth",
@@ -801,7 +804,8 @@
         },
         "properties": {
           "checked": false,
-          "label": "F4: Ruination"
+          "label": "Ruination",
+          "actionId": "TOGGLE_RUINATION"
         }
       },
       {
@@ -814,10 +818,102 @@
           "h": 20
         },
         "style": {
-          "color": "#ccc"
+          "color": "#ffffff"
         },
         "properties": {
           "text": "Ruination",
+          "fontSize": 11,
+          "align": "left"
+        }
+      },
+      {
+        "id": "lbl_shaders",
+        "type": "LABEL",
+        "geometry": {
+          "x": 20,
+          "y": 210,
+          "w": 200,
+          "h": 20
+        },
+        "style": {
+          "color": "#ffffff"
+        },
+        "properties": {
+          "text": "SHADERS",
+          "fontSize": 12,
+          "align": "left"
+        }
+      },
+      {
+        "id": "chk_edge",
+        "type": "CHECKBOX",
+        "geometry": {
+          "x": 20,
+          "y": 240,
+          "w": 20,
+          "h": 20
+        },
+        "style": {
+          "bg": "#262626",
+          "border": "#525252"
+        },
+        "properties": {
+          "checked": true,
+          "label": "Edge Detection",
+          "actionId": "TOGGLE_SHADER_EDGE"
+        }
+      },
+      {
+        "id": "lbl_edge",
+        "type": "LABEL",
+        "geometry": {
+          "x": 50,
+          "y": 240,
+          "w": 150,
+          "h": 20
+        },
+        "style": {
+          "color": "#ffffff"
+        },
+        "properties": {
+          "text": "Edge Detection",
+          "fontSize": 11,
+          "align": "left"
+        }
+      },
+      {
+        "id": "chk_crt",
+        "type": "CHECKBOX",
+        "geometry": {
+          "x": 20,
+          "y": 270,
+          "w": 20,
+          "h": 20
+        },
+        "style": {
+          "bg": "#262626",
+          "border": "#525252"
+        },
+        "properties": {
+          "checked": false,
+          "label": "CRT Effect",
+          "actionId": "TOGGLE_SHADER_CRT"
+        }
+      },
+      {
+        "id": "lbl_crt",
+        "type": "LABEL",
+        "geometry": {
+          "x": 50,
+          "y": 270,
+          "w": 150,
+          "h": 20
+        },
+        "style": {
+          "color": "#ffffff"
+        },
+        "properties": {
+          "text": "CRT Effect",
           "fontSize": 11,
           "align": "left"
         }
@@ -849,7 +945,7 @@
           "h": 20
         },
         "style": {
-          "color": "#fbbf24"
+          "color": "#ffffff"
         },
         "properties": {
           "text": "HISTORY SCRUBBER",
@@ -886,7 +982,7 @@
           "h": 20
         },
         "style": {
-          "color": "#fff"
+          "color": "#ffffff"
         },
         "properties": {
           "text": "Current Year: 0 (Genesis)",
@@ -921,7 +1017,7 @@
           "h": 20
         },
         "style": {
-          "color": "#fbbf24"
+          "color": "#ffffff"
         },
         "properties": {
           "text": "TILE INSPECTOR",
@@ -939,7 +1035,7 @@
           "h": 60
         },
         "style": {
-          "color": "#666"
+          "color": "#ffffff"
         },
         "properties": {
           "text": "Click any pixel on the map to view Macro Data (Civ, Resources, History).",

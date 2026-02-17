@@ -75,6 +75,8 @@
             const icons = {
                 Terminal: <polyline points="4 17 10 11 4 5"></polyline>,
                 Copy: <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>,
+                Upload: <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>, // Upload/Import base
+                UploadArrow: <polyline points="17 8 12 3 7 8"></polyline>, // Upload arrow
                 Trash: <polyline points="3 6 5 6 21 6"></polyline>,
                 Settings: <circle cx="12" cy="12" r="3"></circle>,
                 MousePointer: <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path>,
@@ -85,6 +87,18 @@
                 Maximize: <path d="M15 3h6v6"></path>,
                 Layout: <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
             };
+
+            // Composition for Upload icon since we're using simple SVG paths
+            if (name === 'Upload') {
+                return (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" { ...p }>
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                );
+            }
+
             return (
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" { ...p }>
                     { icons[name] || <circle cx="12" cy="12" r="10" /> }
@@ -107,6 +121,7 @@
             // --- State ---
             const [settings, setSettings] = useState({ width: 1024, height: 768 });
             const [currentScene, setCurrentScene] = useState('main_menu');
+            const fileInputRef = useRef(null);
 
             // Centralized Data Store
             const [sceneData, setSceneData] = useState({
@@ -287,7 +302,7 @@
 
             const handleMouseUp = () => setDragState({ mode: null, startX: 0, startY: 0, initial: {} });
 
-            // --- Export ---
+            // --- Export / Import ---
             const generateJSON = () => {
                 const exportData = {
                     meta: { generated: new Date().toISOString(), version: "2.3" },
@@ -306,6 +321,63 @@
                 });
 
                 return JSON.stringify(exportData, null, 2);
+            };
+
+            const handleImportClick = () => {
+                fileInputRef.current.click();
+            };
+
+            const handleFileChange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const importedData = JSON.parse(event.target.result);
+
+                        // Basic Validation
+                        if (!importedData.scenes || !importedData.settings) {
+                            alert("Invalid JSON format: Missing scenes or settings.");
+                            return;
+                        }
+
+                        // Reconstruct State from Export Format
+                        const newSceneData = {};
+                        Object.keys(importedData.scenes).forEach(sceneName => {
+                            newSceneData[sceneName] = importedData.scenes[sceneName].map(w => ({
+                                id: w.id,
+                                type: w.type,
+                                // Flatten geometry back to root
+                                x: w.geometry.x,
+                                y: w.geometry.y,
+                                w: w.geometry.w,
+                                h: w.geometry.h,
+                                style: w.style,
+                                // Rename properties back to props
+                                props: w.properties
+                            }));
+                        });
+
+                        // Update State
+                        setSettings(importedData.settings);
+                        setSceneData(newSceneData);
+                        // Reset selection to avoid ghost outlines
+                        setSelectedId(null);
+                        // Ensure we are on a valid scene (default to first available or main_menu)
+                        if (!newSceneData[currentScene]) {
+                            setCurrentScene(Object.keys(newSceneData)[0] || 'main_menu');
+                        }
+
+                        // Clear input so same file can be selected again if needed
+                        e.target.value = null;
+
+                    } catch (err) {
+                        console.error("Import Error:", err);
+                        alert("Failed to import JSON. Check console for details.");
+                    }
+                };
+                reader.readAsText(file);
             };
 
             // --- Rendering Components ---
@@ -397,6 +469,16 @@
 
             return (
                 <div className="flex flex-col h-screen bg-neutral-950 text-neutral-300 font-sans overflow-hidden" onMouseUp={ handleMouseUp } onMouseMove={ handleMouseMove }>
+
+                    {/* HIDDEN INPUT FOR IMPORT */ }
+                    <input
+                        type="file"
+                        ref={ fileInputRef }
+                        onChange={ handleFileChange }
+                        accept=".json"
+                        style={ { display: 'none' } }
+                    />
+
                     {/* --- HEADER --- */ }
                     <header className="h-14 border-b border-neutral-800 bg-neutral-900 flex items-center justify-between px-4 shrink-0">
                         <div className="flex items-center gap-4">
@@ -421,6 +503,10 @@
                         </div>
 
                         <div className="flex gap-2">
+                            <button onClick={ handleImportClick }
+                                className="flex items-center gap-2 px-3 py-1.5 bg-neutral-800 hover:bg-neutral-700 text-xs font-bold rounded border border-neutral-700 transition-colors">
+                                <Icon name="Upload" /> Import JSON
+                            </button>
                             <button onClick={ () => {
                                 const blob = new Blob([generateJSON()], { type: "application/json" });
                                 const url = URL.createObjectURL(blob);
@@ -459,7 +545,7 @@
                             {/* Widgets */ }
                             <div className="relative mx-auto my-8 shadow-2xl bg-black border border-neutral-800"
                                 style={ { width: settings.width, height: settings.height } }>
-                                { currentWidgets.map(w => <WidgetRenderer key={ w.id } w={ w } />) }
+                                { (currentWidgets || []).map(w => <WidgetRenderer key={ w.id } w={ w } />) }
                             </div>
                         </div>
 

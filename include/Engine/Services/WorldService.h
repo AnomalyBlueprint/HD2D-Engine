@@ -9,7 +9,7 @@
 #include <vector>
 #include <string>
 
-struct MacroTile {
+struct LegacyMacroTile {
     uint8_t BiomeID;
     uint32_t SeedOffset;
     uint8_t Ruination;
@@ -33,7 +33,7 @@ public:
 
     // Macro Grid
     void GenerateMacroGrid();
-    const std::vector<MacroTile>& GetMacroGrid() const { return m_macroGrid; }
+    const std::vector<LegacyMacroTile>& GetMacroGrid() const { return m_macroGrid; }
     void LoadWorldGenConfig(const std::string& path);
 
 protected:
@@ -45,7 +45,7 @@ public:
 
 private:
     FastNoiseLite m_noise;
-    std::vector<MacroTile> m_macroGrid; // 256x256
+    std::vector<LegacyMacroTile> m_macroGrid; // 256x256
     WorldGenConfig m_config;
     int m_globalSeed = 0;
 };

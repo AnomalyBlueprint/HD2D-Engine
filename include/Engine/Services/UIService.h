@@ -54,6 +54,8 @@ public:
     // Input Handling
     // Input Handling
     void HandleClick(float normalizedX, float normalizedY) override;
+
+    glm::vec2 NormalizeCoordinates(int screenX, int screenY) override;
     
     glm::vec2 ScreenToUISpace(float screenX, float screenY, int windowW, int windowH) override;
 

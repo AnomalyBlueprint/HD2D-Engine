@@ -72,7 +72,7 @@ void WorldService::GenerateMacroGrid()
         for (int x = 0; x < 256; x++)
         {
             int index = y * 256 + x;
-            MacroTile& tile = m_macroGrid[index];
+            LegacyMacroTile& tile = m_macroGrid[index];
             
             // 1. SeedOffset: Unique hash (GlobalSeed + X + Y)
             // Simple hash: (seed ^ (x * 374761393) ^ (y * 668265263))

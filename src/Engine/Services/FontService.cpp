@@ -97,14 +97,18 @@ void FontService::LoadFont(const std::string& fontName, float fontSize) {
 }
 
 void FontService::RenderText(RenderService* renderer, const std::string& text, float x, float y, float scale, const glm::vec4& color) {
+    // 1. Shadow Pass (+2, +2 offset, Black)
+    RenderTextInternal(renderer, text, x + 2.0f, y + 2.0f, scale, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+    
+    // 2. Main Pass
+    RenderTextInternal(renderer, text, x, y, scale, color);
+}
+
+void FontService::RenderTextInternal(RenderService* renderer, const std::string& text, float x, float y, float scale, const glm::vec4& color) {
     if (!m_fontLoaded) return;
     
-    // Y-Offset to align baseline?
-    // stb_truetype baked quad assumes y=0 is top? or baseline?
-    // It seems to be baseline relative for pixel fonts usually.
-    // If we want top-left alignment passed in (x,y), we might need to adjust.
-    // However, let's stick to the logic: x,y is the baseline start position.
-    
+    float startX = x;
+
     for (unsigned char c : text) {
         if (c < 32 || c >= 128) continue;
         
@@ -125,7 +129,7 @@ void FontService::RenderText(RenderService* renderer, const std::string& text, f
         
         Sprite s;
         // Position is Center for DrawSprite
-        s.Position = glm::vec2(x + x_off + w*0.5f, y + y_off + h*0.5f);
+        s.Position = glm::vec2(startX + x_off + w*0.5f, y + y_off + h*0.5f);
         s.Size = glm::vec2(w, h);
         s.MinUV = glm::vec2(q.s0, q.t0);
         s.MaxUV = glm::vec2(q.s1, q.t1);
@@ -136,7 +140,7 @@ void FontService::RenderText(RenderService* renderer, const std::string& text, f
         renderer->DrawSprite(s);
         
         // Advance external cursor
-        x += advanceX * scale;
+        startX += advanceX * scale;
     }
 }
 

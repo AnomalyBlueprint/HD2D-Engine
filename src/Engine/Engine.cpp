@@ -106,7 +106,7 @@ void Engine::Run()
                 {
                     int w = e.window.data1;
                     int h = e.window.data2;
-                    glViewport(0, 0, w, h); // Ensure GL state is set (redundant if service does it, but safe)
+                    glViewport(0, 0, w, h);
                     auto renderer = ServiceLocator::Get().GetService<RenderService>();
                     if (renderer) renderer->SetViewport(w, h);
                 }

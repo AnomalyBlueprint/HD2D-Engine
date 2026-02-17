@@ -21,8 +21,6 @@ public:
 private:
     enum class RenderStyle { MINECRAFT, BORDERLANDS, MOCO };
     enum class GameState { MainMenu, Gameplay, DebugOverlay };
-    enum class MapMode { Biome, Wealth, Ruination, Height };
-
     void SwitchScene(GameState newState);
     void RenderMacroMap(class RenderService* renderer);
 
@@ -38,5 +36,5 @@ private:
     
     RenderStyle m_currentStyle = RenderStyle::BORDERLANDS;
     GameState m_currentState = GameState::MainMenu;
-    MapMode m_mapMode = MapMode::Biome;
+    // MapMode enum removed, state managed by MacroService directly
 };

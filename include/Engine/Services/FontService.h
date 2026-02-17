@@ -19,6 +19,8 @@ protected:
     void OnInitialize() override;
 
 private:
+    void RenderTextInternal(RenderService* renderer, const std::string& text, float x, float y, float scale, const glm::vec4& color);
+    
     unsigned int m_fontTextureID = 0;
     stbtt_bakedchar m_cdata[96]; // ASCII 32..126 is 95 glyphs
     int m_bitmapW = 512;

@@ -222,15 +222,24 @@ void UIService::Render(RenderService* renderer)
 
 glm::vec2 UIService::ScreenToUISpace(float screenX, float screenY, int windowW, int windowH)
 {
-    // Target Resolution
-    float targetW = (float)m_width;  // 1280 or from JSON
-    float targetH = (float)m_height; // 720 or from JSON
+    // Fixed Logical Resolution
+    float logicalW = 1024.0f;
+    float logicalH = 768.0f;
     
-    // Calculate Scale
-    float scaleX = targetW / (float)windowW;
-    float scaleY = targetH / (float)windowH;
+    // Simple scaling mapping
+    float scaleX = logicalW / (float)windowW;
+    float scaleY = logicalH / (float)windowH;
     
     return glm::vec2(screenX * scaleX, screenY * scaleY);
+}
+
+glm::vec2 UIService::NormalizeCoordinates(int screenX, int screenY)
+{
+    // Helper if we want to use current window size from SDL
+    int w, h;
+    SDL_Window* win = SDL_GL_GetCurrentWindow();
+    SDL_GetWindowSize(win, &w, &h);
+    return ScreenToUISpace((float)screenX, (float)screenY, w, h);
 }
 
 void UIService::HandleClick(float normalizedX, float normalizedY)

@@ -5,6 +5,8 @@
 #include "Engine/Services/ILoggerService.h"
 #include "Engine/Services/IInputService.h"
 #include "Engine/Services/IWorldService.h"
+#include "Engine/Services/IMacroService.h"
+#include "Engine/Services/MacroService.h"
 #include "Engine/Services/ChunkManager.h"
 #include "Engine/Services/BlockRegistryService.h"
 #include "Engine/Services/TextureAtlasService.h"
@@ -30,8 +32,12 @@ GameLayer::~GameLayer() {}
 void GameLayer::OnAttach()
 {
     // Initialize Game Specific Services
+    // Initialize Game Specific Services
     auto worldService = std::make_shared<WorldService>();
     ServiceLocator::Get().Register<IWorldService>(worldService);
+
+    auto macroService = std::make_shared<MacroService>();
+    ServiceLocator::Get().Register<IMacroService>(macroService);
 
     auto atlasService = std::make_shared<TextureAtlasService>();
     // Getting Repo from Locator (should be reg in Engine)
@@ -99,16 +105,8 @@ void GameLayer::OnUpdate(float deltaTime)
     if (inputService)
     {
         // Toggle Styles (Global)
-        if (inputService->IsKeyDown(SDL_SCANCODE_1)) m_currentStyle = RenderStyle::MINECRAFT;
-        if (inputService->IsKeyDown(SDL_SCANCODE_2)) m_currentStyle = RenderStyle::BORDERLANDS;
-        if (inputService->IsKeyDown(SDL_SCANCODE_3)) m_currentStyle = RenderStyle::MOCO;
-        
-        // Debug Modes
-        if (inputService->IsKeyDown(SDL_SCANCODE_4)) m_debugMode = 0; // Normal
-        if (inputService->IsKeyDown(SDL_SCANCODE_5)) m_debugMode = 1; // Texture Only
-        if (inputService->IsKeyDown(SDL_SCANCODE_6)) m_debugMode = 2; // Color Only
-        if (inputService->IsKeyDown(SDL_SCANCODE_7)) m_debugMode = 3; // Normals
-        if (inputService->IsKeyDown(SDL_SCANCODE_8)) m_debugMode = 4; // Atlas View
+        // Toggle Styles (Global) - REMOVED (Moved to UI)
+        // Debug Modes - REMOVED (Moved to UI)
         
         // State Transitions (Debounced ideally, but valid for prototype)
         static bool s_escPressed = false;
@@ -128,44 +126,11 @@ void GameLayer::OnUpdate(float deltaTime)
         }
         s_escPressed = escDown;
 
-        static bool s_f3Pressed = false;
-        bool f3Down = inputService->IsKeyDown(SDL_SCANCODE_F3);
-        if (f3Down && !s_f3Pressed)
-        {
-             if (m_currentState == GameState::Gameplay) {
-                m_currentState = GameState::DebugOverlay;
-                if (uiService) uiService->SetScene("debug_overlay");
-            } else if (m_currentState == GameState::DebugOverlay) {
-                m_currentState = GameState::Gameplay;
-                if (uiService) uiService->SetScene("gameplay");
-            }
-        }
-        s_f3Pressed = f3Down;
+        // F3 Toggle Removed - Moved to UI (Generate World -> Debug Overlay)
         
-        // Map Mode Toggles
-        if (m_currentState == GameState::DebugOverlay)
-        {
-             if (inputService->IsKeyDown(SDL_SCANCODE_F1)) m_mapMode = MapMode::Biome;
-             if (inputService->IsKeyDown(SDL_SCANCODE_F2)) m_mapMode = MapMode::Wealth;
-             if (inputService->IsKeyDown(SDL_SCANCODE_F3)) m_mapMode = MapMode::Ruination; // Toggle out or change mode? 
-             // Note: F3 creates conflict with Toggle Overlay. Maybe use keys 1-4 for modes when in overlay? 
-             // Requirement says: "Map F1-F4 keys to change the "Heatmap" view".
-             // If F3 toggles overlay, we should probably change overlay toggle to something else or accept conflict (press twice?).
-             // Let's stick to user request strictly: F1-F4 Change View. 
-             // "F3 = Ruination" might conflict if F3 toggles overlay. 
-             // I will use SHIFT+F3 for overlay toggle or just assume F3 inside overlay changes view.
-             // Code above toggles overlay on F3 press.
-             // Let's move overlay toggle to F5 or just handle it carefully.
-             // Actually, standard is usually F3 for debug.
-             // Let's add specific logic: If in DebugOverlay, F3 changes mode. To exit, maybe ESC?
-        }
+        // Map Mode Toggles - REMOVED (Moved to UI)
         
-        if (inputService->IsKeyDown(SDL_SCANCODE_F1)) m_mapMode = MapMode::Biome;
-        if (inputService->IsKeyDown(SDL_SCANCODE_F2)) m_mapMode = MapMode::Wealth;
-        // F3 is tricky due to toggle.
-        if (inputService->IsKeyDown(SDL_SCANCODE_F4)) m_mapMode = MapMode::Height;
-        
-        if (m_currentState == GameState::Gameplay || m_currentState == GameState::DebugOverlay)
+        if (m_currentState == GameState::Gameplay)
         {
             m_player->Update(deltaTime, inputService.get());
             m_camera->Update(m_player->GetPosition(), deltaTime, inputService.get());
@@ -209,10 +174,47 @@ void GameLayer::OnUpdate(float deltaTime)
                         if (dbService->CreateNewWorld("NewWorld_" + std::to_string(rand() % 1000))) // Random generic name
                         {
                             worldService->GenerateInitialWorld(rand()); // Seed
+                            
+                            auto macroService = ServiceLocator::Get().GetService<IMacroService>();
+                            if (macroService) macroService->GenerateSimulation(rand());
+
                             SwitchScene(GameState::DebugOverlay);
                         }
                     }
                 }
+                else if (action == "TOGGLE_POLITICAL") 
+                {
+                    auto macro = ServiceLocator::Get().GetService<IMacroService>();
+                    if(macro) macro->SetViewMode(IMacroService::MacroViewMode::Political);
+                }
+                else if (action == "TOGGLE_BIOMES")
+                {
+                    auto macro = ServiceLocator::Get().GetService<IMacroService>();
+                    if(macro) macro->SetViewMode(IMacroService::MacroViewMode::Biome);
+                }
+                else if (action == "TOGGLE_ECONOMY")
+                {
+                    auto macro = ServiceLocator::Get().GetService<IMacroService>();
+                    if(macro) macro->SetViewMode(IMacroService::MacroViewMode::Wealth);
+                }
+                else if (action == "TOGGLE_RUINATION")
+                {
+                    auto macro = ServiceLocator::Get().GetService<IMacroService>();
+                    if(macro) macro->SetViewMode(IMacroService::MacroViewMode::Ruination);
+                }
+                else if (action == "TOGGLE_SHADER_EDGE")
+                {
+                    // Toggle Edge shader or set style
+                     if (m_currentStyle != RenderStyle::BORDERLANDS) m_currentStyle = RenderStyle::BORDERLANDS;
+                     else m_currentStyle = RenderStyle::MINECRAFT; // Toggle off
+                }
+                else if (action == "TOGGLE_SHADER_CRT")
+                {
+                    // Toggle CRT/Moco style
+                     if (m_currentStyle != RenderStyle::MOCO) m_currentStyle = RenderStyle::MOCO;
+                     else m_currentStyle = RenderStyle::MINECRAFT; // Toggle off
+                }
+                
                 uiService->ConsumeAction();
             }
         }
@@ -284,7 +286,7 @@ void GameLayer::OnRender()
           {
               renderer->SetDepthTest(false);
               // Simple render for debug UI
-               int uiW = 1280, uiH = 720;
+               int uiW = 1024, uiH = 768; // Logical size
                uiService->GetScreenSize(uiW, uiH);
                renderer->Begin(glm::ortho(0.0f, (float)uiW, (float)uiH, 0.0f, -1.0f, 1.0f));
                uiService->Render(renderer.get());
@@ -408,10 +410,10 @@ void GameLayer::OnRender()
         renderer->SetClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Transparent
         renderer->Clear();
 
-        // Orthographic Projection for UI
-        int uiW = 1280, uiH = 720;
-        if (uiService) uiService->GetScreenSize(uiW, uiH);
-        glm::mat4 ortho = glm::ortho(0.0f, (float)uiW, (float)uiH, 0.0f, -1.0f, 1.0f);
+        // Orthographic Projection for UI - FIXED to Logical 1024x768
+        // User requested resolution independence. We force the projection to be logical 1024x768 always.
+        // The Viewport is still window size, but projection maps 0..1024 to -1..1.
+        glm::mat4 ortho = glm::ortho(0.0f, 1024.0f, 768.0f, 0.0f, -1.0f, 1.0f);
         renderer->Begin(ortho);
 
         // Setup Shader for UI (reuse basic shader, disable effects)
@@ -573,77 +575,37 @@ void GameLayer::RenderAtlasDebug(RenderService* renderer) {
 }
 
 void GameLayer::RenderMacroMap(RenderService* renderer) {
-    auto worldService = std::dynamic_pointer_cast<WorldService>(ServiceLocator::Get().GetService<IWorldService>());
-    if (!worldService) return;
+    auto macroService = ServiceLocator::Get().GetService<IMacroService>();
+    if (!macroService) return;
 
-    const auto& grid = worldService->GetMacroGrid();
-    if (grid.empty()) return;
+    unsigned int texID = macroService->GetMapTexture();
+    if (texID == 0) return; // Not generated yet
 
-    // Fixed size 256x256 tiles
-    // Screen is 1280x720. Let's make each tile 2x2 pixels -> 512x512 map.
-    // Center it: 1280/2 - 256 = 384. 720/2 - 256 = 104.
-    float startX = 384.0f;
-    float startY = 104.0f;
-    float tileSize = 2.0f;
-
-    renderer->Begin(glm::ortho(0.0f, 1280.0f, 720.0f, 0.0f, -1.0f, 1.0f));
-
-    // Draw Background
-    Sprite bg;
-    bg.Position = glm::vec2(640, 360);
-    bg.Size = glm::vec2(520, 520);
-    bg.Color = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
-    bg.TextureID = 0;
-    renderer->DrawSprite(bg);
-
-    // This is VERY inefficient (65k draw calls or sprites). 
-    // In a real engine, we'd update a texture.
-    // For this prototype/tool request, prompt said "render the 256x256 grid as a pixel-map".
-    // I will try to batch this or just draw it. RenderService buffers sprites so it might handle 65k quads if buffer is large enough.
-    // If RenderService limit is low (e.g. 10k), this will crash or stall.
-    // Assuming RenderService handles flushing.
+    // Draw as a single large quad in the center
+    // We want it to be 512x512 pixels on screen, centered.
+    // Screen is 1280x720 (or whatever glViewport is).
+    // Wait, we are in GameLayer::OnRender, and we set projection for UI pass?
+    // No, RenderMacroMap is called in DebugOverlay state, where we cleared screen.
+    // We should set up an Ortho projection that matches Window or Logical?
+    // Let's use Logical 1024x768 for consistency with UI req.
     
-    // Optimization: Draw to a texture? No, too complex for this step.
-    // Optimization: Draw larger chunks? No.
-    // Let's rely on RenderService. If it's too slow, the user will report.
-    
-    for (int y = 0; y < 256; y++) {
-        for (int x = 0; x < 256; x++) {
-            int idx = y * 256 + x;
-            const MacroTile& tile = grid[idx];
-            
-            glm::vec4 color(1.0f);
-            
-            switch (m_mapMode) {
-                case MapMode::Biome:
-                    if (tile.BiomeID == 1) color = glm::vec4(0.1f, 0.4f, 0.8f, 1.0f); // Ocean
-                    else if (tile.BiomeID == 2) color = glm::vec4(0.4f, 0.8f, 0.2f, 1.0f); // Plains
-                    else if (tile.BiomeID == 3) color = glm::vec4(0.1f, 0.5f, 0.1f, 1.0f); // Forest
-                    else if (tile.BiomeID == 4) color = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f); // Mountain
-                    break;
-                case MapMode::Wealth:
-                    color = glm::vec4(tile.Wealth / 255.0f, tile.Wealth / 255.0f, 0.0f, 1.0f); // Yellow gradient
-                    break;
-                case MapMode::Ruination:
-                    color = glm::vec4(tile.Ruination / 255.0f, 0.0f, 0.0f, 1.0f); // Red gradient
-                    break;
-                case MapMode::Height:
-                    color = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f); 
-                    break;
-            }
+    renderer->Begin(glm::ortho(0.0f, 1024.0f, 768.0f, 0.0f, -1.0f, 1.0f));
 
-            Sprite s;
-            s.Position = glm::vec2(startX + x * tileSize, startY + y * tileSize);
-            s.Size = glm::vec2(tileSize, tileSize);
-            s.Color = color;
-            s.TextureID = 0;
-            renderer->DrawSprite(s);
-        }
-    }
+    // Center of 1024x768 is 512, 384.
+    // Map size 512x512.
+    // Top-Left: 512 - 256 = 256. 384 - 256 = 128.
     
-    // Legend
-    // ... skip for now
+    Sprite mapSprite;
+    mapSprite.Position = glm::vec2(512, 384);
+    mapSprite.Size = glm::vec2(512, 512);
+    mapSprite.TextureID = texID;
+    mapSprite.Color = glm::vec4(1.0f);
     
+    renderer->DrawSprite(mapSprite);
+    
+    // Draw Border (Optional, using solid color sprite behind or lines if supported)
+    // ...
+
     renderer->End();
 }
 
