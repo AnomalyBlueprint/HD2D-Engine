@@ -52,12 +52,14 @@ public:
     /// </summary>
     virtual void UseTexture(unsigned int textureID) = 0;
 
+#include <glm/glm.hpp>
+
     // --- Batch Rendering (2D Sprites / UI) ---
 
     /// <summary>
     /// Begins a batch rendering frame. Resets buffers.
     /// </summary>
-    virtual void Begin() = 0;
+    virtual void Begin(const glm::mat4& projectionMatrix = glm::mat4(1.0f)) = 0;
 
     /// <summary>
     /// Ends the batch rendering frame and flushes remaining geometry.
@@ -68,4 +70,9 @@ public:
     /// Adds a sprite to the current batch.
     /// </summary>
     virtual void DrawSprite(const struct Sprite& sprite) = 0;
+    
+    /// <summary>
+    /// Sets the clear color for the next Clear() call.
+    /// </summary>
+    virtual void SetClearColor(float r, float g, float b, float a) = 0;
 };

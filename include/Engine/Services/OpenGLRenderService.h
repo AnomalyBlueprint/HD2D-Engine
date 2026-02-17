@@ -26,9 +26,10 @@ public:
     unsigned int LoadTexture(const std::string &path) override;
     void UseTexture(unsigned int textureID) override;
 
-    void Begin() override;
+    void Begin(const glm::mat4& projectionMatrix = glm::mat4(1.0f)) override;
     void End() override;
     void DrawSprite(const Sprite& sprite) override;
+    void SetClearColor(float r, float g, float b, float a) override;
 
 private:
     void Flush();
@@ -50,4 +51,7 @@ private:
     std::vector<Vertex> m_vertices;
     unsigned int m_currentTextureID = 0;
     unsigned int m_whiteTextureID = 0; // Default White Texture
+
+    glm::vec4 m_clearColor{0.39f, 0.58f, 0.93f, 1.0f}; // Default Blue
+    glm::mat4 m_projectionMatrix{1.0f};
 };

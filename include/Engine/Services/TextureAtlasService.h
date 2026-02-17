@@ -47,12 +47,18 @@ public:
     /// </summary>
     UVRect GetUVs(KenneyIDs id);
 
+    /// <summary>
+    /// Returns UV coordinates for a specific texture name (string) within the atlas.
+    /// </summary>
+    UVRect GetUVs(const std::string& name);
+
 private:
     unsigned int m_atlasTextureID = 0;
     int m_atlasWidth = 0;
     int m_atlasHeight = 0;
     
     std::map<KenneyIDs, UVRect> m_uvMap;
+    std::map<std::string, UVRect> m_uvStringMap;
 
-    void PackTextures(const std::vector<std::pair<KenneyIDs, std::string>>& textures);
+    void PackTextures(const std::vector<std::pair<KenneyIDs, std::string>>& textures, const std::vector<std::pair<std::string, std::string>>& namedTextures);
 };

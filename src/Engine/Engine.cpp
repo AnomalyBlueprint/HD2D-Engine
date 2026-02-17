@@ -6,7 +6,9 @@
 #include "Engine/Services/ResourceService.h"
 #include "Engine/Services/PathRegistryService.h"
 #include "Engine/Services/KenneyPathRepository.h"
+#include "Engine/Services/KenneyPathRepository.h"
 #include "Engine/Services/OpenGLShaderService.h"
+#include "Engine/Services/FontService.h"
 #include <GL/glew.h>
 
 Engine::Engine() {}
@@ -40,17 +42,20 @@ void Engine::Init()
     auto input = std::make_shared<InputService>();
     ServiceLocator::Get().Register<IInputService>(input);
 
-    auto resources = std::make_shared<ResourceService>();
-    ServiceLocator::Get().Register<IResourceService>(resources);
-
     auto pathRegistry = std::make_shared<PathRegistryService>();
     ServiceLocator::Get().Register<PathRegistryService>(pathRegistry);
 
     auto kenneyRepo = std::make_shared<KenneyPathRepository>();
     pathRegistry->RegisterRepository<KenneyPathRepository>(kenneyRepo);
 
+    auto resources = std::make_shared<ResourceService>();
+    ServiceLocator::Get().Register<IResourceService>(resources);
+
     auto shaderSystem = std::make_shared<OpenGLShaderService>();
     ServiceLocator::Get().Register<IShaderService>(shaderSystem);
+
+    auto fontService = std::make_shared<FontService>();
+    ServiceLocator::Get().Register<IFontService>(fontService);
 
     m_isRunning = true;
     m_lastTime = SDL_GetTicks();
@@ -86,7 +91,7 @@ void Engine::Run()
             if (m_gameLayer) m_gameLayer->OnEvent(e);
         }
 
-        if (inputService && inputService->IsKeyDown(SDL_SCANCODE_ESCAPE)) m_isRunning = false;
+        // if (inputService && inputService->IsKeyDown(SDL_SCANCODE_ESCAPE)) m_isRunning = false;
 
         if (m_gameLayer)
         {

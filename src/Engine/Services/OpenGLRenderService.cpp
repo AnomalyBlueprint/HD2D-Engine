@@ -115,8 +115,13 @@ void OpenGLRenderService::OnInitialize()
 
 void OpenGLRenderService::Clear()
 {
-    glClearColor(0.39f, 0.58f, 0.93f, 1.0f);
+    glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void OpenGLRenderService::SetClearColor(float r, float g, float b, float a)
+{
+    m_clearColor = glm::vec4(r, g, b, a);
 }
 
 void OpenGLRenderService::SwapBuffers()
@@ -235,10 +240,11 @@ void OpenGLRenderService::UseTexture(unsigned int textureID)
 
 // --- BATCH RENDERER IMPLEMENTATION ---
 
-void OpenGLRenderService::Begin()
+void OpenGLRenderService::Begin(const glm::mat4& projectionMatrix)
 {
     m_vertices.clear();
     m_currentTextureID = 0;
+    m_projectionMatrix = projectionMatrix;
 }
 
 void OpenGLRenderService::End()
@@ -251,10 +257,33 @@ void OpenGLRenderService::Flush()
 {
     if (m_vertices.empty()) return;
 
-    if (m_currentTextureID != 0)
-    {
-        UseTexture(m_currentTextureID);
+    // Apply Projection Matrix to current Shader
+    GLint currentProgram;
+    glGetIntegerv(GL_CURRENT_PROGRAM, &currentProgram);
+    if (currentProgram > 0) {
+        GLint projLoc = glGetUniformLocation(currentProgram, "projection"); 
+        if (projLoc != -1) {
+            glUniformMatrix4fv(projLoc, 1, GL_FALSE, &m_projectionMatrix[0][0]);
+        }
+
+        // Fix: Force Model Matrix to Identity for Batched Rendering
+        // Previous draw calls (Chunks/Player) might have set a custom model matrix.
+        // Since we transform vertices on CPU in DrawSprite, the shader model should be Identity.
+        GLint modelLoc = glGetUniformLocation(currentProgram, "model");
+        if (modelLoc != -1) {
+             // Identity Matrix
+            float identity[16] = {
+                1.0f, 0.0f, 0.0f, 0.0f,
+                0.0f, 1.0f, 0.0f, 0.0f,
+                0.0f, 0.0f, 1.0f, 0.0f,
+                0.0f, 0.0f, 0.0f, 1.0f
+            };
+            glUniformMatrix4fv(modelLoc, 1, GL_FALSE, identity);
+        }
     }
+
+    // Always bind texture (UseTexture handles 0 -> White Texture)
+    UseTexture(m_currentTextureID);
 
     glBindVertexArray(m_batchVAO);
     glBindBuffer(GL_ARRAY_BUFFER, m_batchVBO);
@@ -276,13 +305,15 @@ void OpenGLRenderService::Flush()
 void OpenGLRenderService::DrawSprite(const Sprite& sprite)
 {
     // 1. Check Flush Conditions
-    if (sprite.TextureID != m_currentTextureID)
+    unsigned int useTextureID = (sprite.TextureID == 0) ? m_whiteTextureID : sprite.TextureID;
+
+    if (useTextureID != m_currentTextureID)
     {
-        if (m_currentTextureID != 0)
+        if (m_currentTextureID != 0) // 0 mostly implies uninitialized in this context if we use m_whiteTextureID as default
         {
             Flush();
         }
-        m_currentTextureID = sprite.TextureID;
+        m_currentTextureID = useTextureID;
     }
 
     if (m_vertices.size() + 4 > MAX_VERTICES)
@@ -304,10 +335,10 @@ void OpenGLRenderService::DrawSprite(const Sprite& sprite)
     glm::vec4 tr = model * glm::vec4( 0.5f,  0.5f, 0.0f, 1.0f); // Top Right
     glm::vec4 tl = model * glm::vec4(-0.5f,  0.5f, 0.0f, 1.0f); // Top Left
 
-    float u0 = 0.0f;
-    float v0 = 0.0f;
-    float u1 = 1.0f;
-    float v1 = 1.0f;
+    float u0 = sprite.MinUV.x;
+    float v0 = sprite.MinUV.y;
+    float u1 = sprite.MaxUV.x;
+    float v1 = sprite.MaxUV.y;
 
     // Ordered to match indices: 0,1,2, 2,3,0 (Counter-Clockwise)
     // 0: Bottom Left

@@ -16,6 +16,7 @@ uniform bool u_celEnabled;
 uniform bool u_outlinesEnabled;
 uniform vec3 u_viewPos;
 uniform float u_rimStrength;
+uniform int u_debugMode;
 
 in vec3 FragPos;
 
@@ -50,6 +51,11 @@ void main()
     } else {
         FragColor = texColor;
     }
+
+    // Debug Modes
+    if (u_debugMode == 1) FragColor = texture(ourTexture, TexCoord); // Texture Only
+    if (u_debugMode == 2) FragColor = VertexColor; // Vertex Color Only
+    if (u_debugMode == 3) FragColor = vec4(normalize(Normal) * 0.5 + 0.5, 1.0); // Normals
 
     // Output Raw Normal for Edge Detection
     FragNormal = normalize(Normal);

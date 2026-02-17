@@ -1,5 +1,7 @@
 #include "Engine/Services/TextureAtlasService.h"
 #include "Engine/Services/KenneyPathRepository.h"
+#include "Engine/Services/UIPathRepository.h"
+#include "Engine/Services/PathRegistryService.h"
 #include "Engine/Services/ServiceLocator.h"
 #include "Engine/Services/ILoggerService.h"
 #include <iostream>
@@ -10,7 +12,12 @@
 // Usually defined in RenderService or similar. To be safe, we might need it here or rely on the one in RenderService.
 // Since STB_IMAGE_IMPLEMENTATION is likely in OpenGLRenderService.cpp, we just need the header.
 #include <vendor/stb_image.h>
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <vendor/stb_image_write.h>
 #include <GL/glew.h> 
+#include <filesystem>
+
+namespace fs = std::filesystem; 
 
 TextureAtlasService::TextureAtlasService()
 {
@@ -48,16 +55,37 @@ void TextureAtlasService::LoadAtlas(std::shared_ptr<KenneyPathRepository> repo)
         }
     }
 
-    if (texturesToLoad.empty())
+    // 2. Scan UI Directory for named textures using UIPathRepository
+    std::vector<std::pair<std::string, std::string>> namedTextures;
+    
+    auto pathRegistry = ServiceLocator::Get().GetService<PathRegistryService>();
+    if (pathRegistry)
+    {
+        auto uiRepo = pathRegistry->GetRepository<UIPathRepository>();
+        if (uiRepo)
+        {
+            auto paths = uiRepo->GetAllPaths();
+            for (const auto& [name, path] : paths)
+            {
+                namedTextures.push_back({name, path});
+            }
+        }
+        else
+        {
+             log->LogWarning("UIPathRepository not found in TextureAtlasService");
+        }
+    }
+
+    if (texturesToLoad.empty() && namedTextures.empty())
     {
         log->LogError("No textures found to pack into Atlas!");
         return;
     }
 
-    PackTextures(texturesToLoad);
+    PackTextures(texturesToLoad, namedTextures);
 }
 
-void TextureAtlasService::PackTextures(const std::vector<std::pair<KenneyIDs, std::string>>& textures)
+void TextureAtlasService::PackTextures(const std::vector<std::pair<KenneyIDs, std::string>>& textures, const std::vector<std::pair<std::string, std::string>>& namedTextures)
 {
     auto log = ServiceLocator::Get().GetService<ILoggerService>();
 
@@ -71,6 +99,7 @@ void TextureAtlasService::PackTextures(const std::vector<std::pair<KenneyIDs, st
     // Temporary buffer to hold all loaded image data
     struct LoadedImage {
         KenneyIDs id;
+        std::string name; // For named lookups
         unsigned char* data;
         int w, h;
     };
@@ -79,7 +108,7 @@ void TextureAtlasService::PackTextures(const std::vector<std::pair<KenneyIDs, st
     int maxWidth = 0;
     int maxHeight = 0;
 
-    // Load ALL images
+    // Load Integer-ID textures (Blocks)
     for (const auto& pair : textures)
     {
         int w, h, c;
@@ -94,9 +123,31 @@ void TextureAtlasService::PackTextures(const std::vector<std::pair<KenneyIDs, st
         unsigned char* data = stbi_load(pair.second.c_str(), &w, &h, &c, 4); // Force 4 channels (RGBA)
         if (data)
         {
-            images.push_back({pair.first, data, w, h});
+            images.push_back({pair.first, "", data, w, h});
             maxWidth = std::max(maxWidth, w);
             maxHeight = std::max(maxHeight, h);
+            log->Log("Loaded Texture: " + pair.second + " (" + std::to_string(w) + "x" + std::to_string(h) + ")");
+        }
+        else
+        {
+            log->LogError("Failed to load for Atlas: " + pair.second);
+        }
+    }
+
+    // Load String-ID textures (UI)
+    for (const auto& pair : namedTextures)
+    {
+        int w, h, c;
+        stbi_set_flip_vertically_on_load(false); 
+        
+        unsigned char* data = stbi_load(pair.second.c_str(), &w, &h, &c, 4); 
+        if (data)
+        {
+            // Use (KenneyIDs)0 as placeholder for ID, store name
+            images.push_back({(KenneyIDs)0, pair.first, data, w, h});
+            maxWidth = std::max(maxWidth, w);
+            maxHeight = std::max(maxHeight, h);
+            log->Log("Loaded UI Texture: " + pair.second + " (" + std::to_string(w) + "x" + std::to_string(h) + ")");
         }
         else
         {
@@ -152,6 +203,10 @@ void TextureAtlasService::PackTextures(const std::vector<std::pair<KenneyIDs, st
         float v1 = (float)(yOff + img.h) / m_atlasHeight; 
         
         m_uvMap[img.id] = { u0, v0, u1, v1 };
+        if (!img.name.empty())
+        {
+            m_uvStringMap[img.name] = { u0, v0, u1, v1 };
+        }
 
         stbi_image_free(img.data);
         
@@ -171,7 +226,9 @@ void TextureAtlasService::PackTextures(const std::vector<std::pair<KenneyIDs, st
 
     log->Log("Atlas Created: " + std::to_string(m_atlasWidth) + "x" + std::to_string(m_atlasHeight) + ", Textures: " + std::to_string(count));
     
-    // Debug: Save atlas? No.
+    // Debug: Save atlas
+    stbi_write_png("debug_atlas.png", m_atlasWidth, m_atlasHeight, 4, atlasData.data(), m_atlasWidth * 4);
+    log->Log("Saved debug_atlas.png");
 }
 
 UVRect TextureAtlasService::GetUVs(KenneyIDs id)
@@ -181,4 +238,13 @@ UVRect TextureAtlasService::GetUVs(KenneyIDs id)
         return m_uvMap[id];
     }
     return {0,0,1,1}; // Fallback: Full texture?
+}
+
+UVRect TextureAtlasService::GetUVs(const std::string& name)
+{
+    if (m_uvStringMap.find(name) != m_uvStringMap.end())
+    {
+        return m_uvStringMap[name];
+    }
+    return {0,0,1,1}; 
 }

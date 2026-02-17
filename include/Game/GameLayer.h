@@ -15,9 +15,11 @@ public:
     virtual void OnUpdate(float deltaTime);
     virtual void OnRender();
     virtual void OnEvent(SDL_Event& e);
+    
+    void RenderAtlasDebug(class RenderService* renderer);
 
 private:
-    std::shared_ptr<Camera> m_camera;
+    std::shared_ptr<class Camera> m_camera;
     std::unique_ptr<Player> m_player;
 
     // Shader IDs
@@ -26,5 +28,10 @@ private:
     unsigned int m_textureID = 0;
 
     enum class RenderStyle { MINECRAFT, BORDERLANDS, MOCO };
+    int m_debugMode = 0;
+    
     RenderStyle m_currentStyle = RenderStyle::BORDERLANDS;
+
+    enum class GameState { MainMenu, Gameplay, DebugOverlay };
+    GameState m_currentState = GameState::MainMenu;
 };

@@ -2,6 +2,9 @@
 #include "Engine/Services/ServiceLocator.h"
 #include "Engine/Services/RenderService.h"
 #include "Engine/Services/ILoggerService.h"
+#include "Engine/Services/PathRegistryService.h"
+#include "Engine/Services/UIPathRepository.h"
+#include "Engine/Services/FontPathRepository.h"
 #include <iostream>
 
 ResourceService::ResourceService()
@@ -16,7 +19,33 @@ ResourceService::~ResourceService()
 void ResourceService::OnInitialize()
 {
     auto log = ServiceLocator::Get().GetService<ILoggerService>();
-    log->Log("Resource Service Initialized.");
+    if(log) log->Log("Resource Service Initialized.");
+
+    // Register Path Repositories
+    auto pathRegistry = std::make_shared<PathRegistryService>(); // Actually Engine or GameLayer owns this... 
+    // Wait, PathRegistryService is a service itself.
+    // Let's assume PathRegistryService is already registered by Engine.cpp.
+    // IF NOT, we should check availability. 
+    
+    // Actually, based on previous code, ResourceService didn't own PathRegistry.
+    // The user requested: "Register these new repositories in ResourceService::OnInitialize."
+    // But usually PathRegistry holds Repos. 
+    // Let's try to get PathRegistry and add repos to it.
+    
+    auto registry = ServiceLocator::Get().GetService<PathRegistryService>();
+    if (registry)
+    {
+        registry->RegisterRepository<UIPathRepository>(std::make_shared<UIPathRepository>());
+        registry->RegisterRepository<FontPathRepository>(std::make_shared<FontPathRepository>());
+        
+        // Initialize them
+        registry->GetRepository<UIPathRepository>()->OnInitialize();
+        registry->GetRepository<FontPathRepository>()->OnInitialize();
+    }
+    else
+    {
+        if(log) log->LogWarning("PathRegistryService not found in ResourceService::OnInitialize");
+    }
 }
 
 void ResourceService::Clean()

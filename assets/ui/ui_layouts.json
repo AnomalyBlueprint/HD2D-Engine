@@ -1,0 +1,952 @@
+{
+  "meta": {
+    "generated": "2026-02-17T06:38:20.721Z",
+    "version": "2.3"
+  },
+  "settings": {
+    "width": 1024,
+    "height": 768
+  },
+  "scenes": {
+    "main_menu": [
+      {
+        "id": "mm_bg_panel",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 262,
+          "y": 100,
+          "w": 500,
+          "h": 568
+        },
+        "style": {
+          "bg": "#171717",
+          "border": "#404040"
+        },
+        "properties": {
+          "layoutMode": "free"
+        }
+      },
+      {
+        "id": "mm_lbl_title",
+        "type": "LABEL",
+        "geometry": {
+          "x": 362,
+          "y": 130,
+          "w": 300,
+          "h": 40
+        },
+        "style": {
+          "color": "#ffffff"
+        },
+        "properties": {
+          "text": "PROJECT EPOCH",
+          "fontSize": 32,
+          "align": "center"
+        }
+      },
+      {
+        "id": "btn_start",
+        "type": "BUTTON",
+        "geometry": {
+          "x": 412,
+          "y": 200,
+          "w": 200,
+          "h": 40
+        },
+        "style": {
+          "bg": "#059669",
+          "color": "#ffffff"
+        },
+        "properties": {
+          "text": "Start Game",
+          "actionId": "START_GAME"
+        }
+      },
+      {
+        "id": "btn_gen_world",
+        "type": "BUTTON",
+        "geometry": {
+          "x": 412,
+          "y": 250,
+          "w": 200,
+          "h": 40
+        },
+        "style": {
+          "bg": "#0284c7",
+          "color": "#ffffff"
+        },
+        "properties": {
+          "text": "Generate World",
+          "actionId": "GEN_WORLD"
+        }
+      },
+      {
+        "id": "world_list_container",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 312,
+          "y": 320,
+          "w": 400,
+          "h": 300
+        },
+        "style": {
+          "bg": "#0a0a0a",
+          "border": "#262626"
+        },
+        "properties": {
+          "layoutMode": "vertical",
+          "scroll": true
+        }
+      },
+      {
+        "id": "lbl_worlds_header",
+        "type": "LABEL",
+        "geometry": {
+          "x": 332,
+          "y": 330,
+          "w": 100,
+          "h": 20
+        },
+        "style": {
+          "color": "#737373"
+        },
+        "properties": {
+          "text": "SAVED WORLDS",
+          "fontSize": 10,
+          "align": "left"
+        }
+      },
+      {
+        "id": "world_item_1",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 322,
+          "y": 360,
+          "w": 380,
+          "h": 50
+        },
+        "style": {
+          "bg": "#262626",
+          "border": "#404040"
+        },
+        "properties": {
+          "layoutMode": "horizontal"
+        }
+      },
+      {
+        "id": "lbl_w1_name",
+        "type": "LABEL",
+        "geometry": {
+          "x": 332,
+          "y": 375,
+          "w": 200,
+          "h": 20
+        },
+        "style": {
+          "color": "#e5e5e5"
+        },
+        "properties": {
+          "text": "Epoch_Run_004 (Year 210)",
+          "fontSize": 12,
+          "align": "left"
+        }
+      },
+      {
+        "id": "btn_del_w1",
+        "type": "BUTTON",
+        "geometry": {
+          "x": 622,
+          "y": 370,
+          "w": 70,
+          "h": 30
+        },
+        "style": {
+          "bg": "#9f1239",
+          "color": "#ffffff"
+        },
+        "properties": {
+          "text": "DELETE",
+          "actionId": "DEL_WORLD_1"
+        }
+      },
+      {
+        "id": "world_item_2",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 322,
+          "y": 420,
+          "w": 380,
+          "h": 50
+        },
+        "style": {
+          "bg": "#262626",
+          "border": "#404040"
+        },
+        "properties": {
+          "layoutMode": "horizontal"
+        }
+      },
+      {
+        "id": "lbl_w2_name",
+        "type": "LABEL",
+        "geometry": {
+          "x": 332,
+          "y": 435,
+          "w": 200,
+          "h": 20
+        },
+        "style": {
+          "color": "#e5e5e5"
+        },
+        "properties": {
+          "text": "Iron_Fortress_01 (Year 45)",
+          "fontSize": 12,
+          "align": "left"
+        }
+      },
+      {
+        "id": "btn_del_w2",
+        "type": "BUTTON",
+        "geometry": {
+          "x": 622,
+          "y": 430,
+          "w": 70,
+          "h": 30
+        },
+        "style": {
+          "bg": "#9f1239",
+          "color": "#ffffff"
+        },
+        "properties": {
+          "text": "DELETE",
+          "actionId": "DEL_WORLD_2"
+        }
+      }
+    ],
+    "popups": [
+      {
+        "id": "popup_backdrop",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 0,
+          "y": 0,
+          "w": 1024,
+          "h": 768
+        },
+        "style": {
+          "bg": "#000000cc",
+          "border": "transparent"
+        },
+        "properties": {
+          "layoutMode": "free"
+        }
+      },
+      {
+        "id": "modal_window",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 312,
+          "y": 250,
+          "w": 400,
+          "h": 200
+        },
+        "style": {
+          "bg": "#171717",
+          "border": "#525252"
+        },
+        "properties": {
+          "layoutMode": "vertical"
+        }
+      },
+      {
+        "id": "modal_title",
+        "type": "LABEL",
+        "geometry": {
+          "x": 332,
+          "y": 270,
+          "w": 360,
+          "h": 30
+        },
+        "style": {
+          "color": "#ffffff"
+        },
+        "properties": {
+          "text": "CONFIRMATION",
+          "fontSize": 16,
+          "align": "center"
+        }
+      },
+      {
+        "id": "modal_desc",
+        "type": "LABEL",
+        "geometry": {
+          "x": 332,
+          "y": 310,
+          "w": 360,
+          "h": 60
+        },
+        "style": {
+          "color": "#a3a3a3"
+        },
+        "properties": {
+          "text": "Are you sure you want to perform this action? This cannot be undone.",
+          "fontSize": 12,
+          "align": "center"
+        }
+      },
+      {
+        "id": "modal_btn_row",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 332,
+          "y": 390,
+          "w": 360,
+          "h": 40
+        },
+        "style": {
+          "bg": "transparent",
+          "border": "transparent"
+        },
+        "properties": {
+          "layoutMode": "horizontal"
+        }
+      },
+      {
+        "id": "btn_confirm",
+        "type": "BUTTON",
+        "geometry": {
+          "x": 332,
+          "y": 390,
+          "w": 170,
+          "h": 40
+        },
+        "style": {
+          "bg": "#059669",
+          "color": "#ffffff"
+        },
+        "properties": {
+          "text": "CONFIRM",
+          "actionId": "MODAL_CONFIRM"
+        }
+      },
+      {
+        "id": "btn_cancel",
+        "type": "BUTTON",
+        "geometry": {
+          "x": 522,
+          "y": 390,
+          "w": 170,
+          "h": 40
+        },
+        "style": {
+          "bg": "#404040",
+          "color": "#ffffff"
+        },
+        "properties": {
+          "text": "CANCEL",
+          "actionId": "MODAL_CANCEL"
+        }
+      }
+    ],
+    "gameplay": [
+      {
+        "id": "hud_top_bar",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 10,
+          "y": 10,
+          "w": 600,
+          "h": 60
+        },
+        "style": {
+          "bg": "transparent",
+          "border": "transparent"
+        },
+        "properties": {
+          "layoutMode": "horizontal"
+        }
+      },
+      {
+        "id": "hotbar_slot_0",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 10,
+          "y": 10,
+          "w": 40,
+          "h": 40
+        },
+        "style": {
+          "bg": "#262626",
+          "border": "#fbbf24"
+        },
+        "properties": {
+          "layoutMode": "free"
+        }
+      },
+      {
+        "id": "hotbar_slot_1",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 54,
+          "y": 10,
+          "w": 40,
+          "h": 40
+        },
+        "style": {
+          "bg": "#262626",
+          "border": "#525252"
+        },
+        "properties": {
+          "layoutMode": "free"
+        }
+      },
+      {
+        "id": "hotbar_slot_2",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 98,
+          "y": 10,
+          "w": 40,
+          "h": 40
+        },
+        "style": {
+          "bg": "#262626",
+          "border": "#525252"
+        },
+        "properties": {
+          "layoutMode": "free"
+        }
+      },
+      {
+        "id": "hotbar_slot_3",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 142,
+          "y": 10,
+          "w": 40,
+          "h": 40
+        },
+        "style": {
+          "bg": "#262626",
+          "border": "#525252"
+        },
+        "properties": {
+          "layoutMode": "free"
+        }
+      },
+      {
+        "id": "hotbar_slot_4",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 186,
+          "y": 10,
+          "w": 40,
+          "h": 40
+        },
+        "style": {
+          "bg": "#262626",
+          "border": "#525252"
+        },
+        "properties": {
+          "layoutMode": "free"
+        }
+      },
+      {
+        "id": "hotbar_slot_5",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 230,
+          "y": 10,
+          "w": 40,
+          "h": 40
+        },
+        "style": {
+          "bg": "#262626",
+          "border": "#525252"
+        },
+        "properties": {
+          "layoutMode": "free"
+        }
+      },
+      {
+        "id": "hotbar_slot_6",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 274,
+          "y": 10,
+          "w": 40,
+          "h": 40
+        },
+        "style": {
+          "bg": "#262626",
+          "border": "#525252"
+        },
+        "properties": {
+          "layoutMode": "free"
+        }
+      },
+      {
+        "id": "hotbar_slot_7",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 318,
+          "y": 10,
+          "w": 40,
+          "h": 40
+        },
+        "style": {
+          "bg": "#262626",
+          "border": "#525252"
+        },
+        "properties": {
+          "layoutMode": "free"
+        }
+      },
+      {
+        "id": "hotbar_slot_8",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 362,
+          "y": 10,
+          "w": 40,
+          "h": 40
+        },
+        "style": {
+          "bg": "#262626",
+          "border": "#525252"
+        },
+        "properties": {
+          "layoutMode": "free"
+        }
+      },
+      {
+        "id": "hotbar_slot_9",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 406,
+          "y": 10,
+          "w": 40,
+          "h": 40
+        },
+        "style": {
+          "bg": "#262626",
+          "border": "#525252"
+        },
+        "properties": {
+          "layoutMode": "free"
+        }
+      },
+      {
+        "id": "btn_inventory",
+        "type": "BUTTON",
+        "geometry": {
+          "x": 460,
+          "y": 10,
+          "w": 40,
+          "h": 40
+        },
+        "style": {
+          "bg": "#4f46e5",
+          "color": "#fff",
+          "image": "tile_0072"
+        },
+        "properties": {
+          "text": "",
+          "actionId": "TOGGLE_INVENTORY"
+        }
+      },
+      {
+        "id": "bar_health",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 800,
+          "y": 10,
+          "w": 200,
+          "h": 15
+        },
+        "style": {
+          "bg": "#9f1239",
+          "border": "#000"
+        },
+        "properties": {
+          "layoutMode": "free"
+        }
+      },
+      {
+        "id": "bar_mana",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 800,
+          "y": 30,
+          "w": 200,
+          "h": 15
+        },
+        "style": {
+          "bg": "#2563eb",
+          "border": "#000"
+        },
+        "properties": {
+          "layoutMode": "free"
+        }
+      }
+    ],
+    "debug_overlay": [
+      {
+        "id": "debug_root",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 0,
+          "y": 0,
+          "w": 1024,
+          "h": 768
+        },
+        "style": {
+          "bg": "#000000",
+          "border": "transparent"
+        },
+        "properties": {
+          "layoutMode": "free"
+        }
+      },
+      {
+        "id": "map_visualizer",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 250,
+          "y": 50,
+          "w": 512,
+          "h": 512
+        },
+        "style": {
+          "bg": "#111",
+          "border": "#333"
+        },
+        "properties": {
+          "layoutMode": "free"
+        }
+      },
+      {
+        "id": "map_placeholder_text",
+        "type": "LABEL",
+        "geometry": {
+          "x": 350,
+          "y": 300,
+          "w": 312,
+          "h": 20
+        },
+        "style": {
+          "color": "#333"
+        },
+        "properties": {
+          "text": "MACRO GRID VISUALIZATION (256x256)",
+          "fontSize": 12,
+          "align": "center"
+        }
+      },
+      {
+        "id": "panel_controls",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 10,
+          "y": 50,
+          "w": 230,
+          "h": 512
+        },
+        "style": {
+          "bg": "#171717",
+          "border": "#404040"
+        },
+        "properties": {
+          "layoutMode": "vertical"
+        }
+      },
+      {
+        "id": "lbl_view_modes",
+        "type": "LABEL",
+        "geometry": {
+          "x": 20,
+          "y": 60,
+          "w": 200,
+          "h": 20
+        },
+        "style": {
+          "color": "#fbbf24"
+        },
+        "properties": {
+          "text": "VIEW MODES (F-Keys)",
+          "fontSize": 12,
+          "align": "left"
+        }
+      },
+      {
+        "id": "chk_political",
+        "type": "CHECKBOX",
+        "geometry": {
+          "x": 20,
+          "y": 90,
+          "w": 20,
+          "h": 20
+        },
+        "style": {
+          "bg": "#262626",
+          "border": "#525252"
+        },
+        "properties": {
+          "checked": true,
+          "label": "F1: Political Borders"
+        }
+      },
+      {
+        "id": "lbl_pol",
+        "type": "LABEL",
+        "geometry": {
+          "x": 50,
+          "y": 90,
+          "w": 150,
+          "h": 20
+        },
+        "style": {
+          "color": "#ccc"
+        },
+        "properties": {
+          "text": "Political Borders",
+          "fontSize": 11,
+          "align": "left"
+        }
+      },
+      {
+        "id": "chk_biomes",
+        "type": "CHECKBOX",
+        "geometry": {
+          "x": 20,
+          "y": 120,
+          "w": 20,
+          "h": 20
+        },
+        "style": {
+          "bg": "#262626",
+          "border": "#525252"
+        },
+        "properties": {
+          "checked": false,
+          "label": "F2: Biomes"
+        }
+      },
+      {
+        "id": "lbl_bio",
+        "type": "LABEL",
+        "geometry": {
+          "x": 50,
+          "y": 120,
+          "w": 150,
+          "h": 20
+        },
+        "style": {
+          "color": "#ccc"
+        },
+        "properties": {
+          "text": "Biomes",
+          "fontSize": 11,
+          "align": "left"
+        }
+      },
+      {
+        "id": "chk_economy",
+        "type": "CHECKBOX",
+        "geometry": {
+          "x": 20,
+          "y": 150,
+          "w": 20,
+          "h": 20
+        },
+        "style": {
+          "bg": "#262626",
+          "border": "#525252"
+        },
+        "properties": {
+          "checked": false,
+          "label": "F3: Economy Heatmap"
+        }
+      },
+      {
+        "id": "lbl_eco",
+        "type": "LABEL",
+        "geometry": {
+          "x": 50,
+          "y": 150,
+          "w": 150,
+          "h": 20
+        },
+        "style": {
+          "color": "#ccc"
+        },
+        "properties": {
+          "text": "Trade Wealth",
+          "fontSize": 11,
+          "align": "left"
+        }
+      },
+      {
+        "id": "chk_ruin",
+        "type": "CHECKBOX",
+        "geometry": {
+          "x": 20,
+          "y": 180,
+          "w": 20,
+          "h": 20
+        },
+        "style": {
+          "bg": "#262626",
+          "border": "#525252"
+        },
+        "properties": {
+          "checked": false,
+          "label": "F4: Ruination"
+        }
+      },
+      {
+        "id": "lbl_ruin",
+        "type": "LABEL",
+        "geometry": {
+          "x": 50,
+          "y": 180,
+          "w": 150,
+          "h": 20
+        },
+        "style": {
+          "color": "#ccc"
+        },
+        "properties": {
+          "text": "Ruination",
+          "fontSize": 11,
+          "align": "left"
+        }
+      },
+      {
+        "id": "panel_timeline",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 250,
+          "y": 580,
+          "w": 512,
+          "h": 100
+        },
+        "style": {
+          "bg": "#171717",
+          "border": "#404040"
+        },
+        "properties": {
+          "layoutMode": "free"
+        }
+      },
+      {
+        "id": "lbl_timeline",
+        "type": "LABEL",
+        "geometry": {
+          "x": 260,
+          "y": 590,
+          "w": 200,
+          "h": 20
+        },
+        "style": {
+          "color": "#fbbf24"
+        },
+        "properties": {
+          "text": "HISTORY SCRUBBER",
+          "fontSize": 12,
+          "align": "left"
+        }
+      },
+      {
+        "id": "slider_year",
+        "type": "SLIDER",
+        "geometry": {
+          "x": 260,
+          "y": 620,
+          "w": 490,
+          "h": 30
+        },
+        "style": {
+          "bg": "#333",
+          "border": "#555"
+        },
+        "properties": {
+          "min": 0,
+          "max": 500,
+          "value": 0
+        }
+      },
+      {
+        "id": "lbl_year_val",
+        "type": "LABEL",
+        "geometry": {
+          "x": 260,
+          "y": 650,
+          "w": 490,
+          "h": 20
+        },
+        "style": {
+          "color": "#fff"
+        },
+        "properties": {
+          "text": "Current Year: 0 (Genesis)",
+          "fontSize": 12,
+          "align": "center"
+        }
+      },
+      {
+        "id": "panel_inspector",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 780,
+          "y": 50,
+          "w": 230,
+          "h": 512
+        },
+        "style": {
+          "bg": "#171717",
+          "border": "#404040"
+        },
+        "properties": {
+          "layoutMode": "vertical"
+        }
+      },
+      {
+        "id": "lbl_inspector",
+        "type": "LABEL",
+        "geometry": {
+          "x": 790,
+          "y": 60,
+          "w": 200,
+          "h": 20
+        },
+        "style": {
+          "color": "#fbbf24"
+        },
+        "properties": {
+          "text": "TILE INSPECTOR",
+          "fontSize": 12,
+          "align": "left"
+        }
+      },
+      {
+        "id": "lbl_insp_hint",
+        "type": "LABEL",
+        "geometry": {
+          "x": 790,
+          "y": 90,
+          "w": 210,
+          "h": 60
+        },
+        "style": {
+          "color": "#666"
+        },
+        "properties": {
+          "text": "Click any pixel on the map to view Macro Data (Civ, Resources, History).",
+          "fontSize": 10,
+          "align": "left"
+        }
+      }
+    ]
+  }
+}

@@ -1,7 +1,13 @@
 #include "Engine/Services/KenneyPathRepository.h"
+#include "Engine/Services/ServiceLocator.h"
+#include "Engine/Services/ILoggerService.h"
+#include <iostream>
 
 void KenneyPathRepository::OnInitialize()
 {
+    auto log = ServiceLocator::Get().GetService<ILoggerService>();
+    if(log) log->Log("KenneyPathRepository::OnInitialize called.");
+
     std::string base = "assets/textures/kenney_retro-textures-1/PNG/";
 
     m_paths[KenneyIDs::Door_Metal_Frame] = base + "door_metal_frame.png";
@@ -121,6 +127,8 @@ void KenneyPathRepository::OnInitialize()
     m_paths[KenneyIDs::Window_Tall_Rounded_Lit] = base + "window_tall_rounded_lit.png";
     m_paths[KenneyIDs::Window_Tall_Vertical] = base + "window_tall_vertical.png";
     m_paths[KenneyIDs::Window_Tall_Vertical_Lit] = base + "window_tall_vertical_lit.png";
+    
+    if(log) log->Log("KenneyPathRepository initialized with " + std::to_string(m_paths.size()) + " paths.");
 }
 
 std::string KenneyPathRepository::GetPath(int assetID)

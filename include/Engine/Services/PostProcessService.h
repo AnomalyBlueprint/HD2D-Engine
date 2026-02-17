@@ -3,8 +3,17 @@
 #include <GL/glew.h>
 #include <vector>
 #include <memory>
+#include <map>
+#include <string>
 #include "Engine/Services/IShaderService.h"
 #include <glm/glm.hpp>
+
+struct PostProcessLayer {
+    unsigned int fbo = 0;
+    unsigned int colorTex = 0;
+    unsigned int normalTex = 0;
+    unsigned int depthTex = 0;
+};
 
 /// <summary>
 /// Manages usage of Framebuffer Objects (FBO) for post-processing effects.
@@ -21,9 +30,9 @@ public:
     void Clean() override; 
 
     /// <summary>
-    /// Binds the custom framebuffer. All subsequent rendering goes to texture.
+    /// Binds the custom framebuffer of the specified layer.
     /// </summary>
-    void Bind();
+    void SetTargetLayer(const std::string& layerName);
 
     /// <summary>
     /// Unbinds the framebuffer, returning rendering to the default window.
@@ -31,22 +40,23 @@ public:
     void Unbind();
     
     /// <summary>
-    /// Renders a full-screen quad applying the edge-detection shader.
+    /// Renders a layer using the Edge Detection shader.
     /// </summary>
-    void RenderRect(std::shared_ptr<IShaderService> shaders, unsigned int shaderID, float normalThreshold, float depthThreshold, glm::vec4 outlineColor);
+    void RenderLayerWithEdges(const std::string& layerName, std::shared_ptr<IShaderService> shaders, unsigned int shaderID, float normalThreshold, float depthThreshold, glm::vec4 outlineColor);
 
-    unsigned int GetColorTexture() const { return m_colorTex; }
-    unsigned int GetNormalTexture() const { return m_normalTex; }
-    unsigned int GetDepthTexture() const { return m_depthTex; }
+    /// <summary>
+    /// Renders a layer as a simple textured quad (for UI overlay).
+    /// </summary>
+    void RenderLayerComposite(const std::string& layerName, std::shared_ptr<IShaderService> shaders, unsigned int shaderID);
+
+    unsigned int GetTexture(const std::string& layerName);
 
 private:
-    void SetupFBO(int width, int height);
+    void CreateLayer(const std::string& name, bool useDepthNormal);
     void SetupQuad();
 
-    unsigned int m_fbo;
-    unsigned int m_colorTex;
-    unsigned int m_normalTex;
-    unsigned int m_depthTex; 
+    std::map<std::string, PostProcessLayer> m_layers;
+    std::string m_currentLayer;
 
     unsigned int m_quadVAO;
     unsigned int m_quadVBO;
