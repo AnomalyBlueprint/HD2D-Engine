@@ -1,6 +1,6 @@
 CXX      := g++
-CXXFLAGS := -std=c++17 -Wall -Wextra -g -Iinclude -Iinclude/vendor -I/usr/local/include -I/opt/local/include -I/opt/homebrew/include $(shell sdl2-config --cflags)
-LDFLAGS  := -framework OpenGL -L/usr/local/lib -L/opt/local/lib -L/opt/homebrew/lib -lGLEW $(shell sdl2-config --libs)
+CXXFLAGS := -std=c++17 -Wall -Wextra -g -Iinclude -Iinclude/vendor -I/usr/local/include -I/opt/local/include -I/opt/homebrew/include -I/opt/homebrew/Cellar/sqlite/3.51.2/include $(shell sdl2-config --cflags)
+LDFLAGS  := -framework OpenGL -L/usr/local/lib -L/opt/local/lib -L/opt/homebrew/lib -lGLEW -lsqlite3 $(shell sdl2-config --libs)
 
 # Recursive wildcard to find all .cpp files in src/Engine, src/Game, etc.
 rwildcard=$(foreach d,$(wildcard $(1)*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))

@@ -28,6 +28,11 @@ public:
     /// </summary>
     virtual void SwapBuffers() = 0;
 
+    /// <summary>
+    /// Enables or disables depth testing.
+    /// </summary>
+    virtual void SetDepthTest(bool enable) = 0;
+
     // --- Mesh Rendering ---
 
     /// <summary>

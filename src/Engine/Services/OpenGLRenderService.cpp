@@ -129,6 +129,14 @@ void OpenGLRenderService::SwapBuffers()
     SDL_GL_SwapWindow(window);
 }
 
+void OpenGLRenderService::SetDepthTest(bool enable)
+{
+    if (enable)
+        glEnable(GL_DEPTH_TEST);
+    else
+        glDisable(GL_DEPTH_TEST);
+}
+
 void OpenGLRenderService::Clean()
 {
     if (m_batchVAO != 0) glDeleteVertexArrays(1, &m_batchVAO);

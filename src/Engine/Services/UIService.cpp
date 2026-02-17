@@ -164,7 +164,11 @@ void UIService::Render(RenderService* renderer)
         if (!el.style.image.empty() && atlas)
         {
              Sprite imgSprite;
-             imgSprite.Position = glm::vec2(el.geometry.x, el.geometry.y);
+             // Convert Top-Left layout to Center position for DrawSprite
+             imgSprite.Position = glm::vec2(
+                 el.geometry.x + el.geometry.w / 2.0f, 
+                 el.geometry.y + el.geometry.h / 2.0f
+             );
              imgSprite.Size = glm::vec2(el.geometry.w, el.geometry.h);
              imgSprite.Color = glm::vec4(1.0f); // White tint for texture
              imgSprite.TextureID = atlas->GetTextureID();
@@ -178,7 +182,11 @@ void UIService::Render(RenderService* renderer)
         else if (el.style.bg.a > 0.0f)
         {
             Sprite bgSprite;
-            bgSprite.Position = glm::vec2(el.geometry.x, el.geometry.y);
+            // Convert Top-Left layout to Center position for DrawSprite
+            bgSprite.Position = glm::vec2(
+                el.geometry.x + el.geometry.w / 2.0f, 
+                el.geometry.y + el.geometry.h / 2.0f
+            );
             bgSprite.Size = glm::vec2(el.geometry.w, el.geometry.h);
             bgSprite.Color = el.style.bg;
             bgSprite.TextureID = 0; // Solid color
