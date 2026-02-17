@@ -1466,7 +1466,7 @@
         }
       }
     ],
-    "debug_overlay": [
+    "macroWorldGeneration": [
       {
         "id": "debug_root",
         "type": "CONTAINER",
@@ -1829,6 +1829,62 @@
         "properties": {
           "text": "Click any pixel on the map to view Macro Data (Civ, Resources, History).",
           "fontSize": 10,
+          "align": "left",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "btn_generate",
+        "type": "BUTTON",
+        "geometry": {
+          "x": 800,
+          "y": 700,
+          "w": 200,
+          "h": 50
+        },
+        "style": {
+          "bg": "#059669",
+          "color": "#ffffff"
+        },
+        "properties": {
+          "text": "GENERATE WORLD",
+          "actionId": "GEN_MACRO_WORLD",
+          "fontName": "Kenney Pixel",
+          "fontSize": 20
+        }
+      },
+      {
+        "id": "panel_log",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 250,
+          "y": 600,
+          "w": 512,
+          "h": 100
+        },
+        "style": {
+          "bg": "#000000",
+          "border": "#333333"
+        },
+        "properties": {
+          "layoutMode": "free"
+        }
+      },
+      {
+        "id": "lbl_log_output",
+        "type": "LABEL",
+        "geometry": {
+          "x": 260,
+          "y": 610,
+          "w": 490,
+          "h": 80
+        },
+        "style": {
+          "color": "#00ff00"
+        },
+        "properties": {
+          "text": "Ready to generate...",
+          "fontSize": 12,
           "align": "left",
           "fontName": "Kenney Pixel"
         }

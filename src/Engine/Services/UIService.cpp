@@ -112,6 +112,20 @@ void UIService::SetScene(const std::string& sceneName)
     }
 }
 
+void UIService::SetElementText(const std::string& sceneName, const std::string& elementId, const std::string& text)
+{
+    if (m_layouts.find(sceneName) == m_layouts.end()) return;
+
+    for (auto& el : m_layouts[sceneName])
+    {
+        if (el.id == elementId)
+        {
+            el.properties.text = text;
+            return;
+        }
+    }
+}
+
 void UIService::GetScreenSize(int& w, int& h)
 {
     w = m_width;

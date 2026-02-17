@@ -52,5 +52,8 @@ public:
 
     virtual std::string GetLastAction() = 0;
     virtual void ConsumeAction() = 0;
+
+    // Dynamic Updates
+    virtual void SetElementText(const std::string& sceneName, const std::string& elementId, const std::string& text) = 0;
 };
 

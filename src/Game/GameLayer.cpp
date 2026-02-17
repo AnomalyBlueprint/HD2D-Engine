@@ -192,6 +192,16 @@ void GameLayer::OnUpdate(float deltaTime)
                         }
                     }
                 }
+                else if (action == "GEN_MACRO_WORLD")
+                {
+                    auto macroService = ServiceLocator::Get().GetService<IMacroService>();
+                    if (macroService) 
+                    {
+                        int seed = rand();
+                        macroService->GenerateSimulation(seed);
+                        if (uiService) uiService->SetElementText("macroWorldGeneration", "lbl_log_output", "Generated Macro World. Seed: " + std::to_string(seed));
+                    }
+                }
                 else if (action == "TOGGLE_POLITICAL") 
                 {
                     auto macro = ServiceLocator::Get().GetService<IMacroService>();
@@ -643,7 +653,7 @@ void GameLayer::SwitchScene(GameState newState)
     }
     else if (m_currentState == GameState::DebugOverlay)
     {
-        if (uiService) uiService->SetScene("debug_overlay");
+        if (uiService) uiService->SetScene("macroWorldGeneration");
     }
     else if (m_currentState == GameState::CharacterCreation)
     {

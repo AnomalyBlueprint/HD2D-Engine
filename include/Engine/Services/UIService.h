@@ -68,6 +68,7 @@ public:
 
     std::string GetLastAction() override;
     void ConsumeAction() override;
+    void SetElementText(const std::string& sceneName, const std::string& elementId, const std::string& text) override;
 
 protected:
     void OnInitialize() override;
