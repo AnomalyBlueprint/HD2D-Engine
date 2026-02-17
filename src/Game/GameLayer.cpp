@@ -128,6 +128,16 @@ void GameLayer::OnUpdate(float deltaTime)
 
         // F3 Toggle Removed - Moved to UI (Generate World -> Debug Overlay)
         
+        // --- Debug Scene Switching ---
+        if (inputService->IsKeyDown(SDL_SCANCODE_F1)) SwitchScene(GameState::MainMenu);
+        if (inputService->IsKeyDown(SDL_SCANCODE_F2)) SwitchScene(GameState::Gameplay);
+        if (inputService->IsKeyDown(SDL_SCANCODE_F3)) SwitchScene(GameState::DebugOverlay);
+        if (inputService->IsKeyDown(SDL_SCANCODE_F4)) SwitchScene(GameState::CharacterCreation);
+        if (inputService->IsKeyDown(SDL_SCANCODE_F5)) SwitchScene(GameState::PixelForge);
+        if (inputService->IsKeyDown(SDL_SCANCODE_F6)) SwitchScene(GameState::TradeInterface);
+        if (inputService->IsKeyDown(SDL_SCANCODE_F7)) SwitchScene(GameState::DialogueWindow);
+        if (inputService->IsKeyDown(SDL_SCANCODE_F8)) SwitchScene(GameState::DeathSummary);
+        
         // Map Mode Toggles - REMOVED (Moved to UI)
         
         if (m_currentState == GameState::Gameplay)
@@ -634,5 +644,25 @@ void GameLayer::SwitchScene(GameState newState)
     else if (m_currentState == GameState::DebugOverlay)
     {
         if (uiService) uiService->SetScene("debug_overlay");
+    }
+    else if (m_currentState == GameState::CharacterCreation)
+    {
+        if (uiService) uiService->SetScene("character_creation");
+    }
+    else if (m_currentState == GameState::PixelForge)
+    {
+        if (uiService) uiService->SetScene("pixel_forge");
+    }
+    else if (m_currentState == GameState::TradeInterface)
+    {
+        if (uiService) uiService->SetScene("trade_interface");
+    }
+    else if (m_currentState == GameState::DialogueWindow)
+    {
+        if (uiService) uiService->SetScene("dialogue_window");
+    }
+    else if (m_currentState == GameState::DeathSummary)
+    {
+        if (uiService) uiService->SetScene("death_summary");
     }
 }

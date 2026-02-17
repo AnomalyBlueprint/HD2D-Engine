@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated": "2026-02-17T18:02:04.970Z",
+    "generated": "2026-02-17T18:55:57.459Z",
     "version": "2.3"
   },
   "settings": {
@@ -122,9 +122,9 @@
         }
       }
     ],
-    "popups": [
+    "character_creation": [
       {
-        "id": "popup_backdrop",
+        "id": "cc_root",
         "type": "CONTAINER",
         "geometry": {
           "x": 0,
@@ -133,180 +133,255 @@
           "h": 768
         },
         "style": {
-          "bg": "#000000cc",
+          "bg": "#0a0a0a",
           "border": "transparent"
         },
         "properties": {
-          "layoutMode": "free",
-          "prefabHostId": "MODAL_TEMPLATE"
-        }
-      }
-    ],
-    "prefabs": [
-      {
-        "id": "tpl_world_item",
-        "type": "CONTAINER",
-        "geometry": {
-          "x": 50,
-          "y": 50,
-          "w": 380,
-          "h": 50
-        },
-        "style": {
-          "bg": "#262626",
-          "border": "#404040"
-        },
-        "properties": {
-          "layoutMode": "horizontal",
-          "prefabId": "WORLD_ITEM_TEMPLATE"
+          "layoutMode": "free"
         }
       },
       {
-        "id": "tpl_lbl_name",
+        "id": "cc_panel_main",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 100,
+          "y": 50,
+          "w": 400,
+          "h": 600
+        },
+        "style": {
+          "bg": "#171717",
+          "border": "#404040"
+        },
+        "properties": {
+          "layoutMode": "free"
+        }
+      },
+      {
+        "id": "cc_lbl_header",
         "type": "LABEL",
         "geometry": {
-          "x": 60,
-          "y": 65,
-          "w": 200,
+          "x": 120,
+          "y": 70,
+          "w": 360,
+          "h": 30
+        },
+        "style": {
+          "color": "#fbbf24"
+        },
+        "properties": {
+          "text": "GENESIS: NEW LINEAGE",
+          "fontSize": 24,
+          "align": "center",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "cc_input_name",
+        "type": "INPUT_TEXT",
+        "geometry": {
+          "x": 150,
+          "y": 120,
+          "w": 300,
+          "h": 40
+        },
+        "style": {
+          "bg": "#262626",
+          "color": "#fff",
+          "border": "#525252"
+        },
+        "properties": {
+          "placeholder": "Enter Name...",
+          "fontSize": 16
+        }
+      },
+      {
+        "id": "cc_lbl_race",
+        "type": "LABEL",
+        "geometry": {
+          "x": 150,
+          "y": 180,
+          "w": 300,
           "h": 20
         },
         "style": {
-          "color": "#e5e5e5"
+          "color": "#a3a3a3"
         },
         "properties": {
-          "text": "{WorldName}",
+          "text": "ENTITY BASIS (Race)",
           "fontSize": 12,
           "align": "left",
           "fontName": "Kenney Pixel"
         }
       },
       {
-        "id": "tpl_btn_del",
+        "id": "cc_btn_human",
         "type": "BUTTON",
         "geometry": {
-          "x": 350,
-          "y": 60,
-          "w": 70,
+          "x": 150,
+          "y": 210,
+          "w": 90,
           "h": 30
         },
         "style": {
-          "bg": "#9f1239",
-          "color": "#ffffff"
+          "bg": "#404040",
+          "color": "#fff"
         },
         "properties": {
-          "text": "DELETE",
-          "actionId": "DEL_WORLD",
+          "text": "Human",
+          "actionId": "SEL_RACE_HUMAN",
           "fontName": "Kenney Pixel"
         }
       },
       {
-        "id": "tpl_modal_window",
-        "type": "CONTAINER",
+        "id": "cc_btn_dwarf",
+        "type": "BUTTON",
         "geometry": {
-          "x": 500,
-          "y": 50,
-          "w": 400,
-          "h": 200
-        },
-        "style": {
-          "bg": "#171717",
-          "border": "#525252"
-        },
-        "properties": {
-          "layoutMode": "vertical",
-          "prefabId": "MODAL_TEMPLATE"
-        }
-      },
-      {
-        "id": "tpl_modal_title",
-        "type": "LABEL",
-        "geometry": {
-          "x": 520,
-          "y": 70,
-          "w": 360,
+          "x": 255,
+          "y": 210,
+          "w": 90,
           "h": 30
         },
         "style": {
-          "color": "#ffffff"
+          "bg": "#404040",
+          "color": "#fff"
         },
         "properties": {
-          "text": "CONFIRMATION",
-          "fontSize": 16,
-          "align": "center",
+          "text": "Dwarf",
+          "actionId": "SEL_RACE_DWARF",
           "fontName": "Kenney Pixel"
         }
       },
       {
-        "id": "tpl_modal_desc",
+        "id": "cc_btn_elf",
+        "type": "BUTTON",
+        "geometry": {
+          "x": 360,
+          "y": 210,
+          "w": 90,
+          "h": 30
+        },
+        "style": {
+          "bg": "#404040",
+          "color": "#fff"
+        },
+        "properties": {
+          "text": "Elf",
+          "actionId": "SEL_RACE_ELF",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "cc_lbl_class",
         "type": "LABEL",
         "geometry": {
-          "x": 520,
-          "y": 110,
-          "w": 360,
-          "h": 60
+          "x": 150,
+          "y": 260,
+          "w": 300,
+          "h": 20
         },
         "style": {
           "color": "#a3a3a3"
         },
         "properties": {
-          "text": "Are you sure you want to perform this action?",
+          "text": "TRAINING (Class)",
           "fontSize": 12,
-          "align": "center",
+          "align": "left",
           "fontName": "Kenney Pixel"
         }
       },
       {
-        "id": "tpl_modal_btn_row",
-        "type": "CONTAINER",
+        "id": "cc_btn_fight",
+        "type": "BUTTON",
         "geometry": {
-          "x": 520,
-          "y": 190,
-          "w": 360,
-          "h": 40
+          "x": 150,
+          "y": 290,
+          "w": 140,
+          "h": 30
         },
         "style": {
-          "bg": "transparent",
-          "border": "transparent"
+          "bg": "#7f1d1d",
+          "color": "#fff"
         },
         "properties": {
-          "layoutMode": "horizontal"
+          "text": "Fighter",
+          "actionId": "SEL_CLASS_FIGHT",
+          "fontName": "Kenney Pixel"
         }
       },
       {
-        "id": "tpl_btn_confirm",
+        "id": "cc_btn_rogue",
         "type": "BUTTON",
         "geometry": {
-          "x": 520,
-          "y": 190,
-          "w": 170,
-          "h": 40
+          "x": 310,
+          "y": 290,
+          "w": 140,
+          "h": 30
+        },
+        "style": {
+          "bg": "#14532d",
+          "color": "#fff"
+        },
+        "properties": {
+          "text": "Rogue",
+          "actionId": "SEL_CLASS_ROGUE",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "cc_btn_embark",
+        "type": "BUTTON",
+        "geometry": {
+          "x": 150,
+          "y": 550,
+          "w": 300,
+          "h": 50
         },
         "style": {
           "bg": "#059669",
-          "color": "#ffffff"
+          "color": "#ffffff",
+          "border": "#34d399"
         },
         "properties": {
-          "text": "CONFIRM",
-          "actionId": "MODAL_CONFIRM",
+          "text": "EMBARK INTO HISTORY",
+          "actionId": "START_RUN",
+          "fontSize": 20,
           "fontName": "Kenney Pixel"
         }
       },
       {
-        "id": "tpl_btn_cancel",
-        "type": "BUTTON",
+        "id": "cc_preview_panel",
+        "type": "CONTAINER",
         "geometry": {
-          "x": 710,
-          "y": 190,
-          "w": 170,
-          "h": 40
+          "x": 550,
+          "y": 50,
+          "w": 400,
+          "h": 600
         },
         "style": {
-          "bg": "#404040",
-          "color": "#ffffff"
+          "bg": "#111",
+          "border": "#333"
         },
         "properties": {
-          "text": "CANCEL",
-          "actionId": "MODAL_CANCEL",
+          "layoutMode": "free"
+        }
+      },
+      {
+        "id": "cc_preview_lbl",
+        "type": "LABEL",
+        "geometry": {
+          "x": 600,
+          "y": 300,
+          "w": 300,
+          "h": 20
+        },
+        "style": {
+          "color": "#666"
+        },
+        "properties": {
+          "text": "Entity Preview (HD2D Billboard)",
+          "fontSize": 12,
+          "align": "center",
           "fontName": "Kenney Pixel"
         }
       }
@@ -550,6 +625,844 @@
         },
         "properties": {
           "layoutMode": "free"
+        }
+      }
+    ],
+    "pixel_forge": [
+      {
+        "id": "forge_bg",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 0,
+          "y": 0,
+          "w": 1024,
+          "h": 768
+        },
+        "style": {
+          "bg": "#0f172a",
+          "border": "transparent"
+        },
+        "properties": {
+          "layoutMode": "free"
+        }
+      },
+      {
+        "id": "forge_lbl_title",
+        "type": "LABEL",
+        "geometry": {
+          "x": 20,
+          "y": 10,
+          "w": 300,
+          "h": 30
+        },
+        "style": {
+          "color": "#fbbf24"
+        },
+        "properties": {
+          "text": "MORPHOLOGICAL PIXEL-FORGE",
+          "fontSize": 20,
+          "align": "left",
+          "fontName": "Kenney Future"
+        }
+      },
+      {
+        "id": "forge_canvas_container",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 20,
+          "y": 50,
+          "w": 512,
+          "h": 512
+        },
+        "style": {
+          "bg": "#000000",
+          "border": "#94a3b8"
+        },
+        "properties": {
+          "layoutMode": "free"
+        }
+      },
+      {
+        "id": "forge_grid_overlay",
+        "type": "LABEL",
+        "geometry": {
+          "x": 200,
+          "y": 300,
+          "w": 200,
+          "h": 20
+        },
+        "style": {
+          "color": "#334155"
+        },
+        "properties": {
+          "text": "64x64 CANVAS (Zoomed)",
+          "fontSize": 12,
+          "align": "center",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "forge_tools_panel",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 550,
+          "y": 50,
+          "w": 250,
+          "h": 512
+        },
+        "style": {
+          "bg": "#1e293b",
+          "border": "#475569"
+        },
+        "properties": {
+          "layoutMode": "vertical"
+        }
+      },
+      {
+        "id": "lbl_tools",
+        "type": "LABEL",
+        "geometry": {
+          "x": 560,
+          "y": 60,
+          "w": 200,
+          "h": 20
+        },
+        "style": {
+          "color": "#fff"
+        },
+        "properties": {
+          "text": "REFINEMENT TOOLS",
+          "fontSize": 12,
+          "align": "left",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "btn_tool_weld",
+        "type": "BUTTON",
+        "geometry": {
+          "x": 560,
+          "y": 90,
+          "w": 230,
+          "h": 35
+        },
+        "style": {
+          "bg": "#b91c1c",
+          "color": "#fff"
+        },
+        "properties": {
+          "text": "WELD (Join Pixels)",
+          "actionId": "TOOL_WELD",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "btn_tool_sharpen",
+        "type": "BUTTON",
+        "geometry": {
+          "x": 560,
+          "y": 130,
+          "w": 230,
+          "h": 35
+        },
+        "style": {
+          "bg": "#475569",
+          "color": "#fff"
+        },
+        "properties": {
+          "text": "GRINDSTONE (Sharpen)",
+          "actionId": "TOOL_SHARPEN",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "btn_tool_knap",
+        "type": "BUTTON",
+        "geometry": {
+          "x": 560,
+          "y": 170,
+          "w": 230,
+          "h": 35
+        },
+        "style": {
+          "bg": "#475569",
+          "color": "#fff"
+        },
+        "properties": {
+          "text": "KNAP (Hammer Form)",
+          "actionId": "TOOL_KNAP",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "lbl_quadrants",
+        "type": "LABEL",
+        "geometry": {
+          "x": 560,
+          "y": 230,
+          "w": 200,
+          "h": 20
+        },
+        "style": {
+          "color": "#38bdf8"
+        },
+        "properties": {
+          "text": "QUAD-MAP VIEW MODES",
+          "fontSize": 12,
+          "align": "left",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "chk_view_visual",
+        "type": "CHECKBOX",
+        "geometry": {
+          "x": 560,
+          "y": 260,
+          "w": 20,
+          "h": 20
+        },
+        "style": {
+          "bg": "#334155",
+          "border": "#475569"
+        },
+        "properties": {
+          "checked": true,
+          "label": "Q1: Visual (Albedo)"
+        }
+      },
+      {
+        "id": "chk_view_phys",
+        "type": "CHECKBOX",
+        "geometry": {
+          "x": 560,
+          "y": 290,
+          "w": 20,
+          "h": 20
+        },
+        "style": {
+          "bg": "#334155",
+          "border": "#475569"
+        },
+        "properties": {
+          "checked": false,
+          "label": "Q2: Physicality (Mass)"
+        }
+      },
+      {
+        "id": "chk_view_logic",
+        "type": "CHECKBOX",
+        "geometry": {
+          "x": 560,
+          "y": 320,
+          "w": 20,
+          "h": 20
+        },
+        "style": {
+          "bg": "#334155",
+          "border": "#475569"
+        },
+        "properties": {
+          "checked": false,
+          "label": "Q3: Identity (Magic)"
+        }
+      },
+      {
+        "id": "forge_stats_panel",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 810,
+          "y": 50,
+          "w": 200,
+          "h": 300
+        },
+        "style": {
+          "bg": "#1e293b",
+          "border": "#fbbf24"
+        },
+        "properties": {
+          "layoutMode": "vertical"
+        }
+      },
+      {
+        "id": "lbl_calc_stats",
+        "type": "LABEL",
+        "geometry": {
+          "x": 820,
+          "y": 60,
+          "w": 180,
+          "h": 20
+        },
+        "style": {
+          "color": "#fbbf24"
+        },
+        "properties": {
+          "text": "CALCULATED STATS",
+          "fontSize": 12,
+          "align": "center",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "lbl_stat_class",
+        "type": "LABEL",
+        "geometry": {
+          "x": 820,
+          "y": 90,
+          "w": 180,
+          "h": 20
+        },
+        "style": {
+          "color": "#94a3b8"
+        },
+        "properties": {
+          "text": "Class: <Unstable>",
+          "fontSize": 12,
+          "align": "left",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "lbl_stat_dmg",
+        "type": "LABEL",
+        "geometry": {
+          "x": 820,
+          "y": 120,
+          "w": 180,
+          "h": 20
+        },
+        "style": {
+          "color": "#94a3b8"
+        },
+        "properties": {
+          "text": "Est. Damage: 0",
+          "fontSize": 12,
+          "align": "left",
+          "fontName": "Kenney Pixel"
+        }
+      }
+    ],
+    "trade_interface": [
+      {
+        "id": "trade_modal",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 112,
+          "y": 84,
+          "w": 800,
+          "h": 600
+        },
+        "style": {
+          "bg": "#1c1917",
+          "border": "#d97706"
+        },
+        "properties": {
+          "layoutMode": "free"
+        }
+      },
+      {
+        "id": "lbl_trade_header",
+        "type": "LABEL",
+        "geometry": {
+          "x": 112,
+          "y": 94,
+          "w": 800,
+          "h": 30
+        },
+        "style": {
+          "color": "#d97706"
+        },
+        "properties": {
+          "text": "BARTER EXCHANGE",
+          "fontSize": 20,
+          "align": "center",
+          "fontName": "Kenney Future"
+        }
+      },
+      {
+        "id": "trade_player_cont",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 150,
+          "y": 150,
+          "w": 300,
+          "h": 400
+        },
+        "style": {
+          "bg": "#292524",
+          "border": "#44403c"
+        },
+        "properties": {
+          "layoutMode": "vertical",
+          "scroll": true
+        }
+      },
+      {
+        "id": "trade_npc_cont",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 570,
+          "y": 150,
+          "w": 300,
+          "h": 400
+        },
+        "style": {
+          "bg": "#292524",
+          "border": "#44403c"
+        },
+        "properties": {
+          "layoutMode": "vertical",
+          "scroll": true
+        }
+      },
+      {
+        "id": "lbl_p_val",
+        "type": "LABEL",
+        "geometry": {
+          "x": 150,
+          "y": 560,
+          "w": 300,
+          "h": 20
+        },
+        "style": {
+          "color": "#84cc16"
+        },
+        "properties": {
+          "text": "Offer Value: 0",
+          "fontSize": 14,
+          "align": "center",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "lbl_n_val",
+        "type": "LABEL",
+        "geometry": {
+          "x": 570,
+          "y": 560,
+          "w": 300,
+          "h": 20
+        },
+        "style": {
+          "color": "#ef4444"
+        },
+        "properties": {
+          "text": "Cost Value: 0",
+          "fontSize": 14,
+          "align": "center",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "btn_confirm_trade",
+        "type": "BUTTON",
+        "geometry": {
+          "x": 460,
+          "y": 300,
+          "w": 100,
+          "h": 40
+        },
+        "style": {
+          "bg": "#d97706",
+          "color": "#000"
+        },
+        "properties": {
+          "text": "⇄ DEAL",
+          "actionId": "EXECUTE_TRADE",
+          "fontName": "Kenney Pixel"
+        }
+      }
+    ],
+    "dialogue_window": [
+      {
+        "id": "dlg_root",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 100,
+          "y": 500,
+          "w": 824,
+          "h": 250
+        },
+        "style": {
+          "bg": "#171717cc",
+          "border": "#525252"
+        },
+        "properties": {
+          "layoutMode": "free"
+        }
+      },
+      {
+        "id": "dlg_portrait_frame",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 120,
+          "y": 520,
+          "w": 150,
+          "h": 210
+        },
+        "style": {
+          "bg": "#000",
+          "border": "#fbbf24"
+        },
+        "properties": {
+          "layoutMode": "free"
+        }
+      },
+      {
+        "id": "dlg_lbl_name",
+        "type": "LABEL",
+        "geometry": {
+          "x": 290,
+          "y": 520,
+          "w": 600,
+          "h": 30
+        },
+        "style": {
+          "color": "#fbbf24"
+        },
+        "properties": {
+          "text": "Elder NPC Name",
+          "fontSize": 18,
+          "align": "left",
+          "fontName": "Kenney Future"
+        }
+      },
+      {
+        "id": "dlg_text_body",
+        "type": "LABEL",
+        "geometry": {
+          "x": 290,
+          "y": 560,
+          "w": 600,
+          "h": 100
+        },
+        "style": {
+          "color": "#fff"
+        },
+        "properties": {
+          "text": "Dialogue content text goes here. The history engine populates this based on the Rumor System logic.",
+          "fontSize": 14,
+          "align": "left",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "dlg_options_list",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 290,
+          "y": 670,
+          "w": 600,
+          "h": 80
+        },
+        "style": {
+          "bg": "transparent",
+          "border": "transparent"
+        },
+        "properties": {
+          "layoutMode": "vertical"
+        }
+      }
+    ],
+    "death_summary": [
+      {
+        "id": "death_bg",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 0,
+          "y": 0,
+          "w": 1024,
+          "h": 768
+        },
+        "style": {
+          "bg": "#000000",
+          "border": "transparent"
+        },
+        "properties": {
+          "layoutMode": "free"
+        }
+      },
+      {
+        "id": "lbl_you_died",
+        "type": "LABEL",
+        "geometry": {
+          "x": 0,
+          "y": 200,
+          "w": 1024,
+          "h": 100
+        },
+        "style": {
+          "color": "#9f1239"
+        },
+        "properties": {
+          "text": "YOU HAVE DIED",
+          "fontSize": 64,
+          "align": "center",
+          "fontName": "Kenney Future"
+        }
+      },
+      {
+        "id": "lbl_time_skip",
+        "type": "LABEL",
+        "geometry": {
+          "x": 0,
+          "y": 320,
+          "w": 1024,
+          "h": 40
+        },
+        "style": {
+          "color": "#fbbf24"
+        },
+        "properties": {
+          "text": "Simulating History... (Time Skip +20 Years)",
+          "fontSize": 24,
+          "align": "center",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "panel_legacy_log",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 312,
+          "y": 400,
+          "w": 400,
+          "h": 200
+        },
+        "style": {
+          "bg": "#171717",
+          "border": "#404040"
+        },
+        "properties": {
+          "layoutMode": "vertical",
+          "scroll": true
+        }
+      },
+      {
+        "id": "lbl_legacy_header",
+        "type": "LABEL",
+        "geometry": {
+          "x": 312,
+          "y": 380,
+          "w": 400,
+          "h": 20
+        },
+        "style": {
+          "color": "#a3a3a3"
+        },
+        "properties": {
+          "text": "YOUR LEGACY",
+          "fontSize": 12,
+          "align": "center",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "btn_new_era",
+        "type": "BUTTON",
+        "geometry": {
+          "x": 412,
+          "y": 650,
+          "w": 200,
+          "h": 50
+        },
+        "style": {
+          "bg": "#fff",
+          "color": "#000"
+        },
+        "properties": {
+          "text": "ENTER NEW ERA",
+          "actionId": "RETURN_MAIN",
+          "fontName": "Kenney Future"
+        }
+      }
+    ],
+    "popups": [
+      {
+        "id": "popup_backdrop",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 0,
+          "y": 0,
+          "w": 1024,
+          "h": 768
+        },
+        "style": {
+          "bg": "#000000cc",
+          "border": "transparent"
+        },
+        "properties": {
+          "layoutMode": "free",
+          "prefabHostId": "MODAL_TEMPLATE"
+        }
+      }
+    ],
+    "prefabs": [
+      {
+        "id": "tpl_world_item",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 50,
+          "y": 50,
+          "w": 380,
+          "h": 50
+        },
+        "style": {
+          "bg": "#262626",
+          "border": "#404040"
+        },
+        "properties": {
+          "layoutMode": "horizontal",
+          "prefabId": "WORLD_ITEM_TEMPLATE"
+        }
+      },
+      {
+        "id": "tpl_lbl_name",
+        "type": "LABEL",
+        "geometry": {
+          "x": 60,
+          "y": 65,
+          "w": 200,
+          "h": 20
+        },
+        "style": {
+          "color": "#e5e5e5"
+        },
+        "properties": {
+          "text": "{WorldName}",
+          "fontSize": 12,
+          "align": "left",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "tpl_btn_del",
+        "type": "BUTTON",
+        "geometry": {
+          "x": 350,
+          "y": 60,
+          "w": 70,
+          "h": 30
+        },
+        "style": {
+          "bg": "#9f1239",
+          "color": "#ffffff"
+        },
+        "properties": {
+          "text": "DELETE",
+          "actionId": "DEL_WORLD",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "tpl_modal_window",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 500,
+          "y": 50,
+          "w": 400,
+          "h": 200
+        },
+        "style": {
+          "bg": "#171717",
+          "border": "#525252"
+        },
+        "properties": {
+          "layoutMode": "vertical",
+          "prefabId": "MODAL_TEMPLATE"
+        }
+      },
+      {
+        "id": "tpl_modal_title",
+        "type": "LABEL",
+        "geometry": {
+          "x": 520,
+          "y": 70,
+          "w": 360,
+          "h": 30
+        },
+        "style": {
+          "color": "#ffffff"
+        },
+        "properties": {
+          "text": "CONFIRMATION",
+          "fontSize": 16,
+          "align": "center",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "tpl_modal_desc",
+        "type": "LABEL",
+        "geometry": {
+          "x": 520,
+          "y": 110,
+          "w": 360,
+          "h": 60
+        },
+        "style": {
+          "color": "#a3a3a3"
+        },
+        "properties": {
+          "text": "Are you sure you want to perform this action?",
+          "fontSize": 12,
+          "align": "center",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "tpl_modal_btn_row",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 520,
+          "y": 190,
+          "w": 360,
+          "h": 40
+        },
+        "style": {
+          "bg": "transparent",
+          "border": "transparent"
+        },
+        "properties": {
+          "layoutMode": "horizontal"
+        }
+      },
+      {
+        "id": "tpl_btn_confirm",
+        "type": "BUTTON",
+        "geometry": {
+          "x": 520,
+          "y": 190,
+          "w": 170,
+          "h": 40
+        },
+        "style": {
+          "bg": "#059669",
+          "color": "#ffffff"
+        },
+        "properties": {
+          "text": "CONFIRM",
+          "actionId": "MODAL_CONFIRM",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "tpl_btn_cancel",
+        "type": "BUTTON",
+        "geometry": {
+          "x": 710,
+          "y": 190,
+          "w": 170,
+          "h": 40
+        },
+        "style": {
+          "bg": "#404040",
+          "color": "#ffffff"
+        },
+        "properties": {
+          "text": "CANCEL",
+          "actionId": "MODAL_CANCEL",
+          "fontName": "Kenney Pixel"
         }
       }
     ],

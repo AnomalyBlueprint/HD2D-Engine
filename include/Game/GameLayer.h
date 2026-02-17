@@ -20,7 +20,7 @@ public:
 
 private:
     enum class RenderStyle { MINECRAFT, BORDERLANDS, MOCO };
-    enum class GameState { MainMenu, Gameplay, DebugOverlay };
+    enum class GameState { MainMenu, Gameplay, DebugOverlay, CharacterCreation, PixelForge, TradeInterface, DialogueWindow, DeathSummary };
     void SwitchScene(GameState newState);
     void RenderMacroMap(class RenderService* renderer);
 

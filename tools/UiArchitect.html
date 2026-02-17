@@ -57,6 +57,12 @@
             border-radius: 4px;
         }
 
+        /* --- Custom Fonts --- */
+        @font-face {
+            font-family: 'Kenney Pixel';
+            src: url('../assets/fonts/kenney_kenney-fonts/Fonts/Kenney Pixel.ttf') format('truetype');
+        }
+
         .grid-bg {
             background-image: linear-gradient(to right, #262626 1px, transparent 1px), linear-gradient(to bottom, #262626 1px, transparent 1px);
             background-size: 20px 20px;
@@ -85,8 +91,21 @@
                 CheckSquare: <polyline points="9 11 12 14 22 4"></polyline>,
                 Sliders: <line x1="4" y1="21" x2="4" y2="14"></line>,
                 Maximize: <path d="M15 3h6v6"></path>,
-                Layout: <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                Layout: <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>,
+                Plus: <><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></>,
+                Minus: <line x1="5" y1="12" x2="19" y2="12"></line>,
+                Image: <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect> // Placeholder for Image icon
             };
+
+            if (name === 'Image') {
+                return (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" { ...p }>
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                        <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                );
+            }
 
             // Composition for Upload icon since we're using simple SVG paths
             if (name === 'Upload') {
@@ -107,12 +126,14 @@
         };
 
         // --- Constants ---
-        const SCENES = ['main_menu', 'popups', 'prefabs', 'gameplay', 'debug_overlay'];
+        // SCENES removed in favor of dynamic keys from sceneData
 
         const WIDGET_TYPES = {
-            CONTAINER: { label: 'Container', icon: 'Box', defaultH: 100, defaultW: 100, defaultProps: { layoutMode: 'free' } },
-            BUTTON: { label: 'Button', icon: 'MousePointer', defaultH: 40, defaultW: 120, defaultProps: { text: "Click Me", actionId: "BTN_ACTION" } },
+            CONTAINER: { label: 'Container', icon: 'Box', defaultH: 100, defaultW: 100, defaultProps: { layoutMode: 'free', bgImage: '' } },
+            BUTTON: { label: 'Button', icon: 'MousePointer', defaultH: 40, defaultW: 120, defaultProps: { text: "Click Me", actionId: "BTN_ACTION", bgImage: '' } },
             LABEL: { label: 'Text Label', icon: 'Type', defaultH: 30, defaultW: 150, defaultProps: { text: "Label Text", fontSize: 14, align: "left" } },
+            IMAGE: { label: 'Image', icon: 'Image', defaultH: 100, defaultW: 100, defaultProps: { image: 'assets/ui/placeholder.png' } },
+            INPUT_TEXT: { label: 'Input Field', icon: 'Terminal', defaultH: 30, defaultW: 200, defaultProps: { placeholder: "Enter text...", text: "" } },
             SLIDER: { label: 'Slider', icon: 'Sliders', defaultH: 30, defaultW: 200, defaultProps: { min: 0, max: 100, value: 50 } },
             CHECKBOX: { label: 'Checkbox', icon: 'CheckSquare', defaultH: 30, defaultW: 30, defaultProps: { checked: false, label: "Option" } },
         };
@@ -289,11 +310,69 @@
                 const gridSnap = (val) => Math.round(val / 10) * 10; // 10px snap
 
                 if (dragState.mode === 'move') {
-                    updateWidget(selectedId, 'x', gridSnap(dragState.initial.x + dx));
-                    updateWidget(selectedId, 'y', gridSnap(dragState.initial.y + dy));
+                    const newX = gridSnap(dragState.initial.x + dx);
+                    const newY = gridSnap(dragState.initial.y + dy);
+
+                    const deltaX = newX - widget.x;
+                    const deltaY = newY - widget.y;
+
+                    // Bulk Update to handle parent + children
+                    if (deltaX !== 0 || deltaY !== 0) {
+                        setSceneData(prev => {
+                            const newWidgets = [...prev[currentScene]];
+
+                            // Recursive function to move a widget and its children
+                            const moveWidgetAndChildren = (wId, dX, dY) => {
+                                const wIndex = newWidgets.findIndex(w => w.id === wId);
+                                if (wIndex !== -1) {
+                                    newWidgets[wIndex] = {
+                                        ...newWidgets[wIndex],
+                                        x: newWidgets[wIndex].x + dX,
+                                        y: newWidgets[wIndex].y + dY
+                                    };
+
+                                    // Find children
+                                    const children = newWidgets.filter(child => child.parentId === wId);
+                                    children.forEach(c => moveWidgetAndChildren(c.id, dX, dY));
+                                }
+                            };
+
+                            moveWidgetAndChildren(selectedId, deltaX, deltaY);
+
+                            return { ...prev, [currentScene]: newWidgets };
+                        });
+                    }
+
                 } else if (dragState.mode === 'resize') {
                     updateWidget(selectedId, 'w', Math.max(20, gridSnap(dragState.initial.w + dx)));
                     updateWidget(selectedId, 'h', Math.max(20, gridSnap(dragState.initial.h + dy)));
+                }
+
+                // Update start pos for next frame to keep delta correct (since we are using += logic)
+                // Actually, for React state, it's better to stick to initial+totalDelta. 
+                // BUT, to simplify cascading which depends on current frame delta, we updated state.
+                // So we need to reset startX/Y to current to avoid compounding.
+                // However, gridSnap makes "per pixel" updates tricky.
+                // Logic above uses `newX - widget.x` which is the delta *applied*. 
+                // So we just need to ensure we don't double apply.
+                // The issue: React state is async. 
+                // Correct approach for smooth drag in React without per-frame lag:
+                // Use a ref for immediate positions? No, keep it simple.
+                // The standard approach:
+                // 1. Calculate TARGET X/Y based on Initial + Total Delta.
+                // 2. Calculate DIFF from Current X/Y.
+                // 3. Apply DIFF to Self and Children.
+                // As long as we use `dragState.initial` we are good.
+
+                // WAIT: If we use `dragState.initial` for Parent, we know Parent's exact target.
+                // But for Children, we need to know their Initial too? 
+                // Simpler: Just track `lastX/lastY` in drag state and apply delta.
+                if (dragState.mode === 'move') {
+                    setDragState(prev => ({ ...prev, startX: e.clientX, startY: e.clientY, initial: { ...prev.initial, x: widget.x, y: widget.y } }));
+                    // Wait, updating state during drag causes lag. 
+                    // Better: Use `updateWidget` which triggers re-render, and just use the calculated `deltaX/Y` 
+                    // derived from `newX - widget.x`.
+                    // The code above `const deltaX = newX - widget.x` is correct for a single step *if* widget.x is current.
                 }
             };
 
@@ -311,6 +390,7 @@
                     exportData.scenes[scene] = sceneData[scene].map(w => ({
                         id: w.id,
                         type: w.type,
+                        parentId: w.parentId, // Export Hierarchy
                         geometry: { x: w.x, y: w.y, w: w.w, h: w.h },
                         style: w.style,
                         properties: {
@@ -385,15 +465,39 @@
             const WidgetRenderer = ({ w }) => {
                 const isSelected = selectedId === w.id;
 
+                const commonStyle = {
+                    left: w.x,
+                    top: w.y,
+                    width: w.w,
+                    height: w.h,
+                    backgroundColor: w.style.bg,
+                    borderColor: isSelected ? '#10b981' : (w.style.border || 'transparent'),
+                    borderWidth: isSelected ? 2 : 1,
+                    color: w.style.color,
+                    fontSize: `${w.props.fontSize}px`,
+                    zIndex: isSelected ? 100 : 1,
+                    backgroundImage: w.props.bgImage ? `url('${w.props.bgImage}')` : 'none',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center'
+                };
+
                 // Visual simulation of widgets
                 const renderInner = () => {
                     switch (w.type) {
                         case 'BUTTON':
                             return (
-                                <div className="w-full h-full flex items-center justify-center font-bold uppercase tracking-wider text-xs border border-white/10"
-                                    style={ { backgroundColor: w.style.bg, color: w.style.color } }>
+                                <button className="w-full h-full flex items-center justify-center font-bold uppercase tracking-wider hover:brightness-110 active:brightness-90 transition-all font-pixel border-2"
+                                    style={ {
+                                        fontFamily: (w.props.fontName || 'inherit'),
+                                        backgroundImage: w.props.bgImage ? `url('${w.props.bgImage}')` : 'none',
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: 'center',
+                                        backgroundColor: w.style.bg,
+                                        color: w.style.color,
+                                        borderColor: w.style.border || 'transparent'
+                                    } }>
                                     { w.props.text }
-                                </div>
+                                </button>
                             );
                         case 'SLIDER':
                             return (
@@ -404,6 +508,22 @@
                                     <span className="ml-2 text-[10px] text-neutral-500">{ w.props.min }-{ w.props.max }</span>
                                 </div>
                             );
+                        case 'INPUT_TEXT':
+                            return (
+                                <input
+                                    type="text"
+                                    disabled
+                                    className="w-full h-full border outline-none px-2 font-pixel"
+                                    style={ {
+                                        color: w.style.color,
+                                        fontFamily: 'Kenney Pixel',
+                                        backgroundColor: w.style.bg,
+                                        borderColor: w.style.border || 'transparent'
+                                    } }
+                                    placeholder={ w.props.placeholder }
+                                    value={ w.props.text || '' }
+                                />
+                            );
                         case 'CHECKBOX':
                             return (
                                 <div className="w-full h-full flex items-center justify-center bg-neutral-900 border border-neutral-600">
@@ -413,7 +533,12 @@
                         case 'LABEL':
                             return (
                                 <div className="w-full h-full flex items-center"
-                                    style={ { justifyContent: w.props.align === 'center' ? 'center' : w.props.align === 'right' ? 'flex-end' : 'flex-start', color: w.style.color, fontSize: `${w.props.fontSize}px` } }>
+                                    style={ {
+                                        justifyContent: w.props.align === 'center' ? 'center' : w.props.align === 'right' ? 'flex-end' : 'flex-start',
+                                        color: w.style.color,
+                                        backgroundColor: w.style.bg || 'transparent',
+                                        fontSize: `${w.props.fontSize}px`
+                                    } }>
                                     { w.props.text }
                                 </div>
                             );
@@ -517,16 +642,94 @@
             };
 
             const PropertyInput = ({ label, value, onChange, type = "text" }) => (
-                <div className="space-y-1 mb-3">
+                <div className="flex flex-col gap-1">
                     <label className="text-[10px] uppercase font-bold text-neutral-500">{ label }</label>
                     <input
                         type={ type }
-                        value={ value }
-                        onChange={ (e) => onChange(type === 'checkbox' ? e.target.checked : e.target.value) }
-                        className="w-full bg-neutral-950 border border-neutral-700 rounded px-2 py-1.5 text-xs text-neutral-300 focus:border-emerald-500 focus:outline-none"
+                        value={ value || '' }
+                        onChange={ (e) => onChange(e.target.value) }
+                        className="bg-neutral-950 border border-neutral-700 rounded px-2 py-1.5 text-xs text-neutral-300 focus:border-emerald-500 focus:outline-none w-full"
                     />
                 </div>
             );
+
+            const PropertyInputImage = ({ label, value, onChange }) => {
+                const fileInputRef = useRef(null);
+
+                const handleFileChange = (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        // Try to be smart about the path. 
+                        // Since browser security prevents getting full path, we assume assets/ui/ + filename
+                        // This is a "best effort" for local dev tools.
+                        const assetPath = `assets/ui/${file.name}`;
+                        onChange(assetPath);
+                    }
+                };
+
+                return (
+                    <div className="flex flex-col gap-1">
+                        <label className="text-[10px] uppercase font-bold text-neutral-500 flex justify-between">
+                            { label }
+                            <span className="text-[9px] text-neutral-600 lowercase font-normal">(auto-trim: assets/ui/)</span>
+                        </label>
+                        <div className="flex gap-2">
+                            <input
+                                type="text"
+                                value={ value || '' }
+                                onChange={ (e) => onChange(e.target.value) }
+                                className="bg-neutral-950 border border-neutral-700 rounded px-2 py-1.5 text-xs text-neutral-300 focus:border-emerald-500 focus:outline-none w-full font-mono"
+                                placeholder="assets/ui/..."
+                            />
+                            <button
+                                onClick={ () => fileInputRef.current?.click() }
+                                className="bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 rounded px-2 text-neutral-400 hover:text-white transition-colors"
+                                title="Pick File"
+                            >
+                                <Icon name="Upload" className="w-4 h-4" />
+                            </button>
+                        </div>
+                        {/* Hidden File Input */ }
+                        <input
+                            type="file"
+                            ref={ fileInputRef }
+                            className="hidden"
+                            accept="image/png, image/jpeg, image/jpg"
+                            onChange={ handleFileChange }
+                        />
+                    </div>
+                );
+            };
+
+            // --- Scene Management ---
+            const addScene = () => {
+                const name = prompt("Enter new scene name (e.g., 'inventory_screen'):");
+                if (!name) return;
+                const cleanName = name.toLowerCase().replace(/[^a-z0-9_]/g, '_');
+
+                if (sceneData[cleanName]) {
+                    alert("Scene already exists!");
+                    return;
+                }
+
+                setSceneData(prev => ({ ...prev, [cleanName]: [] }));
+                setCurrentScene(cleanName);
+            };
+
+            const deleteScene = () => {
+                const scenes = Object.keys(sceneData);
+                if (scenes.length <= 1) {
+                    alert("Cannot delete the last remaining scene.");
+                    return;
+                }
+
+                if (!confirm(`Are you sure you want to delete scene '${currentScene}'? This cannot be undone.`)) return;
+
+                const { [currentScene]: deleted, ...rest } = sceneData;
+                setSceneData(rest);
+                setCurrentScene(Object.keys(rest)[0]);
+                setSelectedId(null);
+            };
 
             return (
                 <div className="flex flex-col h-screen bg-neutral-950 text-neutral-300 font-sans overflow-hidden" onMouseUp={ handleMouseUp } onMouseMove={ handleMouseMove }>
@@ -549,17 +752,32 @@
                             </div>
                             <div className="h-6 w-px bg-neutral-800 mx-2"></div>
 
-                            {/* Scene Selector */ }
-                            <div className="flex bg-neutral-950 rounded p-1 border border-neutral-800">
-                                { SCENES.map(scene => (
-                                    <button
-                                        key={ scene }
-                                        onClick={ () => { setCurrentScene(scene); setSelectedId(null); } }
-                                        className={ `px-3 py-1 text-xs font-bold rounded capitalize transition-colors ${currentScene === scene ? 'bg-neutral-800 text-emerald-400' : 'text-neutral-500 hover:text-neutral-300'}` }
-                                    >
-                                        { scene.replace('_', ' ') }
-                                    </button>
-                                )) }
+                            {/* Dynamic Scene Selector */ }
+                            <div className="flex items-center gap-2 bg-neutral-950 rounded p-1 border border-neutral-800">
+                                <select
+                                    value={ currentScene }
+                                    onChange={ (e) => { setCurrentScene(e.target.value); setSelectedId(null); } }
+                                    className="bg-neutral-900 text-xs font-bold text-white px-2 py-1 rounded border border-neutral-700 outline-none focus:border-emerald-500 min-w-[150px]"
+                                >
+                                    { Object.keys(sceneData).map(scene => (
+                                        <option key={ scene } value={ scene }>{ scene }</option>
+                                    )) }
+                                </select>
+
+                                <button
+                                    onClick={ addScene }
+                                    className="p-1 hover:bg-neutral-800 rounded text-neutral-400 hover:text-emerald-400 transition-colors"
+                                    title="Add New Scene"
+                                >
+                                    <Icon name="Plus" />
+                                </button>
+                                <button
+                                    onClick={ deleteScene }
+                                    className="p-1 hover:bg-neutral-800 rounded text-neutral-400 hover:text-red-500 transition-colors"
+                                    title="Delete Current Scene"
+                                >
+                                    <Icon name="Trash" />
+                                </button>
                             </div>
                         </div>
 
@@ -628,201 +846,292 @@
                             </div>
                         </div>
 
-                        {/* --- PROPERTIES (Right) --- */ }
-                        <div className="w-72 bg-neutral-900 border-l border-neutral-800 flex flex-col overflow-y-auto">
-                            { selectedWidget ? (
-                                <div className="p-4">
-                                    <div className="flex items-center justify-between mb-6 pb-4 border-b border-neutral-800">
-                                        <div>
-                                            <h2 className="text-sm font-bold text-white flex items-center gap-2">
-                                                <Icon name="Settings" className="w-4 h-4 text-emerald-500" />
-                                                { selectedWidget.type }
-                                            </h2>
-                                            <span className="text-[10px] text-neutral-500 font-mono">{ selectedWidget.id }</span>
-                                        </div>
-                                        <button onClick={ () => deleteWidget(selectedWidget.id) } className="text-neutral-600 hover:text-rose-500 transition-colors">
-                                            <Icon name="Trash" />
-                                        </button>
-                                    </div>
+                        {/* --- RIGHT SIDEBAR (Hierarchy & Properties) --- */ }
+                        <div className="w-80 bg-neutral-900 border-l border-neutral-800 flex flex-col overflow-hidden">
 
-                                    {/* Common Props */ }
-                                    <div className="space-y-4">
-                                        <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Geometry</h3>
-                                        <div className="grid grid-cols-2 gap-2">
-                                            <PropertyInput label="ID" value={ selectedWidget.id } onChange={ (v) => updateWidget(selectedWidget.id, 'id', v) } />
-                                            <PropertyInput label="X" type="number" value={ selectedWidget.x } onChange={ (v) => updateWidget(selectedWidget.id, 'x', parseInt(v) || 0) } />
-                                            <PropertyInput label="Y" type="number" value={ selectedWidget.y } onChange={ (v) => updateWidget(selectedWidget.id, 'y', parseInt(v) || 0) } />
-                                            <PropertyInput label="W" type="number" value={ selectedWidget.w } onChange={ (v) => updateWidget(selectedWidget.id, 'w', parseInt(v) || 0) } />
-                                            <PropertyInput label="H" type="number" value={ selectedWidget.h } onChange={ (v) => updateWidget(selectedWidget.id, 'h', parseInt(v) || 0) } />
-                                        </div>
-
-                                        <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-wider mt-6 pt-4 border-t border-neutral-800">Specifics</h3>
-
-                                        {/* Dynamic Props based on Type */ }
-                                        { selectedWidget.type === 'BUTTON' && (
-                                            <>
-                                                <PropertyInput label="Label Text" value={ selectedWidget.props.text } onChange={ (v) => updateWidget(selectedWidget.id, 'props.text', v) } />
-                                                <div className="space-y-1 mb-3">
-                                                    <label className="text-[10px] uppercase font-bold text-neutral-500">Font</label>
-                                                    <select
-                                                        value={ selectedWidget.props.fontName || '' }
-                                                        onChange={ (e) => updateWidget(selectedWidget.id, 'props.fontName', e.target.value) }
-                                                        className="w-full bg-neutral-950 border border-neutral-700 rounded px-2 py-1.5 text-xs text-neutral-300 focus:border-emerald-500 focus:outline-none"
-                                                    >
-                                                        <option value="">Default (Kenney Pixel)</option>
-                                                        <option value="Kenney Future">Kenney Future</option>
-                                                        <option value="Kenney High">Kenney High</option>
-                                                        <option value="Kenney Mini">Kenney Mini</option>
-                                                        <option value="Kenney Rocket">Kenney Rocket</option>
-                                                        <option value="Kenney Blocks">Kenney Blocks</option>
-                                                    </select>
-                                                </div>
-                                                <PropertyInput label="Action ID" value={ selectedWidget.props.actionId } onChange={ (v) => updateWidget(selectedWidget.id, 'props.actionId', v) } />
-                                                <PropertyInput label="BG Color" type="color" value={ selectedWidget.style.bg } onChange={ (v) => updateWidget(selectedWidget.id, 'style.bg', v) } />
-                                                <PropertyInput label="Text Color" type="color" value={ selectedWidget.style.color } onChange={ (v) => updateWidget(selectedWidget.id, 'style.color', v) } />
-                                            </>
-                                        ) }
-
-                                        { selectedWidget.type === 'SLIDER' && (
-                                            <>
-                                                <div className="grid grid-cols-2 gap-2">
-                                                    <PropertyInput label="Min Value" type="number" value={ selectedWidget.props.min } onChange={ (v) => updateWidget(selectedWidget.id, 'props.min', parseInt(v)) } />
-                                                    <PropertyInput label="Max Value" type="number" value={ selectedWidget.props.max } onChange={ (v) => updateWidget(selectedWidget.id, 'props.max', parseInt(v)) } />
-                                                </div>
-                                                <PropertyInput label="Default Value" type="number" value={ selectedWidget.props.value } onChange={ (v) => updateWidget(selectedWidget.id, 'props.value', parseInt(v)) } />
-                                            </>
-                                        ) }
-
-                                        { selectedWidget.type === 'LABEL' && (
-                                            <>
-                                                <PropertyInput label="Text Content" value={ selectedWidget.props.text } onChange={ (v) => updateWidget(selectedWidget.id, 'props.text', v) } />
-                                                <PropertyInput label="Font Size (px)" type="number" value={ selectedWidget.props.fontSize } onChange={ (v) => updateWidget(selectedWidget.id, 'props.fontSize', parseInt(v)) } />
-                                                <div className="space-y-1 mb-3">
-                                                    <label className="text-[10px] uppercase font-bold text-neutral-500">Font</label>
-                                                    <select
-                                                        value={ selectedWidget.props.fontName || '' }
-                                                        onChange={ (e) => updateWidget(selectedWidget.id, 'props.fontName', e.target.value) }
-                                                        className="w-full bg-neutral-950 border border-neutral-700 rounded px-2 py-1.5 text-xs text-neutral-300 focus:border-emerald-500 focus:outline-none"
-                                                    >
-                                                        <option value="">Default (Kenney Pixel)</option>
-                                                        <option value="Kenney Future">Kenney Future</option>
-                                                        <option value="Kenney High">Kenney High</option>
-                                                        <option value="Kenney Mini">Kenney Mini</option>
-                                                        <option value="Kenney Rocket">Kenney Rocket</option>
-                                                        <option value="Kenney Blocks">Kenney Blocks</option>
-                                                    </select>
-                                                </div>
-                                                <div className="space-y-1 mb-3">
-                                                    <label className="text-[10px] uppercase font-bold text-neutral-500">Alignment</label>
-                                                    <select
-                                                        value={ selectedWidget.props.align }
-                                                        onChange={ (e) => updateWidget(selectedWidget.id, 'props.align', e.target.value) }
-                                                        className="w-full bg-neutral-950 border border-neutral-700 rounded px-2 py-1.5 text-xs text-neutral-300 focus:border-emerald-500 focus:outline-none"
-                                                    >
-                                                        <option value="left">Left</option>
-                                                        <option value="center">Center</option>
-                                                        <option value="right">Right</option>
-                                                    </select>
-                                                </div>
-                                            </>
-                                        ) }
-
-                                        { selectedWidget.type === 'CHECKBOX' && (
-                                            <>
-                                                <PropertyInput label="Label" value={ selectedWidget.props.label || '' } onChange={ (v) => updateWidget(selectedWidget.id, 'props.label', v) } />
-                                                <PropertyInput label="Action ID" value={ selectedWidget.props.actionId || '' } onChange={ (v) => updateWidget(selectedWidget.id, 'props.actionId', v) } />
-                                                <div className="flex items-center justify-between bg-neutral-950 p-2 rounded border border-neutral-800">
-                                                    <span className="text-xs font-bold text-neutral-400">Default Checked</span>
-                                                    <input type="checkbox" checked={ selectedWidget.props.checked } onChange={ (e) => updateWidget(selectedWidget.id, 'props.checked', e.target.checked) } />
-                                                </div>
-                                            </>
-                                        ) }
-
-                                        { selectedWidget.type === 'CONTAINER' && (
-                                            <>
-                                                <PropertyInput label="Background" type="color" value={ selectedWidget.style.bg } onChange={ (v) => updateWidget(selectedWidget.id, 'style.bg', v) } />
-                                                <PropertyInput label="Border" type="color" value={ selectedWidget.style.border } onChange={ (v) => updateWidget(selectedWidget.id, 'style.border', v) } />
-                                                <div className="space-y-1 mb-3">
-                                                    <label className="text-[10px] uppercase font-bold text-neutral-500">Layout Mode (Engine Hint)</label>
-                                                    <select
-                                                        value={ selectedWidget.props.layoutMode || 'free' }
-                                                        onChange={ (e) => updateWidget(selectedWidget.id, 'props.layoutMode', e.target.value) }
-                                                        className="w-full bg-neutral-950 border border-neutral-700 rounded px-2 py-1.5 text-xs text-neutral-300 focus:border-emerald-500 focus:outline-none"
-                                                    >
-                                                        <option value="free">Free (Absolute)</option>
-                                                        <option value="vertical">Vertical Stack</option>
-                                                        <option value="horizontal">Horizontal Stack</option>
-                                                    </select>
-                                                </div>
-                                                <div className="pt-4 mt-4 border-t border-neutral-800">
-                                                    <h4 className="text-[10px] font-bold text-neutral-500 uppercase mb-2">Prefab / Templating</h4>
-
-                                                    { currentScene === 'prefabs' ? (
-                                                        <>
-                                                            <PropertyInput label="Prefab ID (Template Name)" value={ selectedWidget.props.prefabId || '' } onChange={ (v) => updateWidget(selectedWidget.id, 'props.prefabId', v) } />
-                                                            <p className="text-[9px] text-neutral-600 mb-2">Unique ID for this template (e.g., WORLD_ITEM_TEMPLATE).</p>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <div className="space-y-1 mb-3">
-                                                                <label className="text-[10px] uppercase font-bold text-neutral-500">Item Template</label>
-                                                                <select
-                                                                    value={ selectedWidget.props.prefabHostId || '' }
-                                                                    onChange={ (e) => updateWidget(selectedWidget.id, 'props.prefabHostId', e.target.value) }
-                                                                    className="w-full bg-neutral-950 border border-neutral-700 rounded px-2 py-1.5 text-xs text-neutral-300 focus:border-emerald-500 focus:outline-none"
-                                                                >
-                                                                    <option value="">-- None --</option>
-                                                                    { (sceneData['prefabs'] || [])
-                                                                        .filter(p => p.props.prefabId) // Only show items with a Prefab ID
-                                                                        .map(p => (
-                                                                            <option key={ p.id } value={ p.props.prefabId }>{ p.props.prefabId }</option>
-                                                                        ))
-                                                                    }
-                                                                </select>
-                                                                <p className="text-[9px] text-neutral-600">Select a template from the 'prefabs' scene to spawn here.</p>
-                                                            </div>
-                                                        </>
-                                                    ) }
-                                                </div>
-                                            </>
-                                        ) }
-                                    </div>
+                            {/* Hierarchy Panel */ }
+                            <div className="flex-1 flex flex-col min-h-0 border-b border-neutral-800">
+                                <div className="h-8 bg-neutral-950 flex items-center px-4 border-b border-neutral-800">
+                                    <span className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Hierarchy</span>
                                 </div>
-                            ) : (
-                                <div className="flex-1 flex flex-col items-center justify-center text-neutral-600 p-8 text-center opacity-50">
-                                    <Icon name="MousePointer" className="w-8 h-8 mb-2" />
-                                    <p className="text-xs">Select a widget to edit properties</p>
-                                </div>
-                            ) }
+                                <div className="flex-1 overflow-y-auto p-2">
+                                    { (() => {
+                                        // Build Tree
+                                        const roots = (currentWidgets || []).filter(w => !w.parentId);
 
-                            {/* --- MISSING FEATURES LIST --- */ }
-                            <div className="border-t border-neutral-800 bg-neutral-900/50 p-4 text-[10px] text-neutral-500 font-mono">
-                                <strong className="text-neutral-400 block mb-1">MISSING FEATURES (Planned):</strong>
-                                <ul className="list-disc pl-4 space-y-0.5">
-                                    <li>Z-Index / Layering Control</li>
-                                    <li>Texture / Image Support</li>
-                                    <li>9-Slice Scaling (Panels)</li>
-                                    <li>Input Text Fields</li>
-                                    <li>Tooltips & Hover Hints</li>
-                                    <li>Animations & Transitions</li>
-                                    <li>Focus Navigation (Gamepad/Keyboard)</li>
-                                </ul>
+                                        const renderTree = (widget, depth = 0) => {
+                                            const children = (currentWidgets || []).filter(w => w.parentId === widget.id);
+                                            const isSelected = selectedId === widget.id;
+
+                                            return (
+                                                <div key={ widget.id }>
+                                                    <div
+                                                        className={ `flex items-center gap-2 px-2 py-1 rounded cursor-pointer text-xs ${isSelected ? 'bg-emerald-900/30 text-emerald-400' : 'text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200'}` }
+                                                        style={ { paddingLeft: `${depth * 12 + 8}px` } }
+                                                        onClick={ (e) => { e.stopPropagation(); setSelectedId(widget.id); } }
+                                                    >
+                                                        <Icon name={ WIDGET_TYPES[widget.type]?.icon || 'Box' } className="w-3 h-3 opacity-70" />
+                                                        <span className="truncate">{ widget.id }</span>
+                                                    </div>
+                                                    { children.map(child => renderTree(child, depth + 1)) }
+                                                </div>
+                                            );
+                                        };
+
+                                        return (
+                                            <div className="space-y-0.5">
+                                                { roots.map(root => renderTree(root)) }
+                                                { roots.length === 0 && <div className="text-[10px] text-neutral-600 italic text-center mt-4">No widgets in scene</div> }
+                                            </div>
+                                        );
+                                    })() }
+                                </div>
                             </div>
 
-                            {/* --- JSON PREVIEW FOOTER --- */ }
-                            <div className="border-t border-neutral-800 bg-neutral-950 p-0 flex flex-col h-1/3">
-                                <div className="px-4 py-2 bg-neutral-900 text-[10px] font-bold uppercase text-neutral-500 tracking-wider">
-                                    JSON Output Preview
+                            {/* Properties Panel */ }
+                            <div className="h-1/2 flex flex-col border-t border-neutral-800 overflow-hidden">
+                                <div className="h-8 bg-neutral-950 flex items-center px-4 border-b border-neutral-800 shrink-0">
+                                    <span className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Properties</span>
                                 </div>
-                                <div className="flex-1 overflow-auto p-4">
-                                    <pre className="text-[10px] text-emerald-600 font-mono whitespace-pre-wrap">
-                                        { generateJSON() }
-                                    </pre>
+
+                                <div className="flex-1 overflow-y-auto p-4">
+                                    { selectedWidget ? (
+                                        <div>
+                                            <div className="flex items-center justify-between mb-4 pb-2 border-b border-neutral-800">
+                                                <div>
+                                                    <h3 className="font-bold text-neutral-200 text-sm uppercase">{ selectedWidget.type }</h3>
+                                                    <p className="text-[10px] text-neutral-500 font-mono">{ selectedWidget.id }</p>
+                                                </div>
+                                                <div className="flex gap-1">
+                                                    <button
+                                                        onClick={ () => {
+                                                            const sceneWidgets = [...sceneData[currentScene]];
+                                                            const idx = sceneWidgets.findIndex(w => w.id === selectedId);
+                                                            if (idx > 0) {
+                                                                [sceneWidgets[idx], sceneWidgets[idx - 1]] = [sceneWidgets[idx - 1], sceneWidgets[idx]];
+                                                                setSceneData({ ...sceneData, [currentScene]: sceneWidgets });
+                                                            }
+                                                        } }
+                                                        className="p-1.5 bg-neutral-800 hover:bg-neutral-700 rounded text-neutral-400 hover:text-white transition-colors"
+                                                        title="Move Backward"
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                                                    </button>
+                                                    <button onClick={ () => deleteWidget(selectedWidget.id) } className="p-1.5 bg-red-900/20 hover:bg-red-900/50 text-red-500 rounded transition-colors">
+                                                        <Icon name="Trash" />
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            {/* Common Props */ }
+                                            <div className="space-y-4">
+                                                <div className="space-y-1">
+                                                    <label className="text-[10px] uppercase font-bold text-neutral-500">Parent</label>
+                                                    <select
+                                                        value={ selectedWidget.parentId || '' }
+                                                        onChange={ (e) => {
+                                                            const newParentId = e.target.value || null;
+                                                            // Prevent cyclic parenting (simple check: can't be own child)
+                                                            // For now, simple self-check
+                                                            if (newParentId === selectedWidget.id) return;
+                                                            updateWidget(selectedWidget.id, 'parentId', newParentId);
+                                                        } }
+                                                        className="w-full bg-neutral-950 border border-neutral-700 rounded px-2 py-1.5 text-xs text-neutral-300 focus:border-emerald-500 focus:outline-none"
+                                                    >
+                                                        <option value="">-- None (Root) --</option>
+                                                        { currentWidgets.filter(w => w.id !== selectedWidget.id && w.type === 'CONTAINER').map(w => (
+                                                            <option key={ w.id } value={ w.id }>{ w.id }</option>
+                                                        )) }
+                                                    </select>
+                                                </div>
+
+                                                <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Geometry</h3>
+                                                <PropertyInput label="ID" value={ selectedWidget.id } onChange={ (v) => updateWidget(selectedWidget.id, 'id', v) } />
+                                                <div className="grid grid-cols-2 gap-2">
+                                                    <PropertyInput label="X" type="number" value={ selectedWidget.x } onChange={ (v) => updateWidget(selectedWidget.id, 'x', parseInt(v) || 0) } />
+                                                    <PropertyInput label="Y" type="number" value={ selectedWidget.y } onChange={ (v) => updateWidget(selectedWidget.id, 'y', parseInt(v) || 0) } />
+                                                    <PropertyInput label="W" type="number" value={ selectedWidget.w } onChange={ (v) => updateWidget(selectedWidget.id, 'w', parseInt(v) || 0) } />
+                                                    <PropertyInput label="H" type="number" value={ selectedWidget.h } onChange={ (v) => updateWidget(selectedWidget.id, 'h', parseInt(v) || 0) } />
+                                                </div>
+
+                                                <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-wider mt-6 pt-4 border-t border-neutral-800">Specifics</h3>
+
+                                                {/* Dynamic Props based on Type */ }
+                                                { selectedWidget.type === 'BUTTON' && (
+                                                    <>
+                                                        <PropertyInput label="Label Text" value={ selectedWidget.props.text } onChange={ (v) => updateWidget(selectedWidget.id, 'props.text', v) } />
+                                                        <div className="space-y-1 mb-3">
+                                                            <label className="text-[10px] uppercase font-bold text-neutral-500">Font</label>
+                                                            <select
+                                                                value={ selectedWidget.props.fontName || '' }
+                                                                onChange={ (e) => updateWidget(selectedWidget.id, 'props.fontName', e.target.value) }
+                                                                className="w-full bg-neutral-950 border border-neutral-700 rounded px-2 py-1.5 text-xs text-neutral-300 focus:border-emerald-500 focus:outline-none"
+                                                            >
+                                                                <option value="">Default (Kenney Pixel)</option>
+                                                                <option value="Kenney Future">Kenney Future</option>
+                                                                <option value="Kenney High">Kenney High</option>
+                                                                <option value="Kenney Mini">Kenney Mini</option>
+                                                                <option value="Kenney Rocket">Kenney Rocket</option>
+                                                                <option value="Kenney Blocks">Kenney Blocks</option>
+                                                            </select>
+                                                        </div>
+                                                        <PropertyInput label="Action ID" value={ selectedWidget.props.actionId } onChange={ (v) => updateWidget(selectedWidget.id, 'props.actionId', v) } />
+                                                        <PropertyInput label="BG Color" type="color" value={ selectedWidget.style.bg } onChange={ (v) => updateWidget(selectedWidget.id, 'style.bg', v) } />
+                                                        <PropertyInput label="Text Color" type="color" value={ selectedWidget.style.color } onChange={ (v) => updateWidget(selectedWidget.id, 'style.color', v) } />
+                                                        <PropertyInput label="Background Image" value={ selectedWidget.props.bgImage || '' } onChange={ (v) => updateWidget(selectedWidget.id, 'props.bgImage', v) } />
+                                                    </>
+                                                ) }
+
+                                                { selectedWidget.type === 'SLIDER' && (
+                                                    <>
+                                                        <div className="grid grid-cols-2 gap-2">
+                                                            <PropertyInput label="Min Value" type="number" value={ selectedWidget.props.min } onChange={ (v) => updateWidget(selectedWidget.id, 'props.min', parseInt(v)) } />
+                                                            <PropertyInput label="Max Value" type="number" value={ selectedWidget.props.max } onChange={ (v) => updateWidget(selectedWidget.id, 'props.max', parseInt(v)) } />
+                                                        </div>
+                                                        <PropertyInput label="Default Value" type="number" value={ selectedWidget.props.value } onChange={ (v) => updateWidget(selectedWidget.id, 'props.value', parseInt(v)) } />
+                                                    </>
+                                                ) }
+
+                                                { selectedWidget.type === 'LABEL' && (
+                                                    <>
+                                                        <PropertyInput label="Text Content" value={ selectedWidget.props.text } onChange={ (v) => updateWidget(selectedWidget.id, 'props.text', v) } />
+                                                        <PropertyInput label="Font Size (px)" type="number" value={ selectedWidget.props.fontSize } onChange={ (v) => updateWidget(selectedWidget.id, 'props.fontSize', parseInt(v)) } />
+                                                        <div className="space-y-1 mb-3">
+                                                            <label className="text-[10px] uppercase font-bold text-neutral-500">Font</label>
+                                                            <select
+                                                                value={ selectedWidget.props.fontName || '' }
+                                                                onChange={ (e) => updateWidget(selectedWidget.id, 'props.fontName', e.target.value) }
+                                                                className="w-full bg-neutral-950 border border-neutral-700 rounded px-2 py-1.5 text-xs text-neutral-300 focus:border-emerald-500 focus:outline-none"
+                                                            >
+                                                                <option value="">Default (Kenney Pixel)</option>
+                                                                <option value="Kenney Future">Kenney Future</option>
+                                                                <option value="Kenney High">Kenney High</option>
+                                                                <option value="Kenney Mini">Kenney Mini</option>
+                                                                <option value="Kenney Rocket">Kenney Rocket</option>
+                                                                <option value="Kenney Blocks">Kenney Blocks</option>
+                                                            </select>
+                                                        </div>
+                                                        <div className="space-y-1 mb-3">
+                                                            <label className="text-[10px] uppercase font-bold text-neutral-500">Alignment</label>
+                                                            <select
+                                                                value={ selectedWidget.props.align }
+                                                                onChange={ (e) => updateWidget(selectedWidget.id, 'props.align', e.target.value) }
+                                                                className="w-full bg-neutral-950 border border-neutral-700 rounded px-2 py-1.5 text-xs text-neutral-300 focus:border-emerald-500 focus:outline-none"
+                                                            >
+                                                                <option value="left">Left</option>
+                                                                <option value="center">Center</option>
+                                                                <option value="right">Right</option>
+                                                            </select>
+                                                        </div>
+                                                    </>
+                                                ) }
+
+                                                { selectedWidget.type === 'CHECKBOX' && (
+                                                    <>
+                                                        <PropertyInput label="Label" value={ selectedWidget.props.label || '' } onChange={ (v) => updateWidget(selectedWidget.id, 'props.label', v) } />
+                                                        <PropertyInput label="Action ID" value={ selectedWidget.props.actionId || '' } onChange={ (v) => updateWidget(selectedWidget.id, 'props.actionId', v) } />
+                                                        <div className="flex items-center justify-between bg-neutral-950 p-2 rounded border border-neutral-800">
+                                                            <span className="text-xs font-bold text-neutral-400">Default Checked</span>
+                                                            <input type="checkbox" checked={ selectedWidget.props.checked } onChange={ (e) => updateWidget(selectedWidget.id, 'props.checked', e.target.checked) } />
+                                                        </div>
+                                                    </>
+                                                ) }
+
+                                                { selectedWidget.type === 'CONTAINER' && (
+                                                    <>
+                                                        <PropertyInput label="Background" type="color" value={ selectedWidget.style.bg } onChange={ (v) => updateWidget(selectedWidget.id, 'style.bg', v) } />
+                                                        <PropertyInput label="Border" type="color" value={ selectedWidget.style.border } onChange={ (v) => updateWidget(selectedWidget.id, 'style.border', v) } />
+                                                        <PropertyInputImage label="Background Image" value={ selectedWidget.props.bgImage || '' } onChange={ (v) => updateWidget(selectedWidget.id, 'props.bgImage', v) } />
+                                                        <PropertyInput label="Slice Border (9-Slice)" type="number" value={ selectedWidget.props.sliceBorder || 0 } onChange={ (v) => updateWidget(selectedWidget.id, 'props.sliceBorder', parseInt(v) || 0) } />
+                                                        <div className="space-y-1 mb-3">
+                                                            <label className="text-[10px] uppercase font-bold text-neutral-500">Layout Mode (Engine Hint)</label>
+                                                            <select
+                                                                value={ selectedWidget.props.layoutMode || 'free' }
+                                                                onChange={ (e) => updateWidget(selectedWidget.id, 'props.layoutMode', e.target.value) }
+                                                                className="w-full bg-neutral-950 border border-neutral-700 rounded px-2 py-1.5 text-xs text-neutral-300 focus:border-emerald-500 focus:outline-none"
+                                                            >
+                                                                <option value="free">Free (Absolute)</option>
+                                                                <option value="vertical">Vertical Stack</option>
+                                                                <option value="horizontal">Horizontal Stack</option>
+                                                            </select>
+                                                        </div>
+                                                        <div className="pt-4 mt-4 border-t border-neutral-800">
+                                                            <h4 className="text-[10px] font-bold text-neutral-500 uppercase mb-2">Prefab / Templating</h4>
+
+                                                            { currentScene === 'prefabs' ? (
+                                                                <>
+                                                                    <PropertyInput label="Prefab ID (Template Name)" value={ selectedWidget.props.prefabId || '' } onChange={ (v) => updateWidget(selectedWidget.id, 'props.prefabId', v) } />
+                                                                    <p className="text-[9px] text-neutral-600 mb-2">Unique ID for this template (e.g., WORLD_ITEM_TEMPLATE).</p>
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <div className="space-y-1 mb-3">
+                                                                        <label className="text-[10px] uppercase font-bold text-neutral-500">Item Template</label>
+                                                                        <select
+                                                                            value={ selectedWidget.props.prefabHostId || '' }
+                                                                            onChange={ (e) => updateWidget(selectedWidget.id, 'props.prefabHostId', e.target.value) }
+                                                                            className="w-full bg-neutral-950 border border-neutral-700 rounded px-2 py-1.5 text-xs text-neutral-300 focus:border-emerald-500 focus:outline-none"
+                                                                        >
+                                                                            <option value="">-- None --</option>
+                                                                            { (sceneData['prefabs'] || [])
+                                                                                .filter(p => p.props.prefabId) // Only show items with a Prefab ID
+                                                                                .map(p => (
+                                                                                    <option key={ p.id } value={ p.props.prefabId }>{ p.props.prefabId }</option>
+                                                                                ))
+                                                                            }
+                                                                        </select>
+                                                                        <p className="text-[9px] text-neutral-600">Select a template from the 'prefabs' scene to spawn here.</p>
+                                                                    </div>
+                                                                </>
+                                                            ) }
+                                                        </div>
+                                                    </>
+                                                ) }
+
+                                                { selectedWidget.type === 'IMAGE' && (
+                                                    <>
+                                                        <PropertyInputImage label="Image Path" value={ selectedWidget.props.image } onChange={ (v) => updateWidget(selectedWidget.id, 'props.image', v) } />
+                                                        <PropertyInput label="Background" type="color" value={ selectedWidget.style.bg } onChange={ (v) => updateWidget(selectedWidget.id, 'style.bg', v) } />
+                                                    </>
+                                                ) }
+
+                                                { selectedWidget.type === 'INPUT_TEXT' && (
+                                                    <>
+                                                        <PropertyInput label="Placeholder" value={ selectedWidget.props.placeholder } onChange={ (v) => updateWidget(selectedWidget.id, 'props.placeholder', v) } />
+                                                        <PropertyInput label="Default Text" value={ selectedWidget.props.text } onChange={ (v) => updateWidget(selectedWidget.id, 'props.text', v) } />
+                                                        <PropertyInput label="Font Size" type="number" value={ selectedWidget.props.fontSize || 12 } onChange={ (v) => updateWidget(selectedWidget.id, 'props.fontSize', parseInt(v)) } />
+                                                        <PropertyInput label="Background" type="color" value={ selectedWidget.style.bg } onChange={ (v) => updateWidget(selectedWidget.id, 'style.bg', v) } />
+                                                        <PropertyInput label="Text Color" type="color" value={ selectedWidget.style.color } onChange={ (v) => updateWidget(selectedWidget.id, 'style.color', v) } />
+                                                        <PropertyInput label="Border" type="color" value={ selectedWidget.style.border } onChange={ (v) => updateWidget(selectedWidget.id, 'style.border', v) } />
+                                                    </>
+                                                ) }
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="flex-1 flex flex-col items-center justify-center text-neutral-600 p-8 text-center opacity-50">
+                                            <Icon name="MousePointer" className="w-8 h-8 mb-2" />
+                                            <p className="text-xs">Select a widget to edit properties</p>
+                                        </div>
+                                    ) }
+
+
+
+                                    {/* --- JSON PREVIEW FOOTER --- */ }
+                                    <div className="border-t border-neutral-800 bg-neutral-950 p-0 flex flex-col h-1/3">
+                                        <div className="px-4 py-2 bg-neutral-900 text-[10px] font-bold uppercase text-neutral-500 tracking-wider">
+                                            JSON Output Preview
+                                        </div>
+                                        <div className="flex-1 overflow-auto p-4">
+                                            <pre className="text-[10px] text-emerald-600 font-mono whitespace-pre-wrap">
+                                                { generateJSON() }
+                                            </pre>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div >
+                </div>
             );
         }
 
