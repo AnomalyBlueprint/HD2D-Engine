@@ -126,6 +126,20 @@ void UIService::SetElementText(const std::string& sceneName, const std::string& 
     }
 }
 
+void UIService::SetElementTexture(const std::string& sceneName, const std::string& elementId, unsigned int textureId)
+{
+    if (m_layouts.find(sceneName) == m_layouts.end()) return;
+
+    for (auto& el : m_layouts[sceneName])
+    {
+        if (el.id == elementId)
+        {
+            el.style.textureId = textureId;
+            return;
+        }
+    }
+}
+
 void UIService::GetScreenSize(int& w, int& h)
 {
     w = m_width;
@@ -215,6 +229,58 @@ void UIService::Render(RenderService* renderer)
             bgSprite.Color = el.style.bg;
             bgSprite.TextureID = 0; // Solid color
             renderer->DrawSprite(bgSprite);
+        }
+        else if (el.style.textureId != 0)
+        {
+            Sprite texSprite;
+            texSprite.Position = glm::vec2(
+                el.geometry.x + el.geometry.w / 2.0f, 
+                el.geometry.y + el.geometry.h / 2.0f
+            );
+            texSprite.Size = glm::vec2(el.geometry.w, el.geometry.h);
+            texSprite.Color = glm::vec4(1.0f); // White for texture
+            texSprite.TextureID = el.style.textureId;
+            // Default UVs are 0,0 to 1,1
+            renderer->DrawSprite(texSprite);
+        }
+
+        // Border Rendering
+        if (el.style.border.a > 0.0f)
+        {
+            float thickness = 2.0f;
+            glm::vec4 borderColor = el.style.border;
+            
+            // Top
+            Sprite top;
+            top.Position = glm::vec2(el.geometry.x + el.geometry.w / 2.0f, el.geometry.y + thickness / 2.0f);
+            top.Size = glm::vec2(el.geometry.w, thickness);
+            top.Color = borderColor;
+            top.TextureID = 0;
+            renderer->DrawSprite(top);
+
+            // Bottom
+            Sprite bot;
+            bot.Position = glm::vec2(el.geometry.x + el.geometry.w / 2.0f, el.geometry.y + el.geometry.h - thickness / 2.0f);
+            bot.Size = glm::vec2(el.geometry.w, thickness);
+            bot.Color = borderColor;
+            bot.TextureID = 0;
+            renderer->DrawSprite(bot);
+
+            // Left
+            Sprite left;
+            left.Position = glm::vec2(el.geometry.x + thickness / 2.0f, el.geometry.y + el.geometry.h / 2.0f);
+            left.Size = glm::vec2(thickness, el.geometry.h);
+            left.Color = borderColor;
+            left.TextureID = 0;
+            renderer->DrawSprite(left);
+
+            // Right
+            Sprite right;
+            right.Position = glm::vec2(el.geometry.x + el.geometry.w - thickness / 2.0f, el.geometry.y + el.geometry.h / 2.0f);
+            right.Size = glm::vec2(thickness, el.geometry.h);
+            right.Color = borderColor;
+            right.TextureID = 0;
+            renderer->DrawSprite(right);
         }
 
         // 2. Draw Specific Widgets

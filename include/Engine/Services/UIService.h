@@ -16,7 +16,10 @@ struct UIStyle {
     glm::vec4 border = glm::vec4(0.0f);
     glm::vec4 color = glm::vec4(1.0f);
     std::string image;
+    unsigned int textureId = 0; // Custom OpenGL Texture ID
 };
+// ... (skip down to class definition) ...
+
 
 struct UIProperties {
     std::string text;
@@ -69,6 +72,7 @@ public:
     std::string GetLastAction() override;
     void ConsumeAction() override;
     void SetElementText(const std::string& sceneName, const std::string& elementId, const std::string& text) override;
+    void SetElementTexture(const std::string& sceneName, const std::string& elementId, unsigned int textureId) override;
 
 protected:
     void OnInitialize() override;

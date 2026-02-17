@@ -1494,8 +1494,8 @@
           "h": 512
         },
         "style": {
-          "bg": "#111",
-          "border": "#333"
+          "bg": "#00000000",
+          "border": "#333333"
         },
         "properties": {
           "layoutMode": "free"

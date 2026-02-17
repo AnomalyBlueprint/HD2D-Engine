@@ -3,6 +3,7 @@
 #include "Engine/Services/ILoggerService.h"
 #include <GL/glew.h>
 #include <iostream>
+#include "Engine/Core/BitmapFont.h"
 
 // Constants
 constexpr int PIPELINE_WIDTH = 256;
@@ -40,15 +41,17 @@ void MacroService::GenerateSimulation(int seed) {
 
     FastNoiseLite heightNoise;
     heightNoise.SetSeed(seed + 1);
-    heightNoise.SetNoiseType(FastNoiseLite::NoiseType::OpenSimplex2);
+    heightNoise.SetNoiseType(FastNoiseLite::NoiseType::Perlin);
     heightNoise.SetFrequency(0.02f);
 
     for (int y = 0; y < PIPELINE_HEIGHT; y++) {
         for (int x = 0; x < PIPELINE_WIDTH; x++) {
             int index = y * PIPELINE_WIDTH + x;
 
-            // float n = noise.GetNoise((float)x, (float)y); // Unused for now
-            float h = heightNoise.GetNoise((float)x, (float)y);
+            float offsetX = (seed % 100000) * 1.0f;
+            float offsetY = ((seed / 100000) % 100000) * 1.0f;
+
+            float h = heightNoise.GetNoise((float)x + offsetX, (float)y + offsetY);
             
             // Normalize to 0-255
             uint8_t heightVal = (uint8_t)((h + 1.0f) * 127.5f);
@@ -80,76 +83,99 @@ void MacroService::GenerateSimulation(int seed) {
             m_grid[index] = { biome, heightVal, political, wealth, ruination };
         }
     }
-
-    UpdateTexture();
+    // Debug Log: Check if grid is actually changing
+    if (!m_grid.empty()) {
+        int centerIdx = (PIPELINE_HEIGHT / 2) * PIPELINE_WIDTH + (PIPELINE_WIDTH / 2);
+        auto logger = ServiceLocator::Get().GetService<ILoggerService>();
+        if (logger) logger->Log("Center Tile Biome: " + std::to_string(m_grid[centerIdx].BiomeID) + 
+                                ", Height: " + std::to_string(m_grid[centerIdx].Height));
+    }
+    // Generate Texture
+    RegenerateTexture();
 }
 
-void MacroService::UpdateTexture() {
-
+void MacroService::UpdateTexture()
+{
+    // Texture Dimensions: 256x256 grid * 8x8 font = 2048x2048 pixels
+    constexpr int TEXTURE_WIDTH = PIPELINE_WIDTH * 8;
+    constexpr int TEXTURE_HEIGHT = PIPELINE_HEIGHT * 8;
     
-    std::vector<unsigned char> textureData(PIPELINE_WIDTH * PIPELINE_HEIGHT * 3); // RGB
+    std::vector<unsigned char> data(TEXTURE_WIDTH * TEXTURE_HEIGHT * 3, 0); // Initialize with black
+    
+    auto DrawGlyph = [&](int tileX, int tileY, uint8_t charCode, unsigned char r, unsigned char g, unsigned char b) {
+        if (charCode >= 128) return;
+        
+        int startX = tileX * 8;
+        int startY = tileY * 8;
+        
+        for (int row = 0; row < 8; ++row) {
+            uint8_t rowBits = BITMAP_FONT[charCode][row];
+            for (int col = 0; col < 8; ++col) {
+                if (rowBits & (1 << (7 - col))) {
+                    int px = startX + col;
+                    int py = startY + row;
+                    int idx = (py * TEXTURE_WIDTH + px) * 3;
+                    if (idx < data.size()) {
+                        data[idx + 0] = r;
+                        data[idx + 1] = g;
+                        data[idx + 2] = b;
+                    }
+                }
+            }
+        }
+    };
 
     for (int i = 0; i < PIPELINE_WIDTH * PIPELINE_HEIGHT; ++i) {
+        int x = i % PIPELINE_WIDTH;
+        int y = i / PIPELINE_WIDTH;
         const auto& tile = m_grid[i];
         
-        unsigned char r = 0, g = 0, b = 0;
+        unsigned char r = 255, g = 255, b = 255;
+        uint8_t glyph = '?';
 
         if (m_currentMode == MacroViewMode::Biome) {
             switch (tile.BiomeID) {
-                case 1: r = 0; g = 0; b = 139; break;   // Deep Water
-                case 2: r = 65; g = 105; b = 225; break; // Water
-                case 3: r = 238; g = 214; b = 175; break; // Sand
-                case 4: r = 34; g = 139; b = 34; break;  // Grass
-                case 5: r = 0; g = 100; b = 0; break;    // Forest
-                case 6: r = 128; g = 128; b = 128; break; // Mountain
-                case 7: r = 255; g = 250; b = 250; break; // Snow
-                default: r = 255; g = 0; b = 255; break; 
+                case 1: r=0; g=0; b=200; glyph = '~'; break;   // Deep Water
+                case 2: r=65; g=105; b=225; glyph = '~'; break; // Water
+                case 3: r=238; g=214; b=175; glyph = '.'; break; // Sand
+                case 4: r=34; g=139; b=34; glyph = ','; break;  // Grass
+                case 5: r=0; g=100; b=0; glyph = 5; break;    // Forest (Tree club symbol)
+                case 6: r=128; g=128; b=128; glyph = 94; break; // Mountain (^)
+                case 7: r=240; g=248; b=255; glyph = '*'; break; // Snow
+                default: r=255; g=0; b=255; glyph = '?'; break; 
             }
         }
         else if (m_currentMode == MacroViewMode::Political) {
-             // Random colors for political IDs
+             glyph = '#';
              switch (tile.PoliticalID % 6) {
-                 case 0: r = 255; g = 0; b = 0; break;
-                 case 1: r = 0; g = 255; b = 0; break;
-                 case 2: r = 0; g = 0; b = 255; break;
-                 case 3: r = 255; g = 255; b = 0; break;
-                 case 4: r = 0; g = 255; b = 255; break;
-                 case 5: r = 255; g = 0; b = 255; break;
+                 case 0: r=255; g=0; b=0; break;
+                 case 1: r=0; g=255; b=0; break;
+                 case 2: r=100; g=100; b=255; break;
+                 case 3: r=255; g=255; b=0; break;
+                 case 4: r=0; g=255; b=255; break;
+                 case 5: r=255; g=0; b=255; break;
              }
-             // Darken based on height for depth?
-             float shade = tile.Height / 255.0f;
-             r *= shade; g *= shade; b *= shade;
-        }
-        else if (m_currentMode == MacroViewMode::Wealth) {
-            // Gold gradient
-            r = tile.Wealth;
-            g = tile.Wealth * 0.8f; // Gold-ish
-            b = tile.Wealth * 0.1f;
-        }
-        else if (m_currentMode == MacroViewMode::Ruination) {
-            // Purple/Black gradient
-            r = tile.Ruination * 0.6f;
-            g = 0;
-            b = tile.Ruination;
         }
         else if (m_currentMode == MacroViewMode::Height) {
-            // Greyscale
+            glyph = 127; // Full block
             r = g = b = tile.Height;
         }
+        else {
+            glyph = '?'; // Default
+        }
         
-        textureData[i * 3 + 0] = r;
-        textureData[i * 3 + 1] = g;
-        textureData[i * 3 + 2] = b;
+        DrawGlyph(x, y, glyph, r, g, b);
     }
 
-    if (m_textureID == 0) {
-        glGenTextures(1, &m_textureID);
+    if (m_textureID != 0) {
+        glDeleteTextures(1, &m_textureID);
+        m_textureID = 0;
     }
-
-    glBindTexture(GL_TEXTURE_2D, m_textureID);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, PIPELINE_WIDTH, PIPELINE_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, textureData.data());
     
-    // Nearest neighbor for pixel art look
+    glGenTextures(1, &m_textureID);
+    glBindTexture(GL_TEXTURE_2D, m_textureID);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, TEXTURE_WIDTH, TEXTURE_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, data.data());
+    
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -166,3 +192,8 @@ void MacroService::SetViewMode(MacroViewMode mode) {
 unsigned int MacroService::GetMapTexture() {
     return m_textureID;
 }
+
+void MacroService::RegenerateTexture() {
+    UpdateTexture();
+}
+

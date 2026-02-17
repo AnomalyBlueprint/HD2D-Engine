@@ -24,5 +24,7 @@ private:
     MacroViewMode m_currentMode = MacroViewMode::Biome;
     
     // Helper to map biome data to color
+    // Helper to map biome data to color
     void UpdateTexture();
+    void RegenerateTexture(); // New method for RGBA generation
 };
