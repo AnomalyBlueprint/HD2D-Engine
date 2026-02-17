@@ -316,7 +316,11 @@
                         type: w.type,
                         geometry: { x: w.x, y: w.y, w: w.w, h: w.h },
                         style: w.style,
-                        properties: w.props
+                        properties: {
+                            ...w.props,
+                            // Ensure fontName is explicitly set for compatible types
+                            fontName: (w.type === 'LABEL' || w.type === 'BUTTON') ? (w.props.fontName || "Kenney Pixel") : undefined
+                        }
                     }));
                 });
 
@@ -512,7 +516,7 @@
                                 const url = URL.createObjectURL(blob);
                                 const a = document.createElement('a');
                                 a.href = url;
-                                a.download = `ui_layout_${currentScene}.json`;
+                                a.download = `layout_${currentScene}.json`;
                                 a.click();
                             } } className="flex items-center gap-2 px-3 py-1.5 bg-neutral-800 hover:bg-neutral-700 text-xs font-bold rounded border border-neutral-700 transition-colors">
                                 <Icon name="Copy" /> Export JSON
@@ -583,6 +587,21 @@
                                         { selectedWidget.type === 'BUTTON' && (
                                             <>
                                                 <PropertyInput label="Label Text" value={ selectedWidget.props.text } onChange={ (v) => updateWidget(selectedWidget.id, 'props.text', v) } />
+                                                <div className="space-y-1 mb-3">
+                                                    <label className="text-[10px] uppercase font-bold text-neutral-500">Font</label>
+                                                    <select
+                                                        value={ selectedWidget.props.fontName || '' }
+                                                        onChange={ (e) => updateWidget(selectedWidget.id, 'props.fontName', e.target.value) }
+                                                        className="w-full bg-neutral-950 border border-neutral-700 rounded px-2 py-1.5 text-xs text-neutral-300 focus:border-emerald-500 focus:outline-none"
+                                                    >
+                                                        <option value="">Default (Kenney Pixel)</option>
+                                                        <option value="Kenney Future">Kenney Future</option>
+                                                        <option value="Kenney High">Kenney High</option>
+                                                        <option value="Kenney Mini">Kenney Mini</option>
+                                                        <option value="Kenney Rocket">Kenney Rocket</option>
+                                                        <option value="Kenney Blocks">Kenney Blocks</option>
+                                                    </select>
+                                                </div>
                                                 <PropertyInput label="Action ID" value={ selectedWidget.props.actionId } onChange={ (v) => updateWidget(selectedWidget.id, 'props.actionId', v) } />
                                                 <PropertyInput label="BG Color" type="color" value={ selectedWidget.style.bg } onChange={ (v) => updateWidget(selectedWidget.id, 'style.bg', v) } />
                                                 <PropertyInput label="Text Color" type="color" value={ selectedWidget.style.color } onChange={ (v) => updateWidget(selectedWidget.id, 'style.color', v) } />
@@ -604,6 +623,21 @@
                                                 <PropertyInput label="Text Content" value={ selectedWidget.props.text } onChange={ (v) => updateWidget(selectedWidget.id, 'props.text', v) } />
                                                 <PropertyInput label="Font Size (px)" type="number" value={ selectedWidget.props.fontSize } onChange={ (v) => updateWidget(selectedWidget.id, 'props.fontSize', parseInt(v)) } />
                                                 <div className="space-y-1 mb-3">
+                                                    <label className="text-[10px] uppercase font-bold text-neutral-500">Font</label>
+                                                    <select
+                                                        value={ selectedWidget.props.fontName || '' }
+                                                        onChange={ (e) => updateWidget(selectedWidget.id, 'props.fontName', e.target.value) }
+                                                        className="w-full bg-neutral-950 border border-neutral-700 rounded px-2 py-1.5 text-xs text-neutral-300 focus:border-emerald-500 focus:outline-none"
+                                                    >
+                                                        <option value="">Default (Kenney Pixel)</option>
+                                                        <option value="Kenney Future">Kenney Future</option>
+                                                        <option value="Kenney High">Kenney High</option>
+                                                        <option value="Kenney Mini">Kenney Mini</option>
+                                                        <option value="Kenney Rocket">Kenney Rocket</option>
+                                                        <option value="Kenney Blocks">Kenney Blocks</option>
+                                                    </select>
+                                                </div>
+                                                <div className="space-y-1 mb-3">
                                                     <label className="text-[10px] uppercase font-bold text-neutral-500">Alignment</label>
                                                     <select
                                                         value={ selectedWidget.props.align }
@@ -621,6 +655,7 @@
                                         { selectedWidget.type === 'CHECKBOX' && (
                                             <>
                                                 <PropertyInput label="Label" value={ selectedWidget.props.label || '' } onChange={ (v) => updateWidget(selectedWidget.id, 'props.label', v) } />
+                                                <PropertyInput label="Action ID" value={ selectedWidget.props.actionId || '' } onChange={ (v) => updateWidget(selectedWidget.id, 'props.actionId', v) } />
                                                 <div className="flex items-center justify-between bg-neutral-950 p-2 rounded border border-neutral-800">
                                                     <span className="text-xs font-bold text-neutral-400">Default Checked</span>
                                                     <input type="checkbox" checked={ selectedWidget.props.checked } onChange={ (e) => updateWidget(selectedWidget.id, 'props.checked', e.target.checked) } />
@@ -644,6 +679,13 @@
                                                         <option value="horizontal">Horizontal Stack</option>
                                                     </select>
                                                 </div>
+                                                <div className="pt-4 mt-4 border-t border-neutral-800">
+                                                    <h4 className="text-[10px] font-bold text-neutral-500 uppercase mb-2">Prefab / Templating</h4>
+                                                    <PropertyInput label="Prefab ID (Defines Template)" value={ selectedWidget.props.prefabId || '' } onChange={ (v) => updateWidget(selectedWidget.id, 'props.prefabId', v) } />
+                                                    <p className="text-[9px] text-neutral-600 mb-2">If set, this container becomes a template and is hidden by default.</p>
+                                                    <PropertyInput label="Prefab Host ID (Spawn Target)" value={ selectedWidget.props.prefabHostId || '' } onChange={ (v) => updateWidget(selectedWidget.id, 'props.prefabHostId', v) } />
+                                                    <p className="text-[9px] text-neutral-600">If set, this container will host spawned instances of the specified Prefab ID.</p>
+                                                </div>
                                             </>
                                         ) }
                                     </div>
@@ -654,6 +696,20 @@
                                     <p className="text-xs">Select a widget to edit properties</p>
                                 </div>
                             ) }
+
+                            {/* --- MISSING FEATURES LIST --- */ }
+                            <div className="border-t border-neutral-800 bg-neutral-900/50 p-4 text-[10px] text-neutral-500 font-mono">
+                                <strong className="text-neutral-400 block mb-1">MISSING FEATURES (Planned):</strong>
+                                <ul className="list-disc pl-4 space-y-0.5">
+                                    <li>Z-Index / Layering Control</li>
+                                    <li>Texture / Image Support</li>
+                                    <li>9-Slice Scaling (Panels)</li>
+                                    <li>Input Text Fields</li>
+                                    <li>Tooltips & Hover Hints</li>
+                                    <li>Animations & Transitions</li>
+                                    <li>Focus Navigation (Gamepad/Keyboard)</li>
+                                </ul>
+                            </div>
 
                             {/* --- JSON PREVIEW FOOTER --- */ }
                             <div className="border-t border-neutral-800 bg-neutral-950 p-0 flex flex-col h-1/3">

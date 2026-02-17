@@ -21,10 +21,17 @@ struct UIStyle {
 struct UIProperties {
     std::string text;
     int fontSize = 12;
+    std::string fontName;
     std::string align = "left";
     std::string actionId;
     bool checked = false;
     std::string label;
+    std::string prefabId; // New: If set, this element is a template
+    std::string prefabHostId; // New: If set, this element hosts spawned prefabs
+    float min = 0.0f;
+    float max = 1.0f;
+    int value = 50;
+    std::string layoutMode = "free";
 };
 
 struct UIElement {

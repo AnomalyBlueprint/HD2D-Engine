@@ -72,10 +72,17 @@ void UIService::LoadLayouts(const std::string& path)
                     const auto& props = el["properties"];
                     uiEl.properties.text = props.value("text", "");
                     uiEl.properties.fontSize = props.value("fontSize", 12);
+                    uiEl.properties.fontName = props.value("fontName", "");
                     uiEl.properties.align = props.value("align", "left");
                     uiEl.properties.actionId = props.value("actionId", "");
                     uiEl.properties.checked = props.value("checked", false);
                     uiEl.properties.label = props.value("label", "");
+                    uiEl.properties.min = props.value("min", 0);
+                    uiEl.properties.max = props.value("max", 100);
+                    uiEl.properties.value = props.value("value", 50);
+                    uiEl.properties.layoutMode = props.value("layoutMode", "free");
+                    uiEl.properties.prefabId = props.value("prefabId", "");
+                    uiEl.properties.prefabHostId = props.value("prefabHostId", "");
                 }
 
                 uiElements.push_back(uiEl);
@@ -160,6 +167,9 @@ void UIService::Render(RenderService* renderer)
     const auto& elements = m_layouts[m_activeScene];
     for (const auto& el : elements)
     {
+        // Skip Prefab Templates (they are cloned, not rendered directly)
+        if (!el.properties.prefabId.empty()) continue;
+
         // 1. Draw Background or Image
         if (!el.style.image.empty() && atlas)
         {
@@ -193,28 +203,90 @@ void UIService::Render(RenderService* renderer)
             renderer->DrawSprite(bgSprite);
         }
 
-        // 2. Draw Text / Label
-        if (el.type == "LABEL" || !el.properties.text.empty())
+        // 2. Draw Specific Widgets
+        if (el.type == "SLIDER")
         {
-             auto font = ServiceLocator::Get().GetService<IFontService>();
-             if (font) {
-                 float x = el.geometry.x;
-                 float y = el.geometry.y + el.geometry.h / 2 + 10; // Approx vertical center offset
-                 
-                 float fontSizeLoaded = 32.0f; // Keep consistent with FontService
-                 float scale = (el.properties.fontSize > 0) ? (el.properties.fontSize / fontSizeLoaded) : 1.0f;
+            // Draw Track
+            Sprite trackSprite;
+            trackSprite.Position = glm::vec2(el.geometry.x + el.geometry.w / 2.0f, el.geometry.y + el.geometry.h / 2.0f);
+            trackSprite.Size = glm::vec2(el.geometry.w, el.geometry.h / 4.0f); // Thin track
+            trackSprite.Color = glm::vec4(0.3f, 0.3f, 0.3f, 1.0f); // Dark Gray
+            trackSprite.TextureID = 0;
+            renderer->DrawSprite(trackSprite);
 
-                 if (el.properties.align == "center") {
-                     float textW = font->GetTextWidth(el.properties.text, scale);
-                     x += (el.geometry.w - textW) / 2;
-                 } else { // padding
-                     x += 10;
+            // Draw Knob
+            float range = (float)(el.properties.max - el.properties.min);
+            float pct = (range > 0) ? ((float)(el.properties.value - el.properties.min) / range) : 0.0f;
+            float knobX = el.geometry.x + (el.geometry.w * pct);
+            
+            Sprite knobSprite;
+            knobSprite.Position = glm::vec2(knobX, el.geometry.y + el.geometry.h / 2.0f);
+            knobSprite.Size = glm::vec2(10.0f, el.geometry.h); 
+            knobSprite.Color = glm::vec4(0.0f, 0.8f, 0.0f, 1.0f); // Green
+            knobSprite.TextureID = 0;
+            renderer->DrawSprite(knobSprite);
+        }
+        else if (el.type == "CHECKBOX")
+        {
+             // Draw Box
+             Sprite boxSprite;
+             boxSprite.Position = glm::vec2(el.geometry.x + el.geometry.w / 2.0f, el.geometry.y + el.geometry.h / 2.0f);
+             boxSprite.Size = glm::vec2(el.geometry.w, el.geometry.h);
+             boxSprite.Color = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
+             boxSprite.TextureID = 0;
+             renderer->DrawSprite(boxSprite);
+
+             if (el.properties.checked)
+             {
+                 Sprite checkSprite;
+                 checkSprite.Position = boxSprite.Position;
+                 checkSprite.Size = boxSprite.Size * 0.6f;
+                 checkSprite.Color = glm::vec4(0.0f, 0.8f, 0.0f, 1.0f);
+                 checkSprite.TextureID = 0;
+                 renderer->DrawSprite(checkSprite);
+             }
+             
+             // Draw Label if exists
+             if (!el.properties.label.empty())
+             {
+                 auto font = ServiceLocator::Get().GetService<IFontService>();
+                 if (font) {
+                     font->RenderText(renderer, el.properties.label, 
+                         el.geometry.x + el.geometry.w + 10, 
+                         el.geometry.y + el.geometry.h / 2 + 5, 
+                         0.5f, glm::vec4(1.0f), el.properties.fontName);
                  }
-                 
-                 glm::vec4 textColor = el.style.color;
-                 if (textColor.a == 0.0f) textColor = glm::vec4(1.0f);
-                 
-                 font->RenderText(renderer, el.properties.text, x, y, scale, textColor);
+             }
+        }
+        
+        // 3. Draw Text / Content
+        if (el.type == "LABEL" || el.type == "BUTTON")
+        {
+             if (!el.properties.text.empty())
+             {
+                 auto font = ServiceLocator::Get().GetService<IFontService>();
+                 if (font) {
+                     float x = el.geometry.x;
+                     float y = el.geometry.y + el.geometry.h / 2 + 10; // Approx vertical center offset
+                     
+                     float fontSizeLoaded = 32.0f; // Keep consistent with FontService
+                     float scale = (el.properties.fontSize > 0) ? (el.properties.fontSize / fontSizeLoaded) : 1.0f;
+    
+                     if (el.properties.align == "center") {
+                         float textW = font->GetTextWidth(el.properties.text, scale, el.properties.fontName);
+                         x += (el.geometry.w - textW) / 2;
+                     } else if (el.properties.align == "right") {
+                         float textW = font->GetTextWidth(el.properties.text, scale, el.properties.fontName);
+                         x += (el.geometry.w - textW); 
+                     } else { // padding
+                         x += 10;
+                     }
+                     
+                     glm::vec4 textColor = el.style.color;
+                     if (textColor.a == 0.0f) textColor = glm::vec4(1.0f);
+                     
+                     font->RenderText(renderer, el.properties.text, x, y, scale, textColor, el.properties.fontName);
+                 }
              }
         }
     }
@@ -250,18 +322,39 @@ void UIService::HandleClick(float normalizedX, float normalizedY)
     float my = normalizedY;
     
     // Check collision with buttons
-    const auto& elements = m_layouts[m_activeScene];
-    for (const auto& el : elements)
+    // Check collision
+    auto& elements = m_layouts[m_activeScene];
+    for (auto& el : elements)
     {
-        if (el.type == "BUTTON" && !el.properties.actionId.empty())
+        bool hit = (mx >= el.geometry.x && mx <= el.geometry.x + el.geometry.w &&
+                    my >= el.geometry.y && my <= el.geometry.y + el.geometry.h);
+
+        if (hit) 
         {
-            // AABB Check
-            if (mx >= el.geometry.x && mx <= el.geometry.x + el.geometry.w &&
-                my >= el.geometry.y && my <= el.geometry.y + el.geometry.h)
+            if (el.type == "BUTTON" && !el.properties.actionId.empty())
             {
                 m_lastAction = el.properties.actionId;
-                std::cout << "[DEBUG] UI Click at Normalized: (" << mx << ", " << my << ") - Found Action: " << m_lastAction << std::endl;
-                break;
+                std::cout << "[DEBUG] UI Click Button: " << m_lastAction << std::endl;
+                return; // Consume click
+            }
+            else if (el.type == "CHECKBOX")
+            {
+                el.properties.checked = !el.properties.checked;
+                if (!el.properties.actionId.empty()) {
+                     m_lastAction = el.properties.actionId; // Trigger action on toggle
+                }
+                std::cout << "[DEBUG] Checkbox Toggled: " << (el.properties.checked ? "ON" : "OFF") << std::endl;
+                return;
+            }
+            else if (el.type == "SLIDER")
+            {
+                // Simple click-to-set logic for now (dragging requires state)
+                float relX = mx - el.geometry.x;
+                float pct = glm::clamp(relX / el.geometry.w, 0.0f, 1.0f);
+                int range = el.properties.max - el.properties.min;
+                el.properties.value = el.properties.min + (int)(pct * range);
+                std::cout << "[DEBUG] Slider Value: " << el.properties.value << std::endl;
+                return;
             }
         }
     }
