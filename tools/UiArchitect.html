@@ -107,7 +107,7 @@
         };
 
         // --- Constants ---
-        const SCENES = ['main_menu', 'popups', 'gameplay', 'debug_overlay'];
+        const SCENES = ['main_menu', 'popups', 'prefabs', 'gameplay', 'debug_overlay'];
 
         const WIDGET_TYPES = {
             CONTAINER: { label: 'Container', icon: 'Box', defaultH: 100, defaultW: 100, defaultProps: { layoutMode: 'free' } },
@@ -137,30 +137,27 @@
                     { id: 'world_list_container', type: 'CONTAINER', x: 312, y: 320, w: 400, h: 300, style: { bg: '#0a0a0a', border: '#262626' }, props: { layoutMode: 'vertical', scroll: true } },
                     { id: 'lbl_worlds_header', type: 'LABEL', x: 332, y: 330, w: 100, h: 20, style: { color: '#737373' }, props: { text: "SAVED WORLDS", fontSize: 10, align: "left" } },
 
-                    // Mock World Item 1
-                    { id: 'world_item_1', type: 'CONTAINER', x: 322, y: 360, w: 380, h: 50, style: { bg: '#262626', border: '#404040' }, props: { layoutMode: 'horizontal' } },
-                    { id: 'lbl_w1_name', type: 'LABEL', x: 332, y: 375, w: 200, h: 20, style: { color: '#e5e5e5' }, props: { text: "Epoch_Run_004 (Year 210)", fontSize: 12, align: "left" } },
-                    { id: 'btn_del_w1', type: 'BUTTON', x: 622, y: 370, w: 70, h: 30, style: { bg: '#9f1239', color: '#ffffff' }, props: { text: "DELETE", actionId: "DEL_WORLD_1" } },
-
-                    // Mock World Item 2
-                    { id: 'world_item_2', type: 'CONTAINER', x: 322, y: 420, w: 380, h: 50, style: { bg: '#262626', border: '#404040' }, props: { layoutMode: 'horizontal' } },
-                    { id: 'lbl_w2_name', type: 'LABEL', x: 332, y: 435, w: 200, h: 20, style: { color: '#e5e5e5' }, props: { text: "Iron_Fortress_01 (Year 45)", fontSize: 12, align: "left" } },
-                    { id: 'btn_del_w2', type: 'BUTTON', x: 622, y: 430, w: 70, h: 30, style: { bg: '#9f1239', color: '#ffffff' }, props: { text: "DELETE", actionId: "DEL_WORLD_2" } },
                 ],
 
                 popups: [
-                    // Backdrop
-                    { id: 'popup_backdrop', type: 'CONTAINER', x: 0, y: 0, w: 1024, h: 768, style: { bg: '#000000cc', border: 'transparent' }, props: { layoutMode: 'free' } },
+                    // Backdrop (The host for popups)
+                    { id: 'popup_backdrop', type: 'CONTAINER', x: 0, y: 0, w: 1024, h: 768, style: { bg: '#000000cc', border: 'transparent' }, props: { layoutMode: 'free', prefabHostId: 'MODAL_TEMPLATE' } },
+                ],
 
-                    // Generic Confirmation Modal
-                    { id: 'modal_window', type: 'CONTAINER', x: 312, y: 250, w: 400, h: 200, style: { bg: '#171717', border: '#525252' }, props: { layoutMode: 'vertical' } },
-                    { id: 'modal_title', type: 'LABEL', x: 332, y: 270, w: 360, h: 30, style: { color: '#ffffff' }, props: { text: "CONFIRMATION", fontSize: 16, align: "center" } },
-                    { id: 'modal_desc', type: 'LABEL', x: 332, y: 310, w: 360, h: 60, style: { color: '#a3a3a3' }, props: { text: "Are you sure you want to perform this action? This cannot be undone.", fontSize: 12, align: "center" } },
+                prefabs: [
+                    // World List Item Template
+                    { id: 'tpl_world_item', type: 'CONTAINER', x: 50, y: 50, w: 380, h: 50, style: { bg: '#262626', border: '#404040' }, props: { layoutMode: 'horizontal', prefabId: 'WORLD_ITEM_TEMPLATE' } },
+                    { id: 'tpl_lbl_name', type: 'LABEL', x: 60, y: 65, w: 200, h: 20, style: { color: '#e5e5e5' }, props: { text: "{WorldName}", fontSize: 12, align: "left" } },
+                    { id: 'tpl_btn_del', type: 'BUTTON', x: 350, y: 60, w: 70, h: 30, style: { bg: '#9f1239', color: '#ffffff' }, props: { text: "DELETE", actionId: "DEL_WORLD" } },
 
-                    // Button Row
-                    { id: 'modal_btn_row', type: 'CONTAINER', x: 332, y: 390, w: 360, h: 40, style: { bg: 'transparent', border: 'transparent' }, props: { layoutMode: 'horizontal' } },
-                    { id: 'btn_confirm', type: 'BUTTON', x: 332, y: 390, w: 170, h: 40, style: { bg: '#059669', color: '#ffffff' }, props: { text: "CONFIRM", actionId: "MODAL_CONFIRM" } },
-                    { id: 'btn_cancel', type: 'BUTTON', x: 522, y: 390, w: 170, h: 40, style: { bg: '#404040', color: '#ffffff' }, props: { text: "CANCEL", actionId: "MODAL_CANCEL" } },
+                    // Generic Confirmation Modal Template
+                    { id: 'tpl_modal_window', type: 'CONTAINER', x: 500, y: 50, w: 400, h: 200, style: { bg: '#171717', border: '#525252' }, props: { layoutMode: 'vertical', prefabId: 'MODAL_TEMPLATE' } },
+                    { id: 'tpl_modal_title', type: 'LABEL', x: 520, y: 70, w: 360, h: 30, style: { color: '#ffffff' }, props: { text: "CONFIRMATION", fontSize: 16, align: "center" } },
+                    { id: 'tpl_modal_desc', type: 'LABEL', x: 520, y: 110, w: 360, h: 60, style: { color: '#a3a3a3' }, props: { text: "Are you sure you want to perform this action?", fontSize: 12, align: "center" } },
+
+                    { id: 'tpl_modal_btn_row', type: 'CONTAINER', x: 520, y: 190, w: 360, h: 40, style: { bg: 'transparent', border: 'transparent' }, props: { layoutMode: 'horizontal' } },
+                    { id: 'tpl_btn_confirm', type: 'BUTTON', x: 520, y: 190, w: 170, h: 40, style: { bg: '#059669', color: '#ffffff' }, props: { text: "CONFIRM", actionId: "MODAL_CONFIRM" } },
+                    { id: 'tpl_btn_cancel', type: 'BUTTON', x: 710, y: 190, w: 170, h: 40, style: { bg: '#404040', color: '#ffffff' }, props: { text: "CANCEL", actionId: "MODAL_CANCEL" } },
                 ],
 
                 gameplay: [
@@ -421,11 +418,71 @@
                                 </div>
                             );
                         default: // CONTAINER
+                            const renderPrefabPreview = () => {
+                                if (!w.props.prefabHostId) return null;
+
+                                const prefabRoot = (sceneData['prefabs'] || []).find(p => p.props.prefabId === w.props.prefabHostId);
+                                if (!prefabRoot) return null;
+
+                                // Find children inside the prefab root
+                                const prefabChildren = (sceneData['prefabs'] || []).filter(c =>
+                                    c.id !== prefabRoot.id &&
+                                    c.x >= prefabRoot.x && c.x <= (prefabRoot.x + prefabRoot.w) &&
+                                    c.y >= prefabRoot.y && c.y <= (prefabRoot.y + prefabRoot.h)
+                                );
+
+                                // Simulate 3 items based on layout mode
+                                const isHorizontal = w.props.layoutMode === 'horizontal';
+                                const items = [0, 1, 2];
+
+                                return items.map(i => {
+                                    const offsetX = isHorizontal ? (i * (prefabRoot.w + 5)) : 0;
+                                    const offsetY = isHorizontal ? 0 : (i * (prefabRoot.h + 5));
+
+                                    // Don't render if out of bounds of the host
+                                    if (offsetY + prefabRoot.h > w.h && !w.props.scroll) return null;
+
+                                    return (
+                                        <div key={ i } className="absolute pointer-events-none opacity-50 grayscale"
+                                            style={ {
+                                                top: 5 + offsetY, // 5px padding
+                                                left: 5 + offsetX,
+                                                width: prefabRoot.w,
+                                                height: prefabRoot.h,
+                                                backgroundColor: prefabRoot.style.bg,
+                                                border: `1px dashed ${prefabRoot.style.border}`
+                                            } }>
+                                            {/* Render Children relative to Root */ }
+                                            { prefabChildren.map(child => {
+                                                // Relative pos
+                                                const rx = child.x - prefabRoot.x;
+                                                const ry = child.y - prefabRoot.y;
+                                                return (
+                                                    <div key={ child.id } className="absolute border border-white/10 flex items-center justify-center text-[9px] overflow-hidden"
+                                                        style={ {
+                                                            top: ry, left: rx, width: child.w, height: child.h,
+                                                            backgroundColor: child.style.bg, color: child.style.color,
+                                                            fontSize: `${child.props.fontSize || 10}px`
+                                                        } }>
+                                                        { child.props.text || (child.type === 'BUTTON' ? child.props.text : '') || child.id }
+                                                    </div>
+                                                );
+                                            }) }
+                                        </div>
+                                    );
+                                });
+                            };
+
                             return (
                                 <div className="w-full h-full border border-dashed flex flex-col relative overflow-hidden" style={ { backgroundColor: w.style.bg, borderColor: w.style.border } }>
-                                    <div className="p-1 text-[9px] text-neutral-500 opacity-50 uppercase flex justify-between">
+                                    <div className="p-1 text-[9px] text-neutral-500 opacity-50 uppercase flex justify-between z-10">
                                         <span>{ w.id }</span>
                                         { w.props.layoutMode && w.props.layoutMode !== 'free' && <Icon name="Layout" className="w-3 h-3 opacity-50" /> }
+                                    </div>
+
+                                    {/* Prefab Ghost Preview */ }
+                                    <div className="absolute inset-0 p-1 pointer-events-none z-0">
+                                        { renderPrefabPreview() }
                                     </div>
                                 </div>
                             );
@@ -516,7 +573,7 @@
                                 const url = URL.createObjectURL(blob);
                                 const a = document.createElement('a');
                                 a.href = url;
-                                a.download = `layout_${currentScene}.json`;
+                                a.download = `ui_layouts.json`;
                                 a.click();
                             } } className="flex items-center gap-2 px-3 py-1.5 bg-neutral-800 hover:bg-neutral-700 text-xs font-bold rounded border border-neutral-700 transition-colors">
                                 <Icon name="Copy" /> Export JSON
@@ -540,15 +597,33 @@
                         </div>
 
                         {/* --- CANVAS (Center) --- */ }
-                        <div className="flex-1 bg-[#0a0a0a] relative overflow-hidden grid-bg" ref={ containerRef }>
+                        <div
+                            className="flex-1 bg-[#0a0a0a] relative overflow-hidden grid-bg"
+                            ref={ containerRef }
+                            onMouseDown={ (e) => {
+                                // Only deselect if clicking the background directly (not a widget)
+                                if (e.target === e.currentTarget || e.target.classList.contains('grid-bg')) {
+                                    setSelectedId(null);
+                                }
+                            } }
+                        >
                             {/* Canvas Size Indicator */ }
                             <div className="absolute top-0 left-0 border-b border-r border-neutral-700 bg-neutral-900/50 text-[10px] px-2 py-1 text-neutral-500">
                                 { settings.width }x{ settings.height }
                             </div>
 
                             {/* Widgets */ }
-                            <div className="relative mx-auto my-8 shadow-2xl bg-black border border-neutral-800"
-                                style={ { width: settings.width, height: settings.height } }>
+                            <div
+                                className="relative mx-auto my-8 shadow-2xl bg-black border border-neutral-800"
+                                style={ { width: settings.width, height: settings.height } }
+                                onMouseDown={ (e) => {
+                                    // Also deselect if clicking the black canvas area but not a widget
+                                    // Widgets call stopPropagation, so this only fires if we missed a widget
+                                    if (e.target === e.currentTarget) {
+                                        setSelectedId(null);
+                                    }
+                                } }
+                            >
                                 { (currentWidgets || []).map(w => <WidgetRenderer key={ w.id } w={ w } />) }
                             </div>
                         </div>
@@ -681,10 +756,33 @@
                                                 </div>
                                                 <div className="pt-4 mt-4 border-t border-neutral-800">
                                                     <h4 className="text-[10px] font-bold text-neutral-500 uppercase mb-2">Prefab / Templating</h4>
-                                                    <PropertyInput label="Prefab ID (Defines Template)" value={ selectedWidget.props.prefabId || '' } onChange={ (v) => updateWidget(selectedWidget.id, 'props.prefabId', v) } />
-                                                    <p className="text-[9px] text-neutral-600 mb-2">If set, this container becomes a template and is hidden by default.</p>
-                                                    <PropertyInput label="Prefab Host ID (Spawn Target)" value={ selectedWidget.props.prefabHostId || '' } onChange={ (v) => updateWidget(selectedWidget.id, 'props.prefabHostId', v) } />
-                                                    <p className="text-[9px] text-neutral-600">If set, this container will host spawned instances of the specified Prefab ID.</p>
+
+                                                    { currentScene === 'prefabs' ? (
+                                                        <>
+                                                            <PropertyInput label="Prefab ID (Template Name)" value={ selectedWidget.props.prefabId || '' } onChange={ (v) => updateWidget(selectedWidget.id, 'props.prefabId', v) } />
+                                                            <p className="text-[9px] text-neutral-600 mb-2">Unique ID for this template (e.g., WORLD_ITEM_TEMPLATE).</p>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <div className="space-y-1 mb-3">
+                                                                <label className="text-[10px] uppercase font-bold text-neutral-500">Item Template</label>
+                                                                <select
+                                                                    value={ selectedWidget.props.prefabHostId || '' }
+                                                                    onChange={ (e) => updateWidget(selectedWidget.id, 'props.prefabHostId', e.target.value) }
+                                                                    className="w-full bg-neutral-950 border border-neutral-700 rounded px-2 py-1.5 text-xs text-neutral-300 focus:border-emerald-500 focus:outline-none"
+                                                                >
+                                                                    <option value="">-- None --</option>
+                                                                    { (sceneData['prefabs'] || [])
+                                                                        .filter(p => p.props.prefabId) // Only show items with a Prefab ID
+                                                                        .map(p => (
+                                                                            <option key={ p.id } value={ p.props.prefabId }>{ p.props.prefabId }</option>
+                                                                        ))
+                                                                    }
+                                                                </select>
+                                                                <p className="text-[9px] text-neutral-600">Select a template from the 'prefabs' scene to spawn here.</p>
+                                                            </div>
+                                                        </>
+                                                    ) }
                                                 </div>
                                             </>
                                         ) }
@@ -724,7 +822,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div >
             );
         }
 

@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated": "2026-02-17T06:38:20.721Z",
+    "generated": "2026-02-17T18:02:04.970Z",
     "version": "2.3"
   },
   "settings": {
@@ -41,7 +41,8 @@
         "properties": {
           "text": "PROJECT EPOCH",
           "fontSize": 32,
-          "align": "center"
+          "align": "center",
+          "fontName": "Kenney Pixel"
         }
       },
       {
@@ -59,7 +60,8 @@
         },
         "properties": {
           "text": "Start Game",
-          "actionId": "START_GAME"
+          "actionId": "START_GAME",
+          "fontName": "Kenney Pixel"
         }
       },
       {
@@ -77,7 +79,8 @@
         },
         "properties": {
           "text": "Generate World",
-          "actionId": "GEN_WORLD"
+          "actionId": "GEN_WORLD",
+          "fontName": "Kenney Pixel"
         }
       },
       {
@@ -95,7 +98,8 @@
         },
         "properties": {
           "layoutMode": "vertical",
-          "scroll": true
+          "scroll": true,
+          "prefabHostId": "WORLD_ITEM_TEMPLATE"
         }
       },
       {
@@ -108,118 +112,13 @@
           "h": 20
         },
         "style": {
-          "color": "#ffffff"
+          "color": "#737373"
         },
         "properties": {
           "text": "SAVED WORLDS",
           "fontSize": 10,
-          "align": "left"
-        }
-      },
-      {
-        "id": "world_item_1",
-        "type": "CONTAINER",
-        "geometry": {
-          "x": 322,
-          "y": 360,
-          "w": 380,
-          "h": 50
-        },
-        "style": {
-          "bg": "#262626",
-          "border": "#404040"
-        },
-        "properties": {
-          "layoutMode": "horizontal"
-        }
-      },
-      {
-        "id": "lbl_w1_name",
-        "type": "LABEL",
-        "geometry": {
-          "x": 332,
-          "y": 375,
-          "w": 200,
-          "h": 20
-        },
-        "style": {
-          "color": "#ffffff"
-        },
-        "properties": {
-          "text": "Epoch_Run_004 (Year 210)",
-          "fontSize": 12,
-          "align": "left"
-        }
-      },
-      {
-        "id": "btn_del_w1",
-        "type": "BUTTON",
-        "geometry": {
-          "x": 622,
-          "y": 370,
-          "w": 70,
-          "h": 30
-        },
-        "style": {
-          "bg": "#9f1239",
-          "color": "#ffffff"
-        },
-        "properties": {
-          "text": "DELETE",
-          "actionId": "DEL_WORLD_1"
-        }
-      },
-      {
-        "id": "world_item_2",
-        "type": "CONTAINER",
-        "geometry": {
-          "x": 322,
-          "y": 420,
-          "w": 380,
-          "h": 50
-        },
-        "style": {
-          "bg": "#262626",
-          "border": "#404040"
-        },
-        "properties": {
-          "layoutMode": "horizontal"
-        }
-      },
-      {
-        "id": "lbl_w2_name",
-        "type": "LABEL",
-        "geometry": {
-          "x": 332,
-          "y": 435,
-          "w": 200,
-          "h": 20
-        },
-        "style": {
-          "color": "#ffffff"
-        },
-        "properties": {
-          "text": "Iron_Fortress_01 (Year 45)",
-          "fontSize": 12,
-          "align": "left"
-        }
-      },
-      {
-        "id": "btn_del_w2",
-        "type": "BUTTON",
-        "geometry": {
-          "x": 622,
-          "y": 430,
-          "w": 70,
-          "h": 30
-        },
-        "style": {
-          "bg": "#9f1239",
-          "color": "#ffffff"
-        },
-        "properties": {
-          "text": "DELETE",
-          "actionId": "DEL_WORLD_2"
+          "align": "left",
+          "fontName": "Kenney Pixel"
         }
       }
     ],
@@ -238,15 +137,74 @@
           "border": "transparent"
         },
         "properties": {
-          "layoutMode": "free"
+          "layoutMode": "free",
+          "prefabHostId": "MODAL_TEMPLATE"
+        }
+      }
+    ],
+    "prefabs": [
+      {
+        "id": "tpl_world_item",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 50,
+          "y": 50,
+          "w": 380,
+          "h": 50
+        },
+        "style": {
+          "bg": "#262626",
+          "border": "#404040"
+        },
+        "properties": {
+          "layoutMode": "horizontal",
+          "prefabId": "WORLD_ITEM_TEMPLATE"
         }
       },
       {
-        "id": "modal_window",
+        "id": "tpl_lbl_name",
+        "type": "LABEL",
+        "geometry": {
+          "x": 60,
+          "y": 65,
+          "w": 200,
+          "h": 20
+        },
+        "style": {
+          "color": "#e5e5e5"
+        },
+        "properties": {
+          "text": "{WorldName}",
+          "fontSize": 12,
+          "align": "left",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "tpl_btn_del",
+        "type": "BUTTON",
+        "geometry": {
+          "x": 350,
+          "y": 60,
+          "w": 70,
+          "h": 30
+        },
+        "style": {
+          "bg": "#9f1239",
+          "color": "#ffffff"
+        },
+        "properties": {
+          "text": "DELETE",
+          "actionId": "DEL_WORLD",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "tpl_modal_window",
         "type": "CONTAINER",
         "geometry": {
-          "x": 312,
-          "y": 250,
+          "x": 500,
+          "y": 50,
           "w": 400,
           "h": 200
         },
@@ -255,15 +213,16 @@
           "border": "#525252"
         },
         "properties": {
-          "layoutMode": "vertical"
+          "layoutMode": "vertical",
+          "prefabId": "MODAL_TEMPLATE"
         }
       },
       {
-        "id": "modal_title",
+        "id": "tpl_modal_title",
         "type": "LABEL",
         "geometry": {
-          "x": 332,
-          "y": 270,
+          "x": 520,
+          "y": 70,
           "w": 360,
           "h": 30
         },
@@ -273,33 +232,35 @@
         "properties": {
           "text": "CONFIRMATION",
           "fontSize": 16,
-          "align": "center"
+          "align": "center",
+          "fontName": "Kenney Pixel"
         }
       },
       {
-        "id": "modal_desc",
+        "id": "tpl_modal_desc",
         "type": "LABEL",
         "geometry": {
-          "x": 332,
-          "y": 310,
+          "x": 520,
+          "y": 110,
           "w": 360,
           "h": 60
         },
         "style": {
-          "color": "#ffffff"
+          "color": "#a3a3a3"
         },
         "properties": {
-          "text": "Are you sure you want to perform this action? This cannot be undone.",
+          "text": "Are you sure you want to perform this action?",
           "fontSize": 12,
-          "align": "center"
+          "align": "center",
+          "fontName": "Kenney Pixel"
         }
       },
       {
-        "id": "modal_btn_row",
+        "id": "tpl_modal_btn_row",
         "type": "CONTAINER",
         "geometry": {
-          "x": 332,
-          "y": 390,
+          "x": 520,
+          "y": 190,
           "w": 360,
           "h": 40
         },
@@ -312,11 +273,11 @@
         }
       },
       {
-        "id": "btn_confirm",
+        "id": "tpl_btn_confirm",
         "type": "BUTTON",
         "geometry": {
-          "x": 332,
-          "y": 390,
+          "x": 520,
+          "y": 190,
           "w": 170,
           "h": 40
         },
@@ -326,15 +287,16 @@
         },
         "properties": {
           "text": "CONFIRM",
-          "actionId": "MODAL_CONFIRM"
+          "actionId": "MODAL_CONFIRM",
+          "fontName": "Kenney Pixel"
         }
       },
       {
-        "id": "btn_cancel",
+        "id": "tpl_btn_cancel",
         "type": "BUTTON",
         "geometry": {
-          "x": 522,
-          "y": 390,
+          "x": 710,
+          "y": 190,
           "w": 170,
           "h": 40
         },
@@ -344,7 +306,8 @@
         },
         "properties": {
           "text": "CANCEL",
-          "actionId": "MODAL_CANCEL"
+          "actionId": "MODAL_CANCEL",
+          "fontName": "Kenney Pixel"
         }
       }
     ],
@@ -547,12 +510,12 @@
         },
         "style": {
           "bg": "#4f46e5",
-          "color": "#ffffff",
-          "image": "tile_0072"
+          "color": "#fff"
         },
         "properties": {
-          "text": "",
-          "actionId": "TOGGLE_INVENTORY"
+          "text": "🎒",
+          "actionId": "TOGGLE_INVENTORY",
+          "fontName": "Kenney Pixel"
         }
       },
       {
@@ -635,12 +598,13 @@
           "h": 20
         },
         "style": {
-          "color": "#ffffff"
+          "color": "#333"
         },
         "properties": {
           "text": "MACRO GRID VISUALIZATION (256x256)",
           "fontSize": 12,
-          "align": "center"
+          "align": "center",
+          "fontName": "Kenney Pixel"
         }
       },
       {
@@ -670,12 +634,13 @@
           "h": 20
         },
         "style": {
-          "color": "#ffffff"
+          "color": "#fbbf24"
         },
         "properties": {
-          "text": "VIEW MODES",
+          "text": "VIEW MODES (F-Keys)",
           "fontSize": 12,
-          "align": "left"
+          "align": "left",
+          "fontName": "Kenney Pixel"
         }
       },
       {
@@ -693,8 +658,7 @@
         },
         "properties": {
           "checked": true,
-          "label": "Political Borders",
-          "actionId": "TOGGLE_POLITICAL"
+          "label": "F1: Political Borders"
         }
       },
       {
@@ -707,12 +671,13 @@
           "h": 20
         },
         "style": {
-          "color": "#ffffff"
+          "color": "#ccc"
         },
         "properties": {
           "text": "Political Borders",
           "fontSize": 11,
-          "align": "left"
+          "align": "left",
+          "fontName": "Kenney Pixel"
         }
       },
       {
@@ -730,8 +695,7 @@
         },
         "properties": {
           "checked": false,
-          "label": "Biomes",
-          "actionId": "TOGGLE_BIOMES"
+          "label": "F2: Biomes"
         }
       },
       {
@@ -744,12 +708,13 @@
           "h": 20
         },
         "style": {
-          "color": "#ffffff"
+          "color": "#ccc"
         },
         "properties": {
           "text": "Biomes",
           "fontSize": 11,
-          "align": "left"
+          "align": "left",
+          "fontName": "Kenney Pixel"
         }
       },
       {
@@ -767,8 +732,7 @@
         },
         "properties": {
           "checked": false,
-          "label": "Economy Heatmap",
-          "actionId": "TOGGLE_ECONOMY"
+          "label": "F3: Economy Heatmap"
         }
       },
       {
@@ -781,12 +745,13 @@
           "h": 20
         },
         "style": {
-          "color": "#ffffff"
+          "color": "#ccc"
         },
         "properties": {
           "text": "Trade Wealth",
           "fontSize": 11,
-          "align": "left"
+          "align": "left",
+          "fontName": "Kenney Pixel"
         }
       },
       {
@@ -804,8 +769,7 @@
         },
         "properties": {
           "checked": false,
-          "label": "Ruination",
-          "actionId": "TOGGLE_RUINATION"
+          "label": "F4: Ruination"
         }
       },
       {
@@ -818,104 +782,13 @@
           "h": 20
         },
         "style": {
-          "color": "#ffffff"
+          "color": "#ccc"
         },
         "properties": {
           "text": "Ruination",
           "fontSize": 11,
-          "align": "left"
-        }
-      },
-      {
-        "id": "lbl_shaders",
-        "type": "LABEL",
-        "geometry": {
-          "x": 20,
-          "y": 210,
-          "w": 200,
-          "h": 20
-        },
-        "style": {
-          "color": "#ffffff"
-        },
-        "properties": {
-          "text": "SHADERS",
-          "fontSize": 12,
-          "align": "left"
-        }
-      },
-      {
-        "id": "chk_edge",
-        "type": "CHECKBOX",
-        "geometry": {
-          "x": 20,
-          "y": 240,
-          "w": 20,
-          "h": 20
-        },
-        "style": {
-          "bg": "#262626",
-          "border": "#525252"
-        },
-        "properties": {
-          "checked": true,
-          "label": "Edge Detection",
-          "actionId": "TOGGLE_SHADER_EDGE"
-        }
-      },
-      {
-        "id": "lbl_edge",
-        "type": "LABEL",
-        "geometry": {
-          "x": 50,
-          "y": 240,
-          "w": 150,
-          "h": 20
-        },
-        "style": {
-          "color": "#ffffff"
-        },
-        "properties": {
-          "text": "Edge Detection",
-          "fontSize": 11,
-          "align": "left"
-        }
-      },
-      {
-        "id": "chk_crt",
-        "type": "CHECKBOX",
-        "geometry": {
-          "x": 20,
-          "y": 270,
-          "w": 20,
-          "h": 20
-        },
-        "style": {
-          "bg": "#262626",
-          "border": "#525252"
-        },
-        "properties": {
-          "checked": false,
-          "label": "CRT Effect",
-          "actionId": "TOGGLE_SHADER_CRT"
-        }
-      },
-      {
-        "id": "lbl_crt",
-        "type": "LABEL",
-        "geometry": {
-          "x": 50,
-          "y": 270,
-          "w": 150,
-          "h": 20
-        },
-        "style": {
-          "color": "#ffffff"
-        },
-        "properties": {
-          "text": "CRT Effect",
-          "fontSize": 11,
-          "align": "left"
+          "align": "left",
+          "fontName": "Kenney Pixel"
         }
       },
       {
@@ -945,12 +818,13 @@
           "h": 20
         },
         "style": {
-          "color": "#ffffff"
+          "color": "#fbbf24"
         },
         "properties": {
           "text": "HISTORY SCRUBBER",
           "fontSize": 12,
-          "align": "left"
+          "align": "left",
+          "fontName": "Kenney Pixel"
         }
       },
       {
@@ -982,12 +856,13 @@
           "h": 20
         },
         "style": {
-          "color": "#ffffff"
+          "color": "#fff"
         },
         "properties": {
           "text": "Current Year: 0 (Genesis)",
           "fontSize": 12,
-          "align": "center"
+          "align": "center",
+          "fontName": "Kenney Pixel"
         }
       },
       {
@@ -1017,12 +892,13 @@
           "h": 20
         },
         "style": {
-          "color": "#ffffff"
+          "color": "#fbbf24"
         },
         "properties": {
           "text": "TILE INSPECTOR",
           "fontSize": 12,
-          "align": "left"
+          "align": "left",
+          "fontName": "Kenney Pixel"
         }
       },
       {
@@ -1035,12 +911,13 @@
           "h": 60
         },
         "style": {
-          "color": "#ffffff"
+          "color": "#666"
         },
         "properties": {
           "text": "Click any pixel on the map to view Macro Data (Civ, Resources, History).",
           "fontSize": 10,
-          "align": "left"
+          "align": "left",
+          "fontName": "Kenney Pixel"
         }
       }
     ]
