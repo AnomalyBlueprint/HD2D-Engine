@@ -22,6 +22,7 @@ public:
     void Clear() override;
     void SwapBuffers() override;
     void SetDepthTest(bool enable) override;
+    void SetViewport(int width, int height) override;
     unsigned int CreateMesh(const std::vector<float> &vertices, const std::vector<unsigned int> &indices) override;
     void DrawMesh(unsigned int meshID, int indexCount) override;
     unsigned int LoadTexture(const std::string &path) override;

@@ -52,7 +52,11 @@ public:
     void Render(RenderService* renderer) override;
     
     // Input Handling
-    void Update(IInputService* input) override;
+    // Input Handling
+    void HandleClick(float normalizedX, float normalizedY) override;
+    
+    glm::vec2 ScreenToUISpace(float screenX, float screenY, int windowW, int windowH) override;
+
     std::string GetLastAction() override;
     void ConsumeAction() override;
 
@@ -68,5 +72,5 @@ private:
     int m_height = 720;
     
     std::string m_lastAction;
-    bool m_wasMouseDown = false;
+
 };

@@ -220,48 +220,42 @@ void UIService::Render(RenderService* renderer)
     }
 }
 
-void UIService::Update(IInputService* input)
+glm::vec2 UIService::ScreenToUISpace(float screenX, float screenY, int windowW, int windowH)
 {
-    if (!input || m_activeScene.empty()) return;
+    // Target Resolution
+    float targetW = (float)m_width;  // 1280 or from JSON
+    float targetH = (float)m_height; // 720 or from JSON
+    
+    // Calculate Scale
+    float scaleX = targetW / (float)windowW;
+    float scaleY = targetH / (float)windowH;
+    
+    return glm::vec2(screenX * scaleX, screenY * scaleY);
+}
 
-    // TODO: Get Mouse Position from InputService
-    // For now we assume InputService has GetMousePosition() or similar.
-    // Checked IInputService, it only has IsKeyDown. 
-    // We need to add mouse support to IInputService too!
-    // Or simpler: Use SDL_GetMouseState here for now if IInputService doesn't support it.
+void UIService::HandleClick(float normalizedX, float normalizedY)
+{
+    if (m_activeScene.empty()) return;
+
+    float mx = normalizedX;
+    float my = normalizedY;
     
-    int mx, my;
-    SDL_GetMouseState(&mx, &my);
-    
-    bool mouseDown = (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT));
-    
-    // On Click (Mouse Release?) or Press? 
-    // Usually Click = Down then Up.
-    // Let's trigger on Down for simplicity of prototype, or better Up if pressed on same element.
-    // Simple: Trigger on Down.
-    
-    if (mouseDown && !m_wasMouseDown)
+    // Check collision with buttons
+    const auto& elements = m_layouts[m_activeScene];
+    for (const auto& el : elements)
     {
-        // Click Event
-        // Check collision with buttons
-        const auto& elements = m_layouts[m_activeScene];
-        for (const auto& el : elements)
+        if (el.type == "BUTTON" && !el.properties.actionId.empty())
         {
-            if (el.type == "BUTTON" && !el.properties.actionId.empty())
+            // AABB Check
+            if (mx >= el.geometry.x && mx <= el.geometry.x + el.geometry.w &&
+                my >= el.geometry.y && my <= el.geometry.y + el.geometry.h)
             {
-                // AABB Check
-                if (mx >= el.geometry.x && mx <= el.geometry.x + el.geometry.w &&
-                    my >= el.geometry.y && my <= el.geometry.y + el.geometry.h)
-                {
-                    m_lastAction = el.properties.actionId;
-                    std::cout << "[UIService] Button Clicked: " << m_lastAction << std::endl;
-                    break;
-                }
+                m_lastAction = el.properties.actionId;
+                std::cout << "[DEBUG] UI Click at Normalized: (" << mx << ", " << my << ") - Found Action: " << m_lastAction << std::endl;
+                break;
             }
         }
     }
-    
-    m_wasMouseDown = mouseDown;
 }
 
 std::string UIService::GetLastAction()

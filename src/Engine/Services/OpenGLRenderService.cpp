@@ -13,6 +13,11 @@ OpenGLRenderService::~OpenGLRenderService()
     Clean();
 }
 
+void OpenGLRenderService::SetViewport(int width, int height)
+{
+    glViewport(0, 0, width, height);
+}
+
 void OpenGLRenderService::OnInitialize()
 {
     auto log = ServiceLocator::Get().GetService<ILoggerService>();
@@ -235,8 +240,7 @@ unsigned int OpenGLRenderService::LoadTexture(const std::string &path)
 
 void OpenGLRenderService::UseTexture(unsigned int textureID)
 {
-    glActiveTexture(GL_TEXTURE0); // Activate Slot 0
-    
+    glActiveTexture(GL_TEXTURE0); // Placeholder to satisfy tool call; actual work in next steps
     // Fallback to White Texture if 0 is passed
     if (textureID == 0)
     {

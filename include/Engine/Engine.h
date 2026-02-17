@@ -19,9 +19,12 @@ public:
     void Clean();
 
     void AttachLayer(std::shared_ptr<GameLayer> layer);
+    
+    void ToggleFullscreen();
 
 private:
     bool m_isRunning = false;
+    bool m_fullscreen = false;
     SDL_Window* m_window = nullptr;
     std::shared_ptr<GameLayer> m_gameLayer; // Currently single layer support
 

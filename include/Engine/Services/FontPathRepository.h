@@ -15,7 +15,7 @@ public:
     std::string GetPath(const std::string& fontName);
     
     // IPathRepository Interface
-    std::string GetPath(int id) override { return ""; } // Fonts use string IDs
+    std::string GetPath(int /*id*/) override { return ""; } // Fonts use string IDs
 
 private:
     std::map<std::string, std::string> m_paths;

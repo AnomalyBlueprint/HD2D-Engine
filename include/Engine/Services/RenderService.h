@@ -33,6 +33,11 @@ public:
     /// </summary>
     virtual void SetDepthTest(bool enable) = 0;
 
+    /// <summary>
+    /// Sets the rendering viewport.
+    /// </summary>
+    virtual void SetViewport(int width, int height) = 0;
+
     // --- Mesh Rendering ---
 
     /// <summary>

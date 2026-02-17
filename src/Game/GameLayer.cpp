@@ -174,7 +174,24 @@ void GameLayer::OnUpdate(float deltaTime)
         // GUI Interactions
         if (uiService)
         {
-            uiService->Update(inputService.get());
+            // Resolution Independent Input Handling
+            int winW, winH;
+            SDL_Window* window = SDL_GL_GetCurrentWindow();
+            SDL_GetWindowSize(window, &winW, &winH);
+            
+            int mx, my;
+            Uint32 buttons = SDL_GetMouseState(&mx, &my);
+            bool mouseDown = (buttons & SDL_BUTTON(SDL_BUTTON_LEFT));
+            
+            static bool s_wasMouseDown = false;
+            
+            if (mouseDown && !s_wasMouseDown)
+            {
+                 glm::vec2 uiMouse = uiService->ScreenToUISpace((float)mx, (float)my, winW, winH);
+                 uiService->HandleClick(uiMouse.x, uiMouse.y);
+            }
+            s_wasMouseDown = mouseDown;
+
             std::string action = uiService->GetLastAction();
             if (!action.empty())
             {
@@ -411,10 +428,16 @@ void GameLayer::OnRender()
         renderer->SetDepthTest(true);
     }
 
-    // --- 3. Composite Pass ---
     if (usePost && renderWorld)
     {
         postProcess->Unbind(); 
+        
+        // Reset Viewport to Window Size
+        int winW, winH;
+        SDL_Window* window = SDL_GL_GetCurrentWindow();
+        SDL_GetWindowSize(window, &winW, &winH);
+        renderer->SetViewport(winW, winH);
+
         renderer->SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         renderer->Clear();
         
@@ -473,6 +496,12 @@ void GameLayer::OnRender()
          
          static int blitLog = 0;
          if (blitLog++ % 600 == 0) std::cout << "[GameLayer] Blitting UI to Screen (MainMenu)" << std::endl;
+
+         // Reset Viewport to Window Size (PostProcess might have changed it)
+         int winW, winH;
+         SDL_Window* window = SDL_GL_GetCurrentWindow();
+         SDL_GetWindowSize(window, &winW, &winH);
+         renderer->SetViewport(winW, winH);
 
          shaders->UseShader(m_basicShaderID);
          shaders->SetMat4(m_basicShaderID, "view", glm::mat4(1.0f));

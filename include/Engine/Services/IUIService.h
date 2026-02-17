@@ -1,6 +1,7 @@
 #pragma once
 #include "Engine/Services/IService.h"
 #include "Engine/Services/IInputService.h"
+#include <glm/glm.hpp>
 #include <string>
 
 class RenderService; // Forward declaration
@@ -43,7 +44,12 @@ public:
     virtual void Render(RenderService* renderer) = 0;
 
     // Input Handling
-    virtual void Update(IInputService* input) = 0;
+    virtual void HandleClick(float normalizedX, float normalizedY) = 0;
+    
+    // Virtual Coordinate Mapping
+    virtual glm::vec2 ScreenToUISpace(float screenX, float screenY, int windowW, int windowH) = 0;
+
     virtual std::string GetLastAction() = 0;
     virtual void ConsumeAction() = 0;
 };
+

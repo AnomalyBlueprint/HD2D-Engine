@@ -7,6 +7,7 @@
 #include "Engine/Services/PathRegistryService.h"
 #include "Engine/Services/KenneyPathRepository.h"
 #include "Engine/Services/KenneyPathRepository.h"
+#include "Engine/Services/FontPathRepository.h"
 #include "Engine/Services/OpenGLShaderService.h"
 #include "Engine/Services/FontService.h"
 #include <GL/glew.h>
@@ -33,7 +34,7 @@ void Engine::Init()
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 
     m_window = SDL_CreateWindow("HD-2D Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                              1280, 720, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+                              1280, 720, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
     // 3. Core Services
     auto renderer = std::make_shared<OpenGLRenderService>(m_window);
@@ -47,6 +48,13 @@ void Engine::Init()
 
     auto kenneyRepo = std::make_shared<KenneyPathRepository>();
     pathRegistry->RegisterRepository<KenneyPathRepository>(kenneyRepo);
+    
+    // Also register Font Path Repo? Or is it automatic?
+    // FontService uses FontPathRepository. Let's register it if not already?
+    // In previous FontService code it looked for FontPathRepository.
+    // It seems missing here! Let's add it.
+    auto fontRepo = std::make_shared<FontPathRepository>();
+    pathRegistry->RegisterRepository<FontPathRepository>(fontRepo);
 
     auto resources = std::make_shared<ResourceService>();
     ServiceLocator::Get().Register<IResourceService>(resources);
@@ -68,6 +76,12 @@ void Engine::AttachLayer(std::shared_ptr<GameLayer> layer)
         m_gameLayer->OnAttach();
 }
 
+void Engine::ToggleFullscreen()
+{
+    m_fullscreen = !m_fullscreen;
+    SDL_SetWindowFullscreen(m_window, m_fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
+}
+
 void Engine::Run()
 {
     auto inputService = std::dynamic_pointer_cast<InputService>(ServiceLocator::Get().GetService<IInputService>());
@@ -84,6 +98,26 @@ void Engine::Run()
         while (SDL_PollEvent(&e))
         {
             if (e.type == SDL_QUIT) m_isRunning = false;
+            
+            // Window Events
+            if (e.type == SDL_WINDOWEVENT)
+            {
+                if (e.window.event == SDL_WINDOWEVENT_SIZE_CHANGED || e.window.event == SDL_WINDOWEVENT_RESIZED)
+                {
+                    int w = e.window.data1;
+                    int h = e.window.data2;
+                    glViewport(0, 0, w, h); // Ensure GL state is set (redundant if service does it, but safe)
+                    auto renderer = ServiceLocator::Get().GetService<RenderService>();
+                    if (renderer) renderer->SetViewport(w, h);
+                }
+            }
+            
+            // Toggle Fullscreen (Global, outside input service)
+            if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_F11)
+            {
+                ToggleFullscreen();
+            }
+
             // Global Input Event
             if (inputService) inputService->OnEvent(e);
             

@@ -142,7 +142,6 @@ void FontService::RenderText(RenderService* renderer, const std::string& text, f
 
 float FontService::GetTextWidth(const std::string& text, float scale) {
     float x = 0;
-    float y = 0;
     for (unsigned char c : text) {
         if (c < 32 || c >= 128) continue;
         float x_cursor = 0, y_cursor = 0;

@@ -136,7 +136,7 @@ std::pair<int, int> ChunkManager::GetChunkKey(int x, int y)
     return {x, y};
 }
 
-void ChunkManager::Render(RenderService* renderer, IShaderService* shader)
+void ChunkManager::Render(RenderService* renderer, IShaderService* /*shader*/)
 {
     GLint currentProgram;
     glGetIntegerv(GL_CURRENT_PROGRAM, &currentProgram);
