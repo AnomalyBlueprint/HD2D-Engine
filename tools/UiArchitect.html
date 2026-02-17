@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Epoch: UI Architect</title>
+
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Load React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- Load Babel for JSX support in browser -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #050505;
+            color: #d4d4d4;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #171717;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #404040;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #525252;
+        }
+
+        input[type="color"] {
+            -webkit-appearance: none;
+            border: none;
+            padding: 0;
+        }
+
+        input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        input[type="color"]::-webkit-color-swatch {
+            border: none;
+            border-radius: 4px;
+        }
+
+        .grid-bg {
+            background-image: linear-gradient(to right, #262626 1px, transparent 1px), linear-gradient(to bottom, #262626 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // --- Icons ---
+        const Icon = ({ name, ...p }) => {
+            const icons = {
+                Terminal: <polyline points="4 17 10 11 4 5"></polyline>,
+                Copy: <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>,
+                Trash: <polyline points="3 6 5 6 21 6"></polyline>,
+                Settings: <circle cx="12" cy="12" r="3"></circle>,
+                MousePointer: <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path>,
+                Type: <polyline points="4 7 4 4 20 4 20 7"></polyline>,
+                Box: <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>,
+                CheckSquare: <polyline points="9 11 12 14 22 4"></polyline>,
+                Sliders: <line x1="4" y1="21" x2="4" y2="14"></line>,
+                Maximize: <path d="M15 3h6v6"></path>,
+                Layout: <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            };
+            return (
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" { ...p }>
+                    { icons[name] || <circle cx="12" cy="12" r="10" /> }
+                </svg>
+            );
+        };
+
+        // --- Constants ---
+        const SCENES = ['main_menu', 'popups', 'gameplay', 'debug_overlay'];
+
+        const WIDGET_TYPES = {
+            CONTAINER: { label: 'Container', icon: 'Box', defaultH: 100, defaultW: 100, defaultProps: { layoutMode: 'free' } },
+            BUTTON: { label: 'Button', icon: 'MousePointer', defaultH: 40, defaultW: 120, defaultProps: { text: "Click Me", actionId: "BTN_ACTION" } },
+            LABEL: { label: 'Text Label', icon: 'Type', defaultH: 30, defaultW: 150, defaultProps: { text: "Label Text", fontSize: 14, align: "left" } },
+            SLIDER: { label: 'Slider', icon: 'Sliders', defaultH: 30, defaultW: 200, defaultProps: { min: 0, max: 100, value: 50 } },
+            CHECKBOX: { label: 'Checkbox', icon: 'CheckSquare', defaultH: 30, defaultW: 30, defaultProps: { checked: false, label: "Option" } },
+        };
+
+        function App() {
+            // --- State ---
+            const [settings, setSettings] = useState({ width: 1024, height: 768 });
+            const [currentScene, setCurrentScene] = useState('main_menu');
+
+            // Centralized Data Store
+            const [sceneData, setSceneData] = useState({
+                main_menu: [
+                    { id: 'mm_bg_panel', type: 'CONTAINER', x: 262, y: 100, w: 500, h: 568, style: { bg: '#171717', border: '#404040' }, props: { layoutMode: 'free' } },
+                    { id: 'mm_lbl_title', type: 'LABEL', x: 362, y: 130, w: 300, h: 40, style: { color: '#ffffff' }, props: { text: "PROJECT EPOCH", fontSize: 32, align: "center" } },
+
+                    // Action Buttons
+                    { id: 'btn_start', type: 'BUTTON', x: 412, y: 200, w: 200, h: 40, style: { bg: '#059669', color: '#ffffff' }, props: { text: "Start Game", actionId: "START_GAME" } },
+                    { id: 'btn_gen_world', type: 'BUTTON', x: 412, y: 250, w: 200, h: 40, style: { bg: '#0284c7', color: '#ffffff' }, props: { text: "Generate World", actionId: "GEN_WORLD" } },
+
+                    // World List Section
+                    { id: 'world_list_container', type: 'CONTAINER', x: 312, y: 320, w: 400, h: 300, style: { bg: '#0a0a0a', border: '#262626' }, props: { layoutMode: 'vertical', scroll: true } },
+                    { id: 'lbl_worlds_header', type: 'LABEL', x: 332, y: 330, w: 100, h: 20, style: { color: '#737373' }, props: { text: "SAVED WORLDS", fontSize: 10, align: "left" } },
+
+                    // Mock World Item 1
+                    { id: 'world_item_1', type: 'CONTAINER', x: 322, y: 360, w: 380, h: 50, style: { bg: '#262626', border: '#404040' }, props: { layoutMode: 'horizontal' } },
+                    { id: 'lbl_w1_name', type: 'LABEL', x: 332, y: 375, w: 200, h: 20, style: { color: '#e5e5e5' }, props: { text: "Epoch_Run_004 (Year 210)", fontSize: 12, align: "left" } },
+                    { id: 'btn_del_w1', type: 'BUTTON', x: 622, y: 370, w: 70, h: 30, style: { bg: '#9f1239', color: '#ffffff' }, props: { text: "DELETE", actionId: "DEL_WORLD_1" } },
+
+                    // Mock World Item 2
+                    { id: 'world_item_2', type: 'CONTAINER', x: 322, y: 420, w: 380, h: 50, style: { bg: '#262626', border: '#404040' }, props: { layoutMode: 'horizontal' } },
+                    { id: 'lbl_w2_name', type: 'LABEL', x: 332, y: 435, w: 200, h: 20, style: { color: '#e5e5e5' }, props: { text: "Iron_Fortress_01 (Year 45)", fontSize: 12, align: "left" } },
+                    { id: 'btn_del_w2', type: 'BUTTON', x: 622, y: 430, w: 70, h: 30, style: { bg: '#9f1239', color: '#ffffff' }, props: { text: "DELETE", actionId: "DEL_WORLD_2" } },
+                ],
+
+                popups: [
+                    // Backdrop
+                    { id: 'popup_backdrop', type: 'CONTAINER', x: 0, y: 0, w: 1024, h: 768, style: { bg: '#000000cc', border: 'transparent' }, props: { layoutMode: 'free' } },
+
+                    // Generic Confirmation Modal
+                    { id: 'modal_window', type: 'CONTAINER', x: 312, y: 250, w: 400, h: 200, style: { bg: '#171717', border: '#525252' }, props: { layoutMode: 'vertical' } },
+                    { id: 'modal_title', type: 'LABEL', x: 332, y: 270, w: 360, h: 30, style: { color: '#ffffff' }, props: { text: "CONFIRMATION", fontSize: 16, align: "center" } },
+                    { id: 'modal_desc', type: 'LABEL', x: 332, y: 310, w: 360, h: 60, style: { color: '#a3a3a3' }, props: { text: "Are you sure you want to perform this action? This cannot be undone.", fontSize: 12, align: "center" } },
+
+                    // Button Row
+                    { id: 'modal_btn_row', type: 'CONTAINER', x: 332, y: 390, w: 360, h: 40, style: { bg: 'transparent', border: 'transparent' }, props: { layoutMode: 'horizontal' } },
+                    { id: 'btn_confirm', type: 'BUTTON', x: 332, y: 390, w: 170, h: 40, style: { bg: '#059669', color: '#ffffff' }, props: { text: "CONFIRM", actionId: "MODAL_CONFIRM" } },
+                    { id: 'btn_cancel', type: 'BUTTON', x: 522, y: 390, w: 170, h: 40, style: { bg: '#404040', color: '#ffffff' }, props: { text: "CANCEL", actionId: "MODAL_CANCEL" } },
+                ],
+
+                gameplay: [
+                    // Top HUD Area
+                    { id: 'hud_top_bar', type: 'CONTAINER', x: 10, y: 10, w: 600, h: 60, style: { bg: 'transparent', border: 'transparent' }, props: { layoutMode: 'horizontal' } },
+
+                    // Hotbar Slots (Terraria style)
+                    ...Array.from({ length: 10 }).map((_, i) => ({
+                        id: `hotbar_slot_${i}`,
+                        type: 'CONTAINER',
+                        x: 10 + (i * 44),
+                        y: 10,
+                        w: 40,
+                        h: 40,
+                        style: { bg: '#262626', border: i === 0 ? '#fbbf24' : '#525252' }, // Highlight first slot
+                        props: { layoutMode: 'free' }
+                    })),
+
+                    // Bag Icon / Inventory Toggle
+                    { id: 'btn_inventory', type: 'BUTTON', x: 460, y: 10, w: 40, h: 40, style: { bg: '#4f46e5', color: '#fff' }, props: { text: "🎒", actionId: "TOGGLE_INVENTORY" } },
+
+                    // Status Bars (Mock)
+                    { id: 'bar_health', type: 'CONTAINER', x: 800, y: 10, w: 200, h: 15, style: { bg: '#9f1239', border: '#000' }, props: { layoutMode: 'free' } },
+                    { id: 'bar_mana', type: 'CONTAINER', x: 800, y: 30, w: 200, h: 15, style: { bg: '#2563eb', border: '#000' }, props: { layoutMode: 'free' } },
+                ],
+
+                debug_overlay: [
+                    // Map Generation Layout
+                    { id: 'debug_root', type: 'CONTAINER', x: 0, y: 0, w: 1024, h: 768, style: { bg: '#000000', border: 'transparent' }, props: { layoutMode: 'free' } },
+
+                    // Main Map View (256x256 Macro Grid)
+                    { id: 'map_visualizer', type: 'CONTAINER', x: 250, y: 50, w: 512, h: 512, style: { bg: '#111', border: '#333' }, props: { layoutMode: 'free' } },
+                    { id: 'map_placeholder_text', type: 'LABEL', x: 350, y: 300, w: 312, h: 20, style: { color: '#333' }, props: { text: "MACRO GRID VISUALIZATION (256x256)", fontSize: 12, align: "center" } },
+
+                    // Side Panel (Controls)
+                    { id: 'panel_controls', type: 'CONTAINER', x: 10, y: 50, w: 230, h: 512, style: { bg: '#171717', border: '#404040' }, props: { layoutMode: 'vertical' } },
+                    { id: 'lbl_view_modes', type: 'LABEL', x: 20, y: 60, w: 200, h: 20, style: { color: '#fbbf24' }, props: { text: "VIEW MODES (F-Keys)", fontSize: 12, align: "left" } },
+
+                    { id: 'chk_political', type: 'CHECKBOX', x: 20, y: 90, w: 20, h: 20, style: { bg: '#262626', border: '#525252' }, props: { checked: true, label: "F1: Political Borders" } },
+                    { id: 'lbl_pol', type: 'LABEL', x: 50, y: 90, w: 150, h: 20, style: { color: '#ccc' }, props: { text: "Political Borders", fontSize: 11, align: "left" } },
+
+                    { id: 'chk_biomes', type: 'CHECKBOX', x: 20, y: 120, w: 20, h: 20, style: { bg: '#262626', border: '#525252' }, props: { checked: false, label: "F2: Biomes" } },
+                    { id: 'lbl_bio', type: 'LABEL', x: 50, y: 120, w: 150, h: 20, style: { color: '#ccc' }, props: { text: "Biomes", fontSize: 11, align: "left" } },
+
+                    { id: 'chk_economy', type: 'CHECKBOX', x: 20, y: 150, w: 20, h: 20, style: { bg: '#262626', border: '#525252' }, props: { checked: false, label: "F3: Economy Heatmap" } },
+                    { id: 'lbl_eco', type: 'LABEL', x: 50, y: 150, w: 150, h: 20, style: { color: '#ccc' }, props: { text: "Trade Wealth", fontSize: 11, align: "left" } },
+
+                    { id: 'chk_ruin', type: 'CHECKBOX', x: 20, y: 180, w: 20, h: 20, style: { bg: '#262626', border: '#525252' }, props: { checked: false, label: "F4: Ruination" } },
+                    { id: 'lbl_ruin', type: 'LABEL', x: 50, y: 180, w: 150, h: 20, style: { color: '#ccc' }, props: { text: "Ruination", fontSize: 11, align: "left" } },
+
+                    // Bottom Panel (Timeline)
+                    { id: 'panel_timeline', type: 'CONTAINER', x: 250, y: 580, w: 512, h: 100, style: { bg: '#171717', border: '#404040' }, props: { layoutMode: 'free' } },
+                    { id: 'lbl_timeline', type: 'LABEL', x: 260, y: 590, w: 200, h: 20, style: { color: '#fbbf24' }, props: { text: "HISTORY SCRUBBER", fontSize: 12, align: "left" } },
+                    { id: 'slider_year', type: 'SLIDER', x: 260, y: 620, w: 490, h: 30, style: { bg: '#333', border: '#555' }, props: { min: 0, max: 500, value: 0 } },
+                    { id: 'lbl_year_val', type: 'LABEL', x: 260, y: 650, w: 490, h: 20, style: { color: '#fff' }, props: { text: "Current Year: 0 (Genesis)", fontSize: 12, align: "center" } },
+
+                    // Inspector
+                    { id: 'panel_inspector', type: 'CONTAINER', x: 780, y: 50, w: 230, h: 512, style: { bg: '#171717', border: '#404040' }, props: { layoutMode: 'vertical' } },
+                    { id: 'lbl_inspector', type: 'LABEL', x: 790, y: 60, w: 200, h: 20, style: { color: '#fbbf24' }, props: { text: "TILE INSPECTOR", fontSize: 12, align: "left" } },
+                    { id: 'lbl_insp_hint', type: 'LABEL', x: 790, y: 90, w: 210, h: 60, style: { color: '#666' }, props: { text: "Click any pixel on the map to view Macro Data (Civ, Resources, History).", fontSize: 10, align: "left" } },
+                ]
+            });
+
+            const [selectedId, setSelectedId] = useState(null);
+
+            // Drag/Resize Logic
+            const [dragState, setDragState] = useState({ mode: null, startX: 0, startY: 0, initial: {} });
+            const containerRef = useRef(null);
+
+            // --- Helpers ---
+            const currentWidgets = sceneData[currentScene];
+            const selectedWidget = currentWidgets.find(w => w.id === selectedId);
+
+            const updateWidget = (id, field, value) => {
+                setSceneData(prev => ({
+                    ...prev,
+                    [currentScene]: prev[currentScene].map(w => {
+                        if (w.id !== id) return w;
+                        if (field.includes('.')) {
+                            const [parent, child] = field.split('.');
+                            return { ...w, [parent]: { ...w[parent], [child]: value } };
+                        }
+                        return { ...w, [field]: value };
+                    })
+                }));
+            };
+
+            const addWidget = (type) => {
+                const def = WIDGET_TYPES[type];
+                const newId = `${type.toLowerCase()}_${Date.now().toString().slice(-4)}`;
+                const newWidget = {
+                    id: newId,
+                    type: type,
+                    x: 50, y: 50, w: def.defaultW, h: def.defaultH,
+                    style: { bg: '#262626', border: '#525252', color: '#e5e5e5' },
+                    props: { ...def.defaultProps }
+                };
+                setSceneData(prev => ({ ...prev, [currentScene]: [...prev[currentScene], newWidget] }));
+                setSelectedId(newId);
+            };
+
+            const deleteWidget = (id) => {
+                setSceneData(prev => ({
+                    ...prev,
+                    [currentScene]: prev[currentScene].filter(w => w.id !== id)
+                }));
+                setSelectedId(null);
+            };
+
+            // --- Dragging Logic ---
+            const handleMouseDown = (e, widget, mode) => {
+                e.stopPropagation();
+                setSelectedId(widget.id);
+                setDragState({
+                    mode,
+                    startX: e.clientX,
+                    startY: e.clientY,
+                    initial: { x: widget.x, y: widget.y, w: widget.w, h: widget.h }
+                });
+            };
+
+            const handleMouseMove = (e) => {
+                if (!dragState.mode || !selectedId) return;
+                const widget = currentWidgets.find(w => w.id === selectedId);
+                if (!widget) return;
+
+                const dx = e.clientX - dragState.startX;
+                const dy = e.clientY - dragState.startY;
+                const gridSnap = (val) => Math.round(val / 10) * 10; // 10px snap
+
+                if (dragState.mode === 'move') {
+                    updateWidget(selectedId, 'x', gridSnap(dragState.initial.x + dx));
+                    updateWidget(selectedId, 'y', gridSnap(dragState.initial.y + dy));
+                } else if (dragState.mode === 'resize') {
+                    updateWidget(selectedId, 'w', Math.max(20, gridSnap(dragState.initial.w + dx)));
+                    updateWidget(selectedId, 'h', Math.max(20, gridSnap(dragState.initial.h + dy)));
+                }
+            };
+
+            const handleMouseUp = () => setDragState({ mode: null, startX: 0, startY: 0, initial: {} });
+
+            // --- Export ---
+            const generateJSON = () => {
+                const exportData = {
+                    meta: { generated: new Date().toISOString(), version: "2.3" },
+                    settings: settings,
+                    scenes: {}
+                };
+
+                Object.keys(sceneData).forEach(scene => {
+                    exportData.scenes[scene] = sceneData[scene].map(w => ({
+                        id: w.id,
+                        type: w.type,
+                        geometry: { x: w.x, y: w.y, w: w.w, h: w.h },
+                        style: w.style,
+                        properties: w.props
+                    }));
+                });
+
+                return JSON.stringify(exportData, null, 2);
+            };
+
+            // --- Rendering Components ---
+            const WidgetRenderer = ({ w }) => {
+                const isSelected = selectedId === w.id;
+
+                // Visual simulation of widgets
+                const renderInner = () => {
+                    switch (w.type) {
+                        case 'BUTTON':
+                            return (
+                                <div className="w-full h-full flex items-center justify-center font-bold uppercase tracking-wider text-xs border border-white/10"
+                                    style={ { backgroundColor: w.style.bg, color: w.style.color } }>
+                                    { w.props.text }
+                                </div>
+                            );
+                        case 'SLIDER':
+                            return (
+                                <div className="w-full h-full flex items-center px-2 bg-neutral-900 border border-neutral-700">
+                                    <div className="w-full h-1 bg-neutral-700 relative">
+                                        <div className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-emerald-500 rounded-full" style={ { left: '50%' } } />
+                                    </div>
+                                    <span className="ml-2 text-[10px] text-neutral-500">{ w.props.min }-{ w.props.max }</span>
+                                </div>
+                            );
+                        case 'CHECKBOX':
+                            return (
+                                <div className="w-full h-full flex items-center justify-center bg-neutral-900 border border-neutral-600">
+                                    { w.props.checked && <div className="w-3 h-3 bg-emerald-500" /> }
+                                </div>
+                            );
+                        case 'LABEL':
+                            return (
+                                <div className="w-full h-full flex items-center"
+                                    style={ { justifyContent: w.props.align === 'center' ? 'center' : w.props.align === 'right' ? 'flex-end' : 'flex-start', color: w.style.color, fontSize: `${w.props.fontSize}px` } }>
+                                    { w.props.text }
+                                </div>
+                            );
+                        default: // CONTAINER
+                            return (
+                                <div className="w-full h-full border border-dashed flex flex-col relative overflow-hidden" style={ { backgroundColor: w.style.bg, borderColor: w.style.border } }>
+                                    <div className="p-1 text-[9px] text-neutral-500 opacity-50 uppercase flex justify-between">
+                                        <span>{ w.id }</span>
+                                        { w.props.layoutMode && w.props.layoutMode !== 'free' && <Icon name="Layout" className="w-3 h-3 opacity-50" /> }
+                                    </div>
+                                </div>
+                            );
+                    }
+                };
+
+                return (
+                    <div
+                        onMouseDown={ (e) => handleMouseDown(e, w, 'move') }
+                        className={ `absolute cursor-grab active:cursor-grabbing select-none group ${isSelected ? 'z-50' : 'z-10'}` }
+                        style={ { left: w.x, top: w.y, width: w.w, height: w.h } }
+                    >
+                        {/* Selection Outline */ }
+                        { isSelected && <div className="absolute inset-0 border-2 border-emerald-500 pointer-events-none z-50">
+                            <div className="absolute -top-4 left-0 bg-emerald-500 text-black text-[9px] px-1 font-bold">{ w.id }</div>
+                            <div className="absolute -top-4 right-0 bg-neutral-800 text-emerald-500 text-[9px] px-1 font-mono">X:{ w.x } Y:{ w.y }</div>
+                        </div> }
+
+                        { renderInner() }
+
+                        {/* Resize Handle */ }
+                        { isSelected && (
+                            <div
+                                onMouseDown={ (e) => handleMouseDown(e, w, 'resize') }
+                                className="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 cursor-nwse-resize z-50 flex items-center justify-center"
+                            >
+                                <Icon name="Maximize" className="w-3 h-3 text-black" />
+                            </div>
+                        ) }
+                    </div>
+                );
+            };
+
+            const PropertyInput = ({ label, value, onChange, type = "text" }) => (
+                <div className="space-y-1 mb-3">
+                    <label className="text-[10px] uppercase font-bold text-neutral-500">{ label }</label>
+                    <input
+                        type={ type }
+                        value={ value }
+                        onChange={ (e) => onChange(type === 'checkbox' ? e.target.checked : e.target.value) }
+                        className="w-full bg-neutral-950 border border-neutral-700 rounded px-2 py-1.5 text-xs text-neutral-300 focus:border-emerald-500 focus:outline-none"
+                    />
+                </div>
+            );
+
+            return (
+                <div className="flex flex-col h-screen bg-neutral-950 text-neutral-300 font-sans overflow-hidden" onMouseUp={ handleMouseUp } onMouseMove={ handleMouseMove }>
+                    {/* --- HEADER --- */ }
+                    <header className="h-14 border-b border-neutral-800 bg-neutral-900 flex items-center justify-between px-4 shrink-0">
+                        <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-2 text-emerald-500">
+                                <Icon name="Terminal" />
+                                <span className="font-bold tracking-tight text-white">Project Epoch UI</span>
+                            </div>
+                            <div className="h-6 w-px bg-neutral-800 mx-2"></div>
+
+                            {/* Scene Selector */ }
+                            <div className="flex bg-neutral-950 rounded p-1 border border-neutral-800">
+                                { SCENES.map(scene => (
+                                    <button
+                                        key={ scene }
+                                        onClick={ () => { setCurrentScene(scene); setSelectedId(null); } }
+                                        className={ `px-3 py-1 text-xs font-bold rounded capitalize transition-colors ${currentScene === scene ? 'bg-neutral-800 text-emerald-400' : 'text-neutral-500 hover:text-neutral-300'}` }
+                                    >
+                                        { scene.replace('_', ' ') }
+                                    </button>
+                                )) }
+                            </div>
+                        </div>
+
+                        <div className="flex gap-2">
+                            <button onClick={ () => {
+                                const blob = new Blob([generateJSON()], { type: "application/json" });
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = `ui_layout_${currentScene}.json`;
+                                a.click();
+                            } } className="flex items-center gap-2 px-3 py-1.5 bg-neutral-800 hover:bg-neutral-700 text-xs font-bold rounded border border-neutral-700 transition-colors">
+                                <Icon name="Copy" /> Export JSON
+                            </button>
+                        </div>
+                    </header>
+
+                    <div className="flex flex-1 overflow-hidden">
+                        {/* --- TOOLBAR (Left) --- */ }
+                        <div className="w-14 bg-neutral-900 border-r border-neutral-800 flex flex-col items-center py-4 gap-4 z-20">
+                            { Object.entries(WIDGET_TYPES).map(([type, config]) => (
+                                <button
+                                    key={ type }
+                                    onClick={ () => addWidget(type) }
+                                    className="w-10 h-10 rounded flex items-center justify-center text-neutral-400 hover:bg-emerald-500/20 hover:text-emerald-400 hover:border-emerald-500/50 border border-transparent transition-all"
+                                    title={ `Add ${config.label}` }
+                                >
+                                    <Icon name={ config.icon } />
+                                </button>
+                            )) }
+                        </div>
+
+                        {/* --- CANVAS (Center) --- */ }
+                        <div className="flex-1 bg-[#0a0a0a] relative overflow-hidden grid-bg" ref={ containerRef }>
+                            {/* Canvas Size Indicator */ }
+                            <div className="absolute top-0 left-0 border-b border-r border-neutral-700 bg-neutral-900/50 text-[10px] px-2 py-1 text-neutral-500">
+                                { settings.width }x{ settings.height }
+                            </div>
+
+                            {/* Widgets */ }
+                            <div className="relative mx-auto my-8 shadow-2xl bg-black border border-neutral-800"
+                                style={ { width: settings.width, height: settings.height } }>
+                                { currentWidgets.map(w => <WidgetRenderer key={ w.id } w={ w } />) }
+                            </div>
+                        </div>
+
+                        {/* --- PROPERTIES (Right) --- */ }
+                        <div className="w-72 bg-neutral-900 border-l border-neutral-800 flex flex-col overflow-y-auto">
+                            { selectedWidget ? (
+                                <div className="p-4">
+                                    <div className="flex items-center justify-between mb-6 pb-4 border-b border-neutral-800">
+                                        <div>
+                                            <h2 className="text-sm font-bold text-white flex items-center gap-2">
+                                                <Icon name="Settings" className="w-4 h-4 text-emerald-500" />
+                                                { selectedWidget.type }
+                                            </h2>
+                                            <span className="text-[10px] text-neutral-500 font-mono">{ selectedWidget.id }</span>
+                                        </div>
+                                        <button onClick={ () => deleteWidget(selectedWidget.id) } className="text-neutral-600 hover:text-rose-500 transition-colors">
+                                            <Icon name="Trash" />
+                                        </button>
+                                    </div>
+
+                                    {/* Common Props */ }
+                                    <div className="space-y-4">
+                                        <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Geometry</h3>
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <PropertyInput label="ID" value={ selectedWidget.id } onChange={ (v) => updateWidget(selectedWidget.id, 'id', v) } />
+                                            <PropertyInput label="X" type="number" value={ selectedWidget.x } onChange={ (v) => updateWidget(selectedWidget.id, 'x', parseInt(v) || 0) } />
+                                            <PropertyInput label="Y" type="number" value={ selectedWidget.y } onChange={ (v) => updateWidget(selectedWidget.id, 'y', parseInt(v) || 0) } />
+                                            <PropertyInput label="W" type="number" value={ selectedWidget.w } onChange={ (v) => updateWidget(selectedWidget.id, 'w', parseInt(v) || 0) } />
+                                            <PropertyInput label="H" type="number" value={ selectedWidget.h } onChange={ (v) => updateWidget(selectedWidget.id, 'h', parseInt(v) || 0) } />
+                                        </div>
+
+                                        <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-wider mt-6 pt-4 border-t border-neutral-800">Specifics</h3>
+
+                                        {/* Dynamic Props based on Type */ }
+                                        { selectedWidget.type === 'BUTTON' && (
+                                            <>
+                                                <PropertyInput label="Label Text" value={ selectedWidget.props.text } onChange={ (v) => updateWidget(selectedWidget.id, 'props.text', v) } />
+                                                <PropertyInput label="Action ID" value={ selectedWidget.props.actionId } onChange={ (v) => updateWidget(selectedWidget.id, 'props.actionId', v) } />
+                                                <PropertyInput label="BG Color" type="color" value={ selectedWidget.style.bg } onChange={ (v) => updateWidget(selectedWidget.id, 'style.bg', v) } />
+                                                <PropertyInput label="Text Color" type="color" value={ selectedWidget.style.color } onChange={ (v) => updateWidget(selectedWidget.id, 'style.color', v) } />
+                                            </>
+                                        ) }
+
+                                        { selectedWidget.type === 'SLIDER' && (
+                                            <>
+                                                <div className="grid grid-cols-2 gap-2">
+                                                    <PropertyInput label="Min Value" type="number" value={ selectedWidget.props.min } onChange={ (v) => updateWidget(selectedWidget.id, 'props.min', parseInt(v)) } />
+                                                    <PropertyInput label="Max Value" type="number" value={ selectedWidget.props.max } onChange={ (v) => updateWidget(selectedWidget.id, 'props.max', parseInt(v)) } />
+                                                </div>
+                                                <PropertyInput label="Default Value" type="number" value={ selectedWidget.props.value } onChange={ (v) => updateWidget(selectedWidget.id, 'props.value', parseInt(v)) } />
+                                            </>
+                                        ) }
+
+                                        { selectedWidget.type === 'LABEL' && (
+                                            <>
+                                                <PropertyInput label="Text Content" value={ selectedWidget.props.text } onChange={ (v) => updateWidget(selectedWidget.id, 'props.text', v) } />
+                                                <PropertyInput label="Font Size (px)" type="number" value={ selectedWidget.props.fontSize } onChange={ (v) => updateWidget(selectedWidget.id, 'props.fontSize', parseInt(v)) } />
+                                                <div className="space-y-1 mb-3">
+                                                    <label className="text-[10px] uppercase font-bold text-neutral-500">Alignment</label>
+                                                    <select
+                                                        value={ selectedWidget.props.align }
+                                                        onChange={ (e) => updateWidget(selectedWidget.id, 'props.align', e.target.value) }
+                                                        className="w-full bg-neutral-950 border border-neutral-700 rounded px-2 py-1.5 text-xs text-neutral-300 focus:border-emerald-500 focus:outline-none"
+                                                    >
+                                                        <option value="left">Left</option>
+                                                        <option value="center">Center</option>
+                                                        <option value="right">Right</option>
+                                                    </select>
+                                                </div>
+                                            </>
+                                        ) }
+
+                                        { selectedWidget.type === 'CHECKBOX' && (
+                                            <>
+                                                <PropertyInput label="Label" value={ selectedWidget.props.label || '' } onChange={ (v) => updateWidget(selectedWidget.id, 'props.label', v) } />
+                                                <div className="flex items-center justify-between bg-neutral-950 p-2 rounded border border-neutral-800">
+                                                    <span className="text-xs font-bold text-neutral-400">Default Checked</span>
+                                                    <input type="checkbox" checked={ selectedWidget.props.checked } onChange={ (e) => updateWidget(selectedWidget.id, 'props.checked', e.target.checked) } />
+                                                </div>
+                                            </>
+                                        ) }
+
+                                        { selectedWidget.type === 'CONTAINER' && (
+                                            <>
+                                                <PropertyInput label="Background" type="color" value={ selectedWidget.style.bg } onChange={ (v) => updateWidget(selectedWidget.id, 'style.bg', v) } />
+                                                <PropertyInput label="Border" type="color" value={ selectedWidget.style.border } onChange={ (v) => updateWidget(selectedWidget.id, 'style.border', v) } />
+                                                <div className="space-y-1 mb-3">
+                                                    <label className="text-[10px] uppercase font-bold text-neutral-500">Layout Mode (Engine Hint)</label>
+                                                    <select
+                                                        value={ selectedWidget.props.layoutMode || 'free' }
+                                                        onChange={ (e) => updateWidget(selectedWidget.id, 'props.layoutMode', e.target.value) }
+                                                        className="w-full bg-neutral-950 border border-neutral-700 rounded px-2 py-1.5 text-xs text-neutral-300 focus:border-emerald-500 focus:outline-none"
+                                                    >
+                                                        <option value="free">Free (Absolute)</option>
+                                                        <option value="vertical">Vertical Stack</option>
+                                                        <option value="horizontal">Horizontal Stack</option>
+                                                    </select>
+                                                </div>
+                                            </>
+                                        ) }
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="flex-1 flex flex-col items-center justify-center text-neutral-600 p-8 text-center opacity-50">
+                                    <Icon name="MousePointer" className="w-8 h-8 mb-2" />
+                                    <p className="text-xs">Select a widget to edit properties</p>
+                                </div>
+                            ) }
+
+                            {/* --- JSON PREVIEW FOOTER --- */ }
+                            <div className="border-t border-neutral-800 bg-neutral-950 p-0 flex flex-col h-1/3">
+                                <div className="px-4 py-2 bg-neutral-900 text-[10px] font-bold uppercase text-neutral-500 tracking-wider">
+                                    JSON Output Preview
+                                </div>
+                                <div className="flex-1 overflow-auto p-4">
+                                    <pre className="text-[10px] text-emerald-600 font-mono whitespace-pre-wrap">
+                                        { generateJSON() }
+                                    </pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+
+</html>
