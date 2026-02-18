@@ -10,6 +10,7 @@
 #include "Engine/Services/FontPathRepository.h"
 #include "Engine/Services/OpenGLShaderService.h"
 #include "Engine/Services/FontService.h"
+#include "Engine/Services/SceneService.h"
 #include <GL/glew.h>
 
 Engine::Engine() {}
@@ -64,6 +65,9 @@ void Engine::Init()
 
     auto fontService = std::make_shared<FontService>();
     ServiceLocator::Get().Register<IFontService>(fontService);
+
+    auto sceneService = std::make_shared<SceneService>();
+    ServiceLocator::Get().Register<SceneService>(sceneService);
 
     m_isRunning = true;
     m_lastTime = SDL_GetTicks();

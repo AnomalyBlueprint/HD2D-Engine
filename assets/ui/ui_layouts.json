@@ -1859,6 +1859,25 @@
         }
       },
       {
+        "id": "btn_back_menu",
+        "type": "BUTTON",
+        "geometry": {
+          "x": 10,
+          "y": 10,
+          "w": 150,
+          "h": 30
+        },
+        "style": {
+          "bg": "#dc2626",
+          "color": "#ffffff"
+        },
+        "properties": {
+          "text": "Back to Menu",
+          "actionId": "BACK_TO_MENU",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
         "id": "panel_timeline",
         "type": "CONTAINER",
         "geometry": {
