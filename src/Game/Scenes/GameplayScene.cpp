@@ -8,7 +8,7 @@
 #include "Engine/Services/ChunkManager.h"
 #include "Engine/Services/TextureAtlasService.h"
 #include "Engine/Services/PostProcessService.h"
-#include "Engine/Services/UIService.h"
+#include "Engine/UI/UIService.h"
 #include "Engine/Services/SceneService.h"
 #include "Game/GameConfig.h"
 #include "Engine/Services/ILoggerService.h"

@@ -1,4 +1,5 @@
 #include "Game/GameLayer.h"
+#include "Game/UI/MainMenuController.h"
 #include "Engine/Services/ServiceLocator.h"
 #include "Engine/Services/SceneService.h"
 #include "Game/Scenes/MainMenuScene.h"
@@ -8,7 +9,7 @@
 #include "Engine/Services/BlockRegistryService.h"
 #include "Engine/Services/DatabaseService.h"
 #include "Engine/Services/ChunkManager.h"
-#include "Engine/Services/UIService.h"
+#include "Engine/UI/UIService.h"
 #include "Engine/Services/PostProcessService.h"
 #include "Engine/Services/PathRegistryService.h"
 #include "Engine/Services/KenneyPathRepository.h"
@@ -49,6 +50,12 @@ void GameLayer::OnAttach()
 
     auto uiService = std::make_shared<UIService>();
     uiService->LoadLayouts("assets/ui/ui_layouts.json");
+    
+    // Register Screens (Game Logic)
+    uiService->RegisterScreenFactory("main_menu", [](const std::string& guid) {
+        return std::make_shared<Game::MainMenuController>(guid);
+    });
+    
     ServiceLocator::Get().Register<IUIService>(uiService);
 
     int w = 1280, h = 720; 

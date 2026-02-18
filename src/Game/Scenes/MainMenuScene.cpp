@@ -2,7 +2,7 @@
 #include "Game/Scenes/GameplayScene.h" // Needed to switch to gameplay
 #include "Engine/Services/ServiceLocator.h"
 #include "Engine/Services/RenderService.h"
-#include "Engine/Services/UIService.h"
+#include "Engine/UI/UIService.h"
 #include "Engine/Services/InputService.h"
 #include "Engine/Services/MacroService.h"
 #include "Engine/Services/DatabaseService.h"
