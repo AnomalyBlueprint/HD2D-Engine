@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Engine/Services/IUIService.h"
-#include "Engine/UI/BaseScreen.h"
+#include "Engine/Services/UI/IUIService.h"
+#include "Engine/Services/UI/BaseScreen.h"
 #include "nlohmann/json.hpp" 
 #include <string>
 #include <map>

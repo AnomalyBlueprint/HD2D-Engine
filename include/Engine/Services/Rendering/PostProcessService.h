@@ -1,11 +1,11 @@
 #pragma once
-#include "Engine/Services/IService.h"
+#include "Engine/Core/IService.h"
 #include <GL/glew.h>
 #include <vector>
 #include <memory>
 #include <map>
 #include <string>
-#include "Engine/Services/IShaderService.h"
+#include "Engine/Services/Rendering/IShaderService.h"
 #include <glm/glm.hpp>
 
 struct PostProcessLayer {

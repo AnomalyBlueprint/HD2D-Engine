@@ -1,4 +1,4 @@
-#include "Engine/Services/SceneService.h"
+#include "Engine/Services/Scene/SceneService.h"
 
 void SceneService::LoadScene(IScene* newScene) {
     if (m_currentScene) {

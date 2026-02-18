@@ -1,5 +1,5 @@
 #pragma once
-#include "Engine/Services/IPathRepository.h"
+#include "Engine/Services/Data/IPathRepository.h"
 #include "Engine/Data/KenneyIDs.h"
 #include <unordered_map>
 

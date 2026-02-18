@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "Engine/Services/PathRegistryService.h"
+#include "Engine/Services/Data/PathRegistryService.h"
 
 // Scans UI directories and provides paths map
 class UIPathRepository : public IPathRepository

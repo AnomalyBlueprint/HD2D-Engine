@@ -1,9 +1,9 @@
-#include "Engine/Services/TextureAtlasService.h"
-#include "Engine/Services/KenneyPathRepository.h"
-#include "Engine/Services/UIPathRepository.h"
-#include "Engine/Services/PathRegistryService.h"
-#include "Engine/Services/ServiceLocator.h"
-#include "Engine/Services/ILoggerService.h"
+#include "Engine/Services/Rendering/TextureAtlasService.h"
+#include "Engine/Services/Data/KenneyPathRepository.h"
+#include "Engine/Services/UI/UIPathRepository.h"
+#include "Engine/Services/Data/PathRegistryService.h"
+#include "Engine/Core/ServiceLocator.h"
+#include "Engine/Services/Logging/ILoggerService.h"
 #include <iostream>
 #include <algorithm>
 #include <cmath>

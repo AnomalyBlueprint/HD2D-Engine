@@ -4,7 +4,7 @@
 #include "Game/Player.h"
 #include <SDL.h>
 #include <memory>
-#include "Engine/Services/RenderService.h"
+#include "Engine/Services/Rendering/RenderService.h"
 
 class GameplayScene : public IScene {
 public:

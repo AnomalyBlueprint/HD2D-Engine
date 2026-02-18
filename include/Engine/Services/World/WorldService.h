@@ -1,5 +1,5 @@
 #pragma once
-#include "Engine/Services/IWorldService.h"
+#include "Engine/Services/World/IWorldService.h"
 #include "vendor/FastNoiseLite.h"
 
 /// <summary>

@@ -1,9 +1,9 @@
-#include "Engine/UI/UIService.h"
-#include "Engine/Services/ServiceLocator.h"
-#include "Engine/Services/LoggerService.h"
-#include "Engine/Services/RenderService.h"
-#include "Engine/Services/IFontService.h"
-#include "Engine/Services/TextureAtlasService.h"
+#include "Engine/Services/UI/UIService.h"
+#include "Engine/Core/ServiceLocator.h"
+#include "Engine/Services/Logging/LoggerService.h"
+#include "Engine/Services/Rendering/RenderService.h"
+#include "Engine/Services/Font/IFontService.h"
+#include "Engine/Services/Rendering/TextureAtlasService.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -14,6 +14,25 @@ glm::vec4 HexToVec4(const std::string& hex) {
     if (hex.empty() || hex == "transparent") return glm::vec4(0.0f);
     std::string h = hex;
     if (h[0] == '#') h = h.substr(1);
+    
+    // Support 3-digit shorthand hex (#ccc -> #cccccc, #fff -> #ffffff)
+    if (h.length() == 3) {
+        std::string expanded;
+        expanded += h[0]; expanded += h[0];
+        expanded += h[1]; expanded += h[1];
+        expanded += h[2]; expanded += h[2];
+        h = expanded;
+    }
+    // Support 4-digit shorthand hex (#rgba)
+    if (h.length() == 4) {
+        std::string expanded;
+        expanded += h[0]; expanded += h[0];
+        expanded += h[1]; expanded += h[1];
+        expanded += h[2]; expanded += h[2];
+        expanded += h[3]; expanded += h[3];
+        h = expanded;
+    }
+    
     float r = 0, g = 0, b = 0, a = 1.0f;
     if (h.length() >= 6) {
         std::stringstream ss;
@@ -89,6 +108,14 @@ std::shared_ptr<UIElement> RecursiveParse(const nlohmann::json& node) {
         if (p.contains("fontSize")) el->fontSize = p["fontSize"];
         if (p.contains("fontName")) el->fontName = p["fontName"];
         if (p.contains("align")) el->align = p["align"];
+        if (p.contains("checked")) el->checked = p["checked"];
+        if (p.contains("label")) el->label = p["label"];
+        if (p.contains("min")) el->min = p["min"];
+        if (p.contains("max")) el->max = p["max"];
+        if (p.contains("value")) el->value = p["value"];
+        if (p.contains("prefabId")) el->prefabId = p["prefabId"];
+        if (p.contains("prefabHostId")) el->prefabHostId = p["prefabHostId"];
+        if (p.contains("layoutMode")) el->layoutMode = p["layoutMode"];
     }
     return el;
 }
@@ -168,26 +195,159 @@ void UIService::Render(RenderService* renderer) {
 }
 
 void UIService::RenderElement(RenderService* renderer, std::shared_ptr<UIElement> el) {
+    // Skip Prefab Templates (they are cloned, not rendered directly)
+    if (!el->prefabId.empty()) return;
+
     glm::vec4 bg = HexToVec4(el->style.bg);
-    if (bg.a > 0.0f) {
-         Sprite s;
-         s.Position = glm::vec2(el->geometry.x + el->geometry.w/2, el->geometry.y + el->geometry.h/2);
-         s.Size = glm::vec2(el->geometry.w, el->geometry.h);
-         s.Color = bg;
-         if (el->textureId != 0) {
-             s.TextureID = el->textureId;
-             s.MinUV = el->uvMin; s.MaxUV = el->uvMax;
-             s.Color = glm::vec4(1.0f); 
+    glm::vec4 borderColor = HexToVec4(el->style.border);
+    auto atlas = ServiceLocator::Get().GetService<TextureAtlasService>();
+    
+    // --- 1. Draw Background / Image / Texture ---
+    if (!el->image.empty() && atlas) {
+         // Image from texture atlas
+         Sprite imgSprite;
+         imgSprite.Position = glm::vec2(el->geometry.x + el->geometry.w/2.0f, el->geometry.y + el->geometry.h/2.0f);
+         imgSprite.Size = glm::vec2(el->geometry.w, el->geometry.h);
+         imgSprite.Color = glm::vec4(1.0f); // White tint for texture
+         imgSprite.TextureID = atlas->GetTextureID();
+         imgSprite.Rotation = el->rotation;
+         
+         UVRect uvs = atlas->GetUVs(el->image);
+         imgSprite.MinUV = glm::vec2(uvs.uMin, uvs.vMin);
+         imgSprite.MaxUV = glm::vec2(uvs.uMax, uvs.vMax);
+         
+         renderer->DrawSprite(imgSprite);
+    } else if (bg.a > 0.0f) {
+         // Solid background color
+         Sprite bgSprite;
+         bgSprite.Position = glm::vec2(el->geometry.x + el->geometry.w/2.0f, el->geometry.y + el->geometry.h/2.0f);
+         bgSprite.Size = glm::vec2(el->geometry.w, el->geometry.h);
+         bgSprite.Color = bg;
+         bgSprite.TextureID = 0;
+         renderer->DrawSprite(bgSprite);
+    } else if (el->textureId != 0) {
+         // Dynamic texture (e.g. map visualizer)
+         Sprite texSprite;
+         texSprite.Position = glm::vec2(el->geometry.x + el->geometry.w/2.0f, el->geometry.y + el->geometry.h/2.0f);
+         texSprite.Size = glm::vec2(el->geometry.w, el->geometry.h);
+         texSprite.Color = glm::vec4(1.0f);
+         texSprite.TextureID = el->textureId;
+         texSprite.MinUV = el->uvMin;
+         texSprite.MaxUV = el->uvMax;
+         texSprite.Rotation = el->rotation;
+         renderer->DrawSprite(texSprite);
+    }
+
+    // --- Border Rendering ---
+    if (borderColor.a > 0.0f) {
+         float thickness = 2.0f;
+         
+         Sprite top;
+         top.Position = glm::vec2(el->geometry.x + el->geometry.w/2.0f, el->geometry.y + thickness/2.0f);
+         top.Size = glm::vec2(el->geometry.w, thickness);
+         top.Color = borderColor;
+         top.TextureID = 0;
+         renderer->DrawSprite(top);
+
+         Sprite bot;
+         bot.Position = glm::vec2(el->geometry.x + el->geometry.w/2.0f, el->geometry.y + el->geometry.h - thickness/2.0f);
+         bot.Size = glm::vec2(el->geometry.w, thickness);
+         bot.Color = borderColor;
+         bot.TextureID = 0;
+         renderer->DrawSprite(bot);
+
+         Sprite left;
+         left.Position = glm::vec2(el->geometry.x + thickness/2.0f, el->geometry.y + el->geometry.h/2.0f);
+         left.Size = glm::vec2(thickness, el->geometry.h);
+         left.Color = borderColor;
+         left.TextureID = 0;
+         renderer->DrawSprite(left);
+
+         Sprite right;
+         right.Position = glm::vec2(el->geometry.x + el->geometry.w - thickness/2.0f, el->geometry.y + el->geometry.h/2.0f);
+         right.Size = glm::vec2(thickness, el->geometry.h);
+         right.Color = borderColor;
+         right.TextureID = 0;
+         renderer->DrawSprite(right);
+    }
+
+    // --- 2. Draw Widget-Specific Visuals ---
+    if (el->type == "SLIDER") {
+         // Draw Track
+         Sprite trackSprite;
+         trackSprite.Position = glm::vec2(el->geometry.x + el->geometry.w/2.0f, el->geometry.y + el->geometry.h/2.0f);
+         trackSprite.Size = glm::vec2(el->geometry.w, el->geometry.h/4.0f);
+         trackSprite.Color = glm::vec4(0.3f, 0.3f, 0.3f, 1.0f);
+         trackSprite.TextureID = 0;
+         renderer->DrawSprite(trackSprite);
+
+         // Draw Knob
+         float range = (float)(el->max - el->min);
+         float pct = (range > 0) ? ((float)(el->value - el->min) / range) : 0.0f;
+         float knobX = el->geometry.x + (el->geometry.w * pct);
+         
+         Sprite knobSprite;
+         knobSprite.Position = glm::vec2(knobX, el->geometry.y + el->geometry.h/2.0f);
+         knobSprite.Size = glm::vec2(10.0f, el->geometry.h);
+         knobSprite.Color = glm::vec4(0.0f, 0.8f, 0.0f, 1.0f);
+         knobSprite.TextureID = 0;
+         renderer->DrawSprite(knobSprite);
+    } else if (el->type == "CHECKBOX") {
+         // Draw Box
+         Sprite boxSprite;
+         boxSprite.Position = glm::vec2(el->geometry.x + el->geometry.w/2.0f, el->geometry.y + el->geometry.h/2.0f);
+         boxSprite.Size = glm::vec2(el->geometry.w, el->geometry.h);
+         boxSprite.Color = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
+         boxSprite.TextureID = 0;
+         renderer->DrawSprite(boxSprite);
+
+         if (el->checked) {
+             Sprite checkSprite;
+             checkSprite.Position = boxSprite.Position;
+             checkSprite.Size = boxSprite.Size * 0.6f;
+             checkSprite.Color = glm::vec4(0.0f, 0.8f, 0.0f, 1.0f);
+             checkSprite.TextureID = 0;
+             renderer->DrawSprite(checkSprite);
          }
-         renderer->DrawSprite(s);
+         
+         // Draw Label if exists
+         if (!el->label.empty()) {
+             auto font = ServiceLocator::Get().GetService<IFontService>();
+             if (font) {
+                 font->RenderText(renderer, el->label, 
+                     el->geometry.x + el->geometry.w + 10, 
+                     el->geometry.y + el->geometry.h/2 + 5, 
+                     0.5f, glm::vec4(1.0f), el->fontName);
+             }
+         }
     }
     
-    if (!el->text.empty()) {
-         auto font = ServiceLocator::Get().GetService<IFontService>();
-         if (font) {
-              float scale = (el->fontSize > 0) ? el->fontSize/32.0f : 1.0f;
-              glm::vec4 c = HexToVec4(el->style.color);
-              font->RenderText(renderer, el->text, el->geometry.x, el->geometry.y + el->geometry.h/2 + 10, scale, c, el->fontName);
+    // --- 3. Draw Text / Content ---
+    if (el->type == "LABEL" || el->type == "BUTTON") {
+         if (!el->text.empty()) {
+             auto font = ServiceLocator::Get().GetService<IFontService>();
+             if (font) {
+                 float x = el->geometry.x;
+                 float y = el->geometry.y + el->geometry.h/2 + 10;
+                 
+                 float fontSizeLoaded = 32.0f;
+                 float scale = (el->fontSize > 0) ? (el->fontSize / fontSizeLoaded) : 1.0f;
+
+                 if (el->align == "center") {
+                     float textW = font->GetTextWidth(el->text, scale, el->fontName);
+                     x += (el->geometry.w - textW) / 2;
+                 } else if (el->align == "right") {
+                     float textW = font->GetTextWidth(el->text, scale, el->fontName);
+                     x += (el->geometry.w - textW);
+                 } else {
+                     x += 10; // Left padding
+                 }
+                 
+                 glm::vec4 textColor = HexToVec4(el->style.color);
+                 if (textColor.a == 0.0f) textColor = glm::vec4(1.0f);
+                 
+                 font->RenderText(renderer, el->text, x, y, scale, textColor, el->fontName);
+             }
          }
     }
 }
@@ -197,10 +357,26 @@ void UIService::HandleClick(float mx, float my) {
          auto root = screen->GetRoot();
          if (!root) continue;
          for (auto& el : root->children) {
-             if (mx >= el->geometry.x && mx <= el->geometry.x + el->geometry.w &&
-                 my >= el->geometry.y && my <= el->geometry.y + el->geometry.h) {
-                 
-                 if (!el->actionId.empty()) {
+             bool hit = (mx >= el->geometry.x && mx <= el->geometry.x + el->geometry.w &&
+                         my >= el->geometry.y && my <= el->geometry.y + el->geometry.h);
+             
+             if (hit) {
+                 if (el->type == "BUTTON" && !el->actionId.empty()) {
+                     m_lastAction = el->actionId;
+                     return; // Consume click
+                 } else if (el->type == "CHECKBOX") {
+                     el->checked = !el->checked;
+                     if (!el->actionId.empty()) {
+                         m_lastAction = el->actionId;
+                     }
+                     return;
+                 } else if (el->type == "SLIDER") {
+                     float relX = mx - el->geometry.x;
+                     float pct = glm::clamp(relX / el->geometry.w, 0.0f, 1.0f);
+                     int range = el->max - el->min;
+                     el->value = el->min + (int)(pct * range);
+                     return;
+                 } else if (!el->actionId.empty()) {
                      m_lastAction = el->actionId;
                  }
              }

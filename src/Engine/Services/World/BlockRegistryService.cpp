@@ -1,6 +1,6 @@
-#include "Engine/Services/BlockRegistryService.h"
-#include "Engine/Services/ServiceLocator.h"
-#include "Engine/Services/ILoggerService.h"
+#include "Engine/Services/World/BlockRegistryService.h"
+#include "Engine/Core/ServiceLocator.h"
+#include "Engine/Services/Logging/ILoggerService.h"
 
 void BlockRegistryService::OnInitialize()
 {

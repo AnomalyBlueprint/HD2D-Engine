@@ -1,9 +1,9 @@
-#include "Engine/Services/FontService.h"
-#include "Engine/Services/ServiceLocator.h"
-#include "Engine/Services/ILoggerService.h"
-#include "Engine/Services/PathRegistryService.h"
-#include "Engine/Services/FontPathRepository.h"
-#include "Engine/Services/RenderService.h"
+#include "Engine/Services/Font/FontService.h"
+#include "Engine/Core/ServiceLocator.h"
+#include "Engine/Services/Logging/ILoggerService.h"
+#include "Engine/Services/Data/PathRegistryService.h"
+#include "Engine/Services/Font/FontPathRepository.h"
+#include "Engine/Services/Rendering/RenderService.h"
 #include <fstream>
 #include <vector>
 #include <iostream>

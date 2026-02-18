@@ -1,7 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "Engine/Services/IInputService.h"
+#include "Engine/Services/Input/IInputService.h"
 
 // Forward declaration if needed, or include SDL?
 // The original header included <SDL.h> for SDL_ScanCode.

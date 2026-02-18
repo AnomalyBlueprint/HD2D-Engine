@@ -10,7 +10,7 @@ This allows for a "Two-Brain" architecture:
 ## Core Systems
 
 ### 1. Service Locator
-*   **File**: `include/Engine/Services/ServiceLocator.h`
+*   **File**: `include/Engine/Core/ServiceLocator.h`
 *   **Role**: Global registry for accessing `IService` implementations.
 *   **Usage**: `ServiceLocator::Get().GetService<IRenderService>()`
 
@@ -45,9 +45,15 @@ Screens are managed via the `BaseScreen` class (acting as the controller).
 ## Folder Structure
 
 ### `include/Engine` (Generic Framework)
-*   **Core**: Basic entities (Player, Camera, Vertex).
-*   **Services**: System interfaces and implementations (Render, Input, UI, Audio).
-*   **UI**: Generic UI classes (BaseScreen, UIElement).
+*   **Core**: Base infrastructure (`IService`, `ServiceLocator`, `Sprite`, `Vertex`, `Camera`).
+*   **Services/Rendering**: Graphics pipeline (`RenderService`, `OpenGLRenderService`, `ShaderService`, `PostProcessService`, `TextureAtlasService`).
+*   **Services/UI**: UI system (`UIService`, `UIElement`, `BaseScreen`, `IUIService`, `UIPathRepository`).
+*   **Services/Font**: Font system (`FontService`, `IFontService`, `FontPathRepository`).
+*   **Services/Input**: Input handling (`InputService`, `IInputService`).
+*   **Services/World**: World generation & management (`WorldService`, `MacroService`, `ChunkManager`, `BlockRegistryService`).
+*   **Services/Data**: Database & resources (`DatabaseService`, `ResourceService`, `PathRegistryService`, `KenneyPathRepository`).
+*   **Services/Scene**: Scene management (`SceneService`).
+*   **Services/Logging**: Logging (`LoggerService`, `ILoggerService`, `LogTypes`).
 *   **Utils**: Helper math and string functions.
 
 ### `include/Game` (Project Epoch Specific)

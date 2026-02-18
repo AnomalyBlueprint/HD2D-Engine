@@ -1,8 +1,8 @@
 #pragma once
-#include "Engine/Services/IService.h"
-#include "Engine/Services/RenderService.h"
-#include "Engine/Services/IShaderService.h"
-#include "Engine/Services/IBlockRegistryService.h"
+#include "Engine/Core/IService.h"
+#include "Engine/Services/Rendering/RenderService.h"
+#include "Engine/Services/Rendering/IShaderService.h"
+#include "Engine/Services/World/IBlockRegistryService.h"
 #include "Game/World/Chunk.h"
 #include <map>
 #include <memory>

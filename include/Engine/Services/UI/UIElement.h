@@ -31,11 +31,21 @@ public:
     // Rendering props
     float fontSize = 12.0f;
     std::string fontName;
-    std::string align;
+    std::string align = "left";
     float rotation = 0.0f;
     unsigned int textureId = 0;
     glm::vec2 uvMin = {0,0};
     glm::vec2 uvMax = {1,1};
+    
+    // Widget-specific properties
+    bool checked = false;
+    std::string label;          // Checkbox label text
+    int min = 0;                // Slider min
+    int max = 100;              // Slider max
+    int value = 50;             // Slider current value
+    std::string prefabId;       // Prefab template ID
+    std::string prefabHostId;   // Prefab host container ID
+    std::string layoutMode = "free";
     
     UIElement() : geometry{0,0,0,0} {}
     

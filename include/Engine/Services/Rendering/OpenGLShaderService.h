@@ -1,7 +1,7 @@
 #pragma once
-#include "Engine/Services/IShaderService.h"
-#include "Engine/Services/ServiceLocator.h"
-#include "Engine/Services/ILoggerService.h"
+#include "Engine/Services/Rendering/IShaderService.h"
+#include "Engine/Core/ServiceLocator.h"
+#include "Engine/Services/Logging/ILoggerService.h"
 #include <GL/glew.h>
 #include <string>
 

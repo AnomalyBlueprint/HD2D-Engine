@@ -1,6 +1,6 @@
-#include "Engine/Services/DatabaseService.h"
-#include "Engine/Services/ServiceLocator.h"
-#include "Engine/Services/ILoggerService.h"
+#include "Engine/Services/Data/DatabaseService.h"
+#include "Engine/Core/ServiceLocator.h"
+#include "Engine/Services/Logging/ILoggerService.h"
 #include <iostream>
 #include <fstream>
 #include <sys/stat.h>

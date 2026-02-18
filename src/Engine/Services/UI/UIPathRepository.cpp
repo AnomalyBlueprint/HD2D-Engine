@@ -1,6 +1,6 @@
-#include "Engine/Services/UIPathRepository.h"
-#include "Engine/Services/ServiceLocator.h"
-#include "Engine/Services/ILoggerService.h"
+#include "Engine/Services/UI/UIPathRepository.h"
+#include "Engine/Core/ServiceLocator.h"
+#include "Engine/Services/Logging/ILoggerService.h"
 #include <filesystem>
 #include <iostream>
 

@@ -1,5 +1,5 @@
 #include "Game/Player.h"
-#include "Engine/Services/ServiceLocator.h"
+#include "Engine/Core/ServiceLocator.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <cmath>
 

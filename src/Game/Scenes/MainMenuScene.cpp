@@ -1,15 +1,15 @@
 #include "Game/Scenes/MainMenuScene.h"
 #include "Game/Scenes/GameplayScene.h" // Needed to switch to gameplay
-#include "Engine/Services/ServiceLocator.h"
-#include "Engine/Services/RenderService.h"
-#include "Engine/UI/UIService.h"
-#include "Engine/Services/InputService.h"
-#include "Engine/Services/MacroService.h"
-#include "Engine/Services/DatabaseService.h"
-#include "Engine/Services/WorldService.h"
-#include "Engine/Services/SceneService.h"
-#include "Engine/Services/IShaderService.h"
-#include "Engine/Services/ILoggerService.h"
+#include "Engine/Core/ServiceLocator.h"
+#include "Engine/Services/Rendering/RenderService.h"
+#include "Engine/Services/UI/UIService.h"
+#include "Engine/Services/Input/InputService.h"
+#include "Engine/Services/World/MacroService.h"
+#include "Engine/Services/Data/DatabaseService.h"
+#include "Engine/Services/World/WorldService.h"
+#include "Engine/Services/Scene/SceneService.h"
+#include "Engine/Services/Rendering/IShaderService.h"
+#include "Engine/Services/Logging/ILoggerService.h"
 #include <GL/glew.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <cstdlib>

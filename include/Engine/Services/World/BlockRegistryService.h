@@ -1,5 +1,5 @@
 #pragma once
-#include "Engine/Services/IBlockRegistryService.h"
+#include "Engine/Services/World/IBlockRegistryService.h"
 #include <unordered_map>
 
 /// <summary>

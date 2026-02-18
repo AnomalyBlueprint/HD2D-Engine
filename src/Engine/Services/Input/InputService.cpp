@@ -1,6 +1,6 @@
-#include "Engine/Services/InputService.h"
-#include "Engine/Services/ServiceLocator.h"
-#include "Engine/Services/ILoggerService.h"
+#include "Engine/Services/Input/InputService.h"
+#include "Engine/Core/ServiceLocator.h"
+#include "Engine/Services/Logging/ILoggerService.h"
 #include <iostream>
 
 InputService::InputService()

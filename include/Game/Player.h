@@ -1,9 +1,9 @@
 #pragma once
 #include <glm/glm.hpp>
 #include <vector>
-#include "Engine/Services/IInputService.h"
-#include "Engine/Services/RenderService.h"
-#include "Engine/Services/IShaderService.h"
+#include "Engine/Services/Input/IInputService.h"
+#include "Engine/Services/Rendering/RenderService.h"
+#include "Engine/Services/Rendering/IShaderService.h"
 
 /// <summary>
 /// Represents the player character in the world.

@@ -1,10 +1,10 @@
-#include "Engine/Services/ResourceService.h"
-#include "Engine/Services/ServiceLocator.h"
-#include "Engine/Services/RenderService.h"
-#include "Engine/Services/ILoggerService.h"
-#include "Engine/Services/PathRegistryService.h"
-#include "Engine/Services/UIPathRepository.h"
-#include "Engine/Services/FontPathRepository.h"
+#include "Engine/Services/Data/ResourceService.h"
+#include "Engine/Core/ServiceLocator.h"
+#include "Engine/Services/Rendering/RenderService.h"
+#include "Engine/Services/Logging/ILoggerService.h"
+#include "Engine/Services/Data/PathRegistryService.h"
+#include "Engine/Services/UI/UIPathRepository.h"
+#include "Engine/Services/Font/FontPathRepository.h"
 #include <iostream>
 
 ResourceService::ResourceService()

@@ -1,6 +1,6 @@
-#include "Engine/Services/KenneyPathRepository.h"
-#include "Engine/Services/ServiceLocator.h"
-#include "Engine/Services/ILoggerService.h"
+#include "Engine/Services/Data/KenneyPathRepository.h"
+#include "Engine/Core/ServiceLocator.h"
+#include "Engine/Services/Logging/ILoggerService.h"
 #include <iostream>
 
 void KenneyPathRepository::OnInitialize()

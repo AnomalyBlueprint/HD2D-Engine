@@ -1,6 +1,6 @@
-#include "Engine/Services/FontPathRepository.h"
-#include "Engine/Services/ServiceLocator.h"
-#include "Engine/Services/ILoggerService.h"
+#include "Engine/Services/Font/FontPathRepository.h"
+#include "Engine/Core/ServiceLocator.h"
+#include "Engine/Services/Logging/ILoggerService.h"
 #include <filesystem>
 
 namespace fs = std::filesystem;

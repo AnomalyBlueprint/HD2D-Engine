@@ -1,5 +1,5 @@
 #pragma once
-#include "Engine/Services/IInputService.h"
+#include "Engine/Services/Input/IInputService.h"
 #include <vector>
 #include <cstring> // for memcpy
 

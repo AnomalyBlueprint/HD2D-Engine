@@ -1,10 +1,10 @@
-#include "Engine/Services/WorldService.h"
-#include "Engine/Services/ServiceLocator.h"
-#include "Engine/Services/ILoggerService.h"
-#include "Engine/Services/ChunkManager.h"
+#include "Engine/Services/World/WorldService.h"
+#include "Engine/Core/ServiceLocator.h"
+#include "Engine/Services/Logging/ILoggerService.h"
+#include "Engine/Services/World/ChunkManager.h"
 #include <iostream>
 
-#include "Engine/Services/DatabaseService.h"
+#include "Engine/Services/Data/DatabaseService.h"
 
 WorldService::WorldService()
 {

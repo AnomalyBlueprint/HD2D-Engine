@@ -1,7 +1,7 @@
 #include "Game/World/Chunk.h"
-#include "Engine/Services/IWorldService.h"
-#include "Engine/Services/TextureAtlasService.h"
-#include "Engine/Services/IBlockRegistryService.h"
+#include "Engine/Services/World/IWorldService.h"
+#include "Engine/Services/Rendering/TextureAtlasService.h"
+#include "Engine/Services/World/IBlockRegistryService.h"
 #include "Engine/Data/KenneyIDs.h"
 #include "Engine/Core/Vertex.h"
 #include <vector>

@@ -6,7 +6,7 @@
 #include "Engine/Data/KenneyIDs.h"
 #include <glm/glm.hpp>
 
-#include "Engine/Services/IService.h"
+#include "Engine/Core/IService.h"
 
 // Forward declarations
 class KenneyPathRepository;

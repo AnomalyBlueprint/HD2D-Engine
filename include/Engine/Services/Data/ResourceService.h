@@ -1,5 +1,5 @@
 #pragma once
-#include "Engine/Services/IResourceService.h"
+#include "Engine/Services/Data/IResourceService.h"
 #include <unordered_map>
 #include <string>
 

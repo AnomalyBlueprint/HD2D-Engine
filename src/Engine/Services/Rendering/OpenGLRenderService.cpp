@@ -1,6 +1,6 @@
-#include "Engine/Services/OpenGLRenderService.h"
-#include "Engine/Services/ServiceLocator.h"
-#include "Engine/Services/ILoggerService.h"
+#include "Engine/Services/Rendering/OpenGLRenderService.h"
+#include "Engine/Core/ServiceLocator.h"
+#include "Engine/Services/Logging/ILoggerService.h"
 #include <iostream>
 #define STB_IMAGE_IMPLEMENTATION
 #include <vendor/stb_image.h>

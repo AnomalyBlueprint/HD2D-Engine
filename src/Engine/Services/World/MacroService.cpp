@@ -1,6 +1,6 @@
-#include "Engine/Services/MacroService.h"
-#include "Engine/Services/ServiceLocator.h"
-#include "Engine/Services/ILoggerService.h"
+#include "Engine/Services/World/MacroService.h"
+#include "Engine/Core/ServiceLocator.h"
+#include "Engine/Services/Logging/ILoggerService.h"
 #include <GL/glew.h>
 #include <iostream>
 #include "Engine/Core/BitmapFont.h"

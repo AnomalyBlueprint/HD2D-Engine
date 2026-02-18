@@ -2,7 +2,7 @@
 #include <map>
 #include <string>
 #include <vector>
-#include "Engine/Services/PathRegistryService.h"
+#include "Engine/Services/Data/PathRegistryService.h"
 
 class FontPathRepository : public IPathRepository
 {

@@ -1,8 +1,8 @@
 #include "Game/UI/MainMenuController.h"
-#include "Engine/Services/ServiceLocator.h"
-#include "Engine/Services/LoggerService.h"
-#include "Engine/Services/IUIService.h"
-#include "Engine/UI/UIService.h" 
+#include "Engine/Core/ServiceLocator.h"
+#include "Engine/Services/Logging/LoggerService.h"
+#include "Engine/Services/UI/IUIService.h"
+#include "Engine/Services/UI/UIService.h" 
 
 namespace Game {
 

@@ -1,6 +1,6 @@
 #pragma once
-#include "Engine/Services/IService.h"
-#include "Engine/UI/BaseScreen.h"
+#include "Engine/Core/IService.h"
+#include "Engine/Services/UI/BaseScreen.h"
 #include <string>
 #include <memory>
 #include <functional>

@@ -1,5 +1,5 @@
 #pragma once
-#include "Engine/Services/RenderService.h"
+#include "Engine/Services/Rendering/RenderService.h"
 #include <SDL.h>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
