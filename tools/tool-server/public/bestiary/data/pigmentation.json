@@ -1,0 +1,30 @@
+{
+  "Standard": {
+    "stealthMod": 0,
+    "flavor": "Typical coloration for its biome."
+  },
+  "Melanistic": {
+    "stealthMod": 2,
+    "flavor": "Pitch black, blending perfectly into the shadows."
+  },
+  "Albino": {
+    "stealthMod": -2,
+    "flavor": "Stark white with red eyes, highly visible but imposing."
+  },
+  "Leucistic": {
+    "stealthMod": -1,
+    "flavor": "Pale and ghostly white, but with normal pigment in the eyes."
+  },
+  "Erythristic": {
+    "stealthMod": 0,
+    "flavor": "Possessing an unusual, vibrant reddish-copper hue."
+  },
+  "Xanthic": {
+    "stealthMod": -1,
+    "flavor": "A striking, unnatural golden-yellow mutation."
+  },
+  "Piebald": {
+    "stealthMod": 0,
+    "flavor": "Large, unpigmented white patches breaking up its base color."
+  }
+}

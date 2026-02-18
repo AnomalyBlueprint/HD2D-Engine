@@ -1,0 +1,58 @@
+{
+  "Infant": {
+    "crMult": 0.1,
+    "hpMult": 0.2,
+    "acMod": -3,
+    "sizeStep": -2,
+    "addedAttack": null
+  },
+  "Puny": {
+    "crMult": 0.5,
+    "hpMult": 0.5,
+    "acMod": -2,
+    "sizeStep": -1,
+    "addedAttack": null
+  },
+  "Young": {
+    "crMult": 0.75,
+    "hpMult": 0.7,
+    "acMod": -1,
+    "sizeStep": -1,
+    "addedAttack": null
+  },
+  "Standard": {
+    "crMult": 1,
+    "hpMult": 1,
+    "acMod": 0,
+    "sizeStep": 0,
+    "addedAttack": null
+  },
+  "Overgrown": {
+    "crMult": 1.5,
+    "hpMult": 1.5,
+    "acMod": 0,
+    "sizeStep": 1,
+    "addedAttack": null
+  },
+  "Giant": {
+    "crMult": 2,
+    "hpMult": 2.5,
+    "acMod": 1,
+    "sizeStep": 1,
+    "addedAttack": "Slam"
+  },
+  "Colossal": {
+    "crMult": 4,
+    "hpMult": 4,
+    "acMod": 2,
+    "sizeStep": 2,
+    "addedAttack": "Body Slam"
+  },
+  "Titanic": {
+    "crMult": 8,
+    "hpMult": 8,
+    "acMod": 4,
+    "sizeStep": 3,
+    "addedAttack": "Trample"
+  }
+}

@@ -1,0 +1,25 @@
+{
+    "bestiary": {
+        "sourceDir": "./public/bestiary/data/",
+        "entryFile": "creatures.json",
+        "exportSqlPath": "../../assets/data/epoch_database.sql",
+        "defaultSchema": {
+            "creatures": [],
+            "version": 1
+        }
+    },
+    "ui": {
+        "sourceDir": "../../assets/ui/",
+        "entryFile": "ui_layouts.json",
+        "defaultSchema": {
+            "meta": {},
+            "settings": {
+                "width": 1024,
+                "height": 768
+            },
+            "scenes": {
+                "main_menu": []
+            }
+        }
+    }
+}

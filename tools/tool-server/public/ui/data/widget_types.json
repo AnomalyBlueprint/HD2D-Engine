@@ -1,0 +1,74 @@
+{
+    "CONTAINER": {
+        "label": "Container",
+        "icon": "Box",
+        "defaultH": 100,
+        "defaultW": 100,
+        "defaultProps": {
+            "layoutMode": "free",
+            "bgImage": ""
+        }
+    },
+    "BUTTON": {
+        "label": "Button",
+        "icon": "MousePointer",
+        "defaultH": 40,
+        "defaultW": 120,
+        "defaultProps": {
+            "text": "Click Me",
+            "actionId": "BTN_ACTION",
+            "bgImage": ""
+        }
+    },
+    "LABEL": {
+        "label": "Text Label",
+        "icon": "Type",
+        "defaultH": 30,
+        "defaultW": 150,
+        "defaultProps": {
+            "text": "Label Text",
+            "fontSize": 14,
+            "align": "left"
+        }
+    },
+    "IMAGE": {
+        "label": "Image",
+        "icon": "Image",
+        "defaultH": 100,
+        "defaultW": 100,
+        "defaultProps": {
+            "image": "assets/ui/placeholder.png"
+        }
+    },
+    "INPUT_TEXT": {
+        "label": "Input Field",
+        "icon": "Terminal",
+        "defaultH": 30,
+        "defaultW": 200,
+        "defaultProps": {
+            "placeholder": "Enter text...",
+            "text": ""
+        }
+    },
+    "SLIDER": {
+        "label": "Slider",
+        "icon": "Sliders",
+        "defaultH": 30,
+        "defaultW": 200,
+        "defaultProps": {
+            "min": 0,
+            "max": 100,
+            "value": 50
+        }
+    },
+    "CHECKBOX": {
+        "label": "Checkbox",
+        "icon": "CheckSquare",
+        "defaultH": 30,
+        "defaultW": 30,
+        "defaultProps": {
+            "checked": false,
+            "label": "Option"
+        }
+    }
+}

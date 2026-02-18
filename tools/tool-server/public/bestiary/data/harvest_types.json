@@ -1,0 +1,56 @@
+{
+    "Skinning": {
+        "toolNeeded": "Knife",
+        "attribute": "Dexterity",
+        "speed": "Fast",
+        "baseTimeSeconds": 3
+    },
+    "Butchering": {
+        "toolNeeded": "Cleaver",
+        "attribute": "Strength",
+        "speed": "Medium",
+        "baseTimeSeconds": 5
+    },
+    "Extraction": {
+        "toolNeeded": "Tweezers",
+        "attribute": "Precision",
+        "speed": "Slow",
+        "baseTimeSeconds": 8
+    },
+    "Sawing": {
+        "toolNeeded": "Bone Saw",
+        "attribute": "Strength",
+        "speed": "Slow",
+        "baseTimeSeconds": 10
+    },
+    "Draining": {
+        "toolNeeded": "Vial",
+        "attribute": "Care",
+        "speed": "Medium",
+        "baseTimeSeconds": 4
+    },
+    "Plucking": {
+        "toolNeeded": "Hands",
+        "attribute": "Speed",
+        "speed": "Fast",
+        "baseTimeSeconds": 2
+    },
+    "Scraping": {
+        "toolNeeded": "Scraper",
+        "attribute": "Patience",
+        "speed": "Slow",
+        "baseTimeSeconds": 6
+    },
+    "Milking": {
+        "toolNeeded": "Flask",
+        "attribute": "Handling",
+        "speed": "Slow",
+        "baseTimeSeconds": 7
+    },
+    "Scavenging": {
+        "toolNeeded": "Hands",
+        "attribute": "Perception",
+        "speed": "Fast",
+        "baseTimeSeconds": 2
+    }
+}

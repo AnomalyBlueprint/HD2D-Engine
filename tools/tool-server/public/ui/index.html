@@ -44,6 +44,7 @@
 
         input[type="color"] {
             -webkit-appearance: none;
+            appearance: none;
             border: none;
             padding: 0;
         }
@@ -143,6 +144,83 @@
             const [settings, setSettings] = useState({ width: 1024, height: 768 });
             const [currentScene, setCurrentScene] = useState('main_menu');
             const fileInputRef = useRef(null);
+
+            // --- Data Sanitizer ---
+            // Converts JSON export format (geometry/properties) to internal state format
+            // and guarantees defaults for style and props on every widget.
+            const sanitizeSceneData = (rawScenes) => {
+                const sanitized = {};
+                Object.keys(rawScenes).forEach(sceneName => {
+                    sanitized[sceneName] = (rawScenes[sceneName] || []).map(w => ({
+                        id: w.id,
+                        type: w.type,
+                        parentId: w.parentId,
+                        // Support both flat (x/y/w/h) and nested (geometry) formats
+                        x: w.x ?? w.geometry?.x ?? 0,
+                        y: w.y ?? w.geometry?.y ?? 0,
+                        w: w.w ?? w.geometry?.w ?? 100,
+                        h: w.h ?? w.geometry?.h ?? 100,
+                        // Ensure style always exists with safe defaults
+                        style: {
+                            bg: '#262626',
+                            border: '#525252',
+                            color: '#e5e5e5',
+                            ...(w.style || {})
+                        },
+                        // Support both 'props' and 'properties', ensure always exists
+                        props: {
+                            ...(w.props || w.properties || {})
+                        }
+                    }));
+                });
+                return sanitized;
+            };
+
+            // --- Server Integration ---
+            useEffect(() => {
+                // Heartbeat
+                const hb = new EventSource('/api/heartbeat');
+                hb.onerror = () => console.warn('Heartbeat lost');
+
+                // Load Data
+                fetch('/api/load/ui')
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data && data.scenes && Object.keys(data.scenes).length > 0) {
+                            console.log("Loaded UI data from server", data);
+                            setSettings(data.settings || { width: 1024, height: 768 });
+                            setSceneData(sanitizeSceneData(data.scenes));
+                            // Ensure current scene is valid
+                            const initialScene = Object.keys(data.scenes)[0] || 'main_menu';
+                            setCurrentScene(initialScene);
+                        } else {
+                            console.log("No saved data found, using defaults.");
+                        }
+                    })
+                    .catch(err => console.error("Failed to load UI data", err));
+
+                return () => hb.close();
+            }, []);
+
+            const saveToServer = async () => {
+                const data = JSON.parse(generateJSON());
+                try {
+                    const res = await fetch('/api/save/ui', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                    const result = await res.json();
+                    if (result.success) {
+                        alert("Saved to server!");
+                    } else {
+                        alert("Save failed: " + result.error);
+                    }
+                } catch (e) {
+                    console.error(e);
+                    alert("Save failed (network error)");
+                }
+            };
 
             // Centralized Data Store
             const [sceneData, setSceneData] = useState({
@@ -394,9 +472,9 @@
                         geometry: { x: w.x, y: w.y, w: w.w, h: w.h },
                         style: w.style,
                         properties: {
-                            ...w.props,
+                            ...(w.props || {}),
                             // Ensure fontName is explicitly set for compatible types
-                            fontName: (w.type === 'LABEL' || w.type === 'BUTTON') ? (w.props.fontName || "Kenney Pixel") : undefined
+                            fontName: (w.type === 'LABEL' || w.type === 'BUTTON') ? ((w.props?.fontName) || "Kenney Pixel") : undefined
                         }
                     }));
                 });
@@ -423,22 +501,8 @@
                             return;
                         }
 
-                        // Reconstruct State from Export Format
-                        const newSceneData = {};
-                        Object.keys(importedData.scenes).forEach(sceneName => {
-                            newSceneData[sceneName] = importedData.scenes[sceneName].map(w => ({
-                                id: w.id,
-                                type: w.type,
-                                // Flatten geometry back to root
-                                x: w.geometry.x,
-                                y: w.geometry.y,
-                                w: w.geometry.w,
-                                h: w.geometry.h,
-                                style: w.style,
-                                // Rename properties back to props
-                                props: w.properties
-                            }));
-                        });
+                        // Reconstruct State from Export Format (using shared sanitizer)
+                        const newSceneData = sanitizeSceneData(importedData.scenes);
 
                         // Update State
                         setSettings(importedData.settings);
@@ -462,7 +526,9 @@
             };
 
             // --- Rendering Components ---
-            const WidgetRenderer = ({ w }) => {
+            const WidgetRenderer = ({ w: rawW }) => {
+                // Safety: Ensure props/style exist to prevent crashes
+                const w = { ...rawW, props: rawW.props || {}, style: rawW.style || {} };
                 const isSelected = selectedId === w.id;
 
                 const commonStyle = {
@@ -470,13 +536,13 @@
                     top: w.y,
                     width: w.w,
                     height: w.h,
-                    backgroundColor: w.style.bg,
-                    borderColor: isSelected ? '#10b981' : (w.style.border || 'transparent'),
+                    backgroundColor: w.style?.bg,
+                    borderColor: isSelected ? '#10b981' : (w.style?.border || 'transparent'),
                     borderWidth: isSelected ? 2 : 1,
-                    color: w.style.color,
-                    fontSize: `${w.props.fontSize}px`,
+                    color: w.style?.color,
+                    fontSize: w.props?.fontSize ? `${w.props.fontSize}px` : undefined,
                     zIndex: isSelected ? 100 : 1,
-                    backgroundImage: w.props.bgImage ? `url('${w.props.bgImage}')` : 'none',
+                    backgroundImage: w.props?.bgImage ? `url('${w.props.bgImage}')` : 'none',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center'
                 };
@@ -782,6 +848,10 @@
                         </div>
 
                         <div className="flex gap-2">
+                            <button onClick={ saveToServer }
+                                className="flex items-center gap-2 px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-xs font-bold rounded border border-emerald-600 transition-colors text-white">
+                                <Icon name="UploadArrow" /> Save Project
+                            </button>
                             <button onClick={ handleImportClick }
                                 className="flex items-center gap-2 px-3 py-1.5 bg-neutral-800 hover:bg-neutral-700 text-xs font-bold rounded border border-neutral-700 transition-colors">
                                 <Icon name="Upload" /> Import JSON

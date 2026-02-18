@@ -1,0 +1,37 @@
+{
+    "Shattered": {
+        "valueMult": 0.1,
+        "craftQuality": "Trash",
+        "dropWeight": 30
+    },
+    "Cracked": {
+        "valueMult": 0.25,
+        "craftQuality": "Poor",
+        "dropWeight": 25
+    },
+    "Chipped": {
+        "valueMult": 0.5,
+        "craftQuality": "Common",
+        "dropWeight": 20
+    },
+    "Standard": {
+        "valueMult": 1.0,
+        "craftQuality": "Uncommon",
+        "dropWeight": 15
+    },
+    "Intact": {
+        "valueMult": 2.0,
+        "craftQuality": "Rare",
+        "dropWeight": 7
+    },
+    "Pristine": {
+        "valueMult": 5.0,
+        "craftQuality": "Epic",
+        "dropWeight": 2
+    },
+    "Flawless": {
+        "valueMult": 10.0,
+        "craftQuality": "Legendary",
+        "dropWeight": 1
+    }
+}

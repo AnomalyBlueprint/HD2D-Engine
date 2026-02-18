@@ -1,0 +1,37 @@
+{
+    "Rotting": {
+        "valueMult": 0.1,
+        "craftQuality": "Trash",
+        "dropWeight": 30
+    },
+    "Tainted": {
+        "valueMult": 0.25,
+        "craftQuality": "Poor",
+        "dropWeight": 25
+    },
+    "Mangled": {
+        "valueMult": 0.5,
+        "craftQuality": "Common",
+        "dropWeight": 20
+    },
+    "Standard": {
+        "valueMult": 1.0,
+        "craftQuality": "Uncommon",
+        "dropWeight": 15
+    },
+    "Prime": {
+        "valueMult": 2.0,
+        "craftQuality": "Rare",
+        "dropWeight": 7
+    },
+    "Exquisite": {
+        "valueMult": 5.0,
+        "craftQuality": "Epic",
+        "dropWeight": 2
+    },
+    "Perfect": {
+        "valueMult": 10.0,
+        "craftQuality": "Legendary",
+        "dropWeight": 1
+    }
+}

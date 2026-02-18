@@ -1,0 +1,14 @@
+{
+    "name": "hd2d-tool-server",
+    "version": "1.0.0",
+    "description": "Content pipeline server for HD2D-Engine tools",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "dev": "node server.js"
+    },
+    "dependencies": {
+        "express": "^4.21.0",
+        "open": "^10.1.0"
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "biomes": "biomes.json",
+    "sizeIndices": "size_indices.json",
+    "attackCategories": "attack_categories.json",
+    "harvestTypes": "harvest_types.json",
+    "anatomyParts": "anatomy_parts.json",
+    "hardLootModifiers": "hard_loot_modifiers.json",
+    "organicLootModifiers": "organic_loot_modifiers.json",
+    "baseAttacks": "base_attacks.json",
+    "prefixes": "prefixes.json",
+    "realWorldData": "real_world_data.json",
+    "sizeAndAgeModifiers": "size_and_age_modifiers.json",
+    "conditionModifiers": "condition_modifiers.json",
+    "biologicalUpgrades": "biological_upgrades.json",
+    "pigmentation": "pigmentation.json",
+    "patterns": "patterns.json",
+    "packMultipliers": "pack_multipliers.json",
+    "maxPackLimits": "max_pack_limits.json"
+}

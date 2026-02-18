@@ -1,0 +1,54 @@
+[
+    {
+        "id": 0,
+        "name": "Ocean"
+    },
+    {
+        "id": 1,
+        "name": "Ice Cap"
+    },
+    {
+        "id": 2,
+        "name": "Tundra"
+    },
+    {
+        "id": 3,
+        "name": "Taiga"
+    },
+    {
+        "id": 4,
+        "name": "Grassland"
+    },
+    {
+        "id": 5,
+        "name": "Forest"
+    },
+    {
+        "id": 6,
+        "name": "Swamp"
+    },
+    {
+        "id": 7,
+        "name": "Desert"
+    },
+    {
+        "id": 8,
+        "name": "Savannah"
+    },
+    {
+        "id": 9,
+        "name": "Jungle"
+    },
+    {
+        "id": 10,
+        "name": "Volcanic"
+    },
+    {
+        "id": 11,
+        "name": "Deadlands"
+    },
+    {
+        "id": 12,
+        "name": "Crystal Wastes"
+    }
+]

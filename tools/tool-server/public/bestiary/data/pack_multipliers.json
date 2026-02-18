@@ -1,0 +1,28 @@
+{
+  "bounds": [
+    {
+      "maxCount": 1,
+      "multiplier": 1
+    },
+    {
+      "maxCount": 2,
+      "multiplier": 1.5
+    },
+    {
+      "maxCount": 6,
+      "multiplier": 2
+    },
+    {
+      "maxCount": 10,
+      "multiplier": 2.5
+    },
+    {
+      "maxCount": 14,
+      "multiplier": 3
+    },
+    {
+      "maxCount": 999,
+      "multiplier": 4
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "None": {
+    "crMult": 1,
+    "hpMult": 1,
+    "acMod": 0,
+    "addedAttack": null
+  },
+  "Armored": {
+    "crMult": 1.5,
+    "hpMult": 1.3,
+    "acMod": 4,
+    "addedAttack": null
+  },
+  "Venomous": {
+    "crMult": 1.5,
+    "hpMult": 1,
+    "acMod": 0,
+    "addedAttack": "Venomous Bite"
+  },
+  "Savage": {
+    "crMult": 1.4,
+    "hpMult": 1.2,
+    "acMod": 0,
+    "addedAttack": "Eviscerate"
+  },
+  "Dire": {
+    "crMult": 2,
+    "hpMult": 2,
+    "acMod": 2,
+    "addedAttack": "Crushing Jaw"
+  },
+  "Alpha": {
+    "crMult": 2.5,
+    "hpMult": 2,
+    "acMod": 1,
+    "addedAttack": "Throat Crush"
+  },
+  "Apex": {
+    "crMult": 4,
+    "hpMult": 3.5,
+    "acMod": 3,
+    "addedAttack": "Death Roll"
+  },
+  "Mutated": {
+    "crMult": 2,
+    "hpMult": 1.5,
+    "acMod": 1,
+    "addedAttack": "Acid Spray"
+  }
+}

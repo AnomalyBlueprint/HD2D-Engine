@@ -1,0 +1,4177 @@
+{
+  "creatures": [
+    {
+      "id": "e4506372-37c3-4873-ab1b-95eceb964994",
+      "name": "Wolf",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 1,
+      "hp": 13,
+      "ac": 13,
+      "biomes": [
+        3,
+        5
+      ],
+      "attacks": [
+        "Bite",
+        "Pounce"
+      ],
+      "base_template": "Wolf"
+    },
+    {
+      "id": "50c05a6c-e1f9-4f1f-9156-f3c14c21551d",
+      "name": "Coyote",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 0.5,
+      "hp": 10,
+      "ac": 12,
+      "biomes": [
+        4,
+        7
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Coyote"
+    },
+    {
+      "id": "9cb3ff41-cd52-499c-888b-0c2a3c179305",
+      "name": "Fox",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.25,
+      "hp": 5,
+      "ac": 13,
+      "biomes": [
+        3,
+        5,
+        4
+      ],
+      "attacks": [
+        "Nibble"
+      ],
+      "base_template": "Fox"
+    },
+    {
+      "id": "2f51acd4-1e58-4146-9bc6-873267450982",
+      "name": "Hyena",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 1,
+      "hp": 15,
+      "ac": 12,
+      "biomes": [
+        8
+      ],
+      "attacks": [
+        "Crushing Jaw"
+      ],
+      "base_template": "Hyena"
+    },
+    {
+      "id": "ea195a84-20b1-4b50-901a-d2547e004c65",
+      "name": "Jackal",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.25,
+      "hp": 8,
+      "ac": 12,
+      "biomes": [
+        7,
+        8
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Jackal"
+    },
+    {
+      "id": "596af3f3-17d2-4bd5-9a89-719718601bd8",
+      "name": "Dingo",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 0.5,
+      "hp": 12,
+      "ac": 12,
+      "biomes": [
+        9,
+        7
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Dingo"
+    },
+    {
+      "id": "7824191e-c02a-41a0-9528-734edbf9b984",
+      "name": "Dhole",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 0.5,
+      "hp": 11,
+      "ac": 13,
+      "biomes": [
+        5,
+        9
+      ],
+      "attacks": [
+        "Bite",
+        "Pounce"
+      ],
+      "base_template": "Dhole"
+    },
+    {
+      "id": "52af40d0-6e0b-4a87-aa1e-28b096db583d",
+      "name": "Mastiff",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 0.5,
+      "hp": 14,
+      "ac": 11,
+      "biomes": [
+        1
+      ],
+      "attacks": [
+        "Crushing Jaw"
+      ],
+      "base_template": "Mastiff"
+    },
+    {
+      "id": "efbc4ff6-b4dc-4261-9070-c67817f3cba3",
+      "name": "Greyhound",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 0.25,
+      "hp": 8,
+      "ac": 14,
+      "biomes": [
+        1
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Greyhound"
+    },
+    {
+      "id": "7818fac7-7203-458c-8bdd-44cfda361cd9",
+      "name": "Bulldog",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.25,
+      "hp": 10,
+      "ac": 11,
+      "biomes": [
+        1
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Bulldog"
+    },
+    {
+      "id": "4b33bf9c-80b0-4502-9a5d-8ab25b353d95",
+      "name": "Terrier",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.13,
+      "hp": 5,
+      "ac": 12,
+      "biomes": [
+        1
+      ],
+      "attacks": [
+        "Nibble",
+        "Gnaw"
+      ],
+      "base_template": "Terrier"
+    },
+    {
+      "id": "ef24b57f-5ab6-44e7-8341-9dd42030cd66",
+      "name": "Hound",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 0.25,
+      "hp": 10,
+      "ac": 12,
+      "biomes": [
+        1
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Hound"
+    },
+    {
+      "id": "5f4ff9de-30aa-444d-b242-126fe06b414a",
+      "name": "Pug",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.13,
+      "hp": 4,
+      "ac": 10,
+      "biomes": [
+        1
+      ],
+      "attacks": [
+        "Nibble"
+      ],
+      "base_template": "Pug"
+    },
+    {
+      "id": "2ed056eb-673f-4e4b-bff6-a9d2ae3881bf",
+      "name": "Husky",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 0.5,
+      "hp": 12,
+      "ac": 12,
+      "biomes": [
+        2,
+        1
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Husky"
+    },
+    {
+      "id": "b807c586-ce6a-4584-a0af-9ca473fe2d95",
+      "name": "Dalmatian",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 0.25,
+      "hp": 10,
+      "ac": 12,
+      "biomes": [
+        1
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Dalmatian"
+    },
+    {
+      "id": "f8d43a60-4c30-4153-9706-0466d9c20840",
+      "name": "Corgi",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.13,
+      "hp": 6,
+      "ac": 11,
+      "biomes": [
+        1
+      ],
+      "attacks": [
+        "Nibble"
+      ],
+      "base_template": "Corgi"
+    },
+    {
+      "id": "4acea58b-1930-4014-8429-3ee1d50aba75",
+      "name": "Akita",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 0.5,
+      "hp": 13,
+      "ac": 13,
+      "biomes": [
+        1,
+        3
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Akita"
+    },
+    {
+      "id": "466e635a-6f6f-4212-8cb4-6c7eb5706084",
+      "name": "Shiba",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.25,
+      "hp": 7,
+      "ac": 13,
+      "biomes": [
+        1
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Shiba"
+    },
+    {
+      "id": "c1927671-cd39-4293-a4a3-fdd6d43c8e0f",
+      "name": "Lycaon",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 1,
+      "hp": 14,
+      "ac": 13,
+      "biomes": [
+        8
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Lycaon"
+    },
+    {
+      "id": "26a7d184-53ed-488e-893b-f7f3e19fa853",
+      "name": "Lion",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 3,
+      "hp": 32,
+      "ac": 13,
+      "biomes": [
+        8
+      ],
+      "attacks": [
+        "Claw",
+        "Bite"
+      ],
+      "base_template": "Lion"
+    },
+    {
+      "id": "49ce2a99-09ea-4dfb-9eff-ec2f4924c648",
+      "name": "Tiger",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 4,
+      "hp": 45,
+      "ac": 12,
+      "biomes": [
+        9,
+        5
+      ],
+      "attacks": [
+        "Claw",
+        "Bite",
+        "Pounce"
+      ],
+      "base_template": "Tiger"
+    },
+    {
+      "id": "73469300-23ef-4042-a97f-779fe43ae9d2",
+      "name": "Panther",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 2,
+      "hp": 25,
+      "ac": 14,
+      "biomes": [
+        9,
+        5
+      ],
+      "attacks": [
+        "Claw",
+        "Bite"
+      ],
+      "base_template": "Panther"
+    },
+    {
+      "id": "d69f45b6-8688-45fd-8273-ce9f564c34b2",
+      "name": "Cheetah",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 2,
+      "hp": 20,
+      "ac": 15,
+      "biomes": [
+        8
+      ],
+      "attacks": [
+        "Bite",
+        "Claw"
+      ],
+      "base_template": "Cheetah"
+    },
+    {
+      "id": "21d2fd3b-1f19-4501-a2f0-4ea6c45af74e",
+      "name": "Bobcat",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.5,
+      "hp": 10,
+      "ac": 13,
+      "biomes": [
+        5,
+        2
+      ],
+      "attacks": [
+        "Claw"
+      ],
+      "base_template": "Bobcat"
+    },
+    {
+      "id": "a9e56a7d-3010-4c52-9c5b-f7e080524dfa",
+      "name": "Lynx",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 1,
+      "hp": 15,
+      "ac": 13,
+      "biomes": [
+        2,
+        3
+      ],
+      "attacks": [
+        "Claw"
+      ],
+      "base_template": "Lynx"
+    },
+    {
+      "id": "43a9c942-8bb8-4934-8b74-c8bf6e8346d5",
+      "name": "Jaguar",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 3,
+      "hp": 40,
+      "ac": 14,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Crushing Jaw",
+        "Claw"
+      ],
+      "base_template": "Jaguar"
+    },
+    {
+      "id": "c896660b-e75e-45fd-a01c-2436cf7ab273",
+      "name": "Leopard",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 2,
+      "hp": 28,
+      "ac": 14,
+      "biomes": [
+        8,
+        9
+      ],
+      "attacks": [
+        "Claw",
+        "Pounce"
+      ],
+      "base_template": "Leopard"
+    },
+    {
+      "id": "f6594b59-77ac-4551-a67f-342e1c680d4f",
+      "name": "Ocelot",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.5,
+      "hp": 12,
+      "ac": 14,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Claw",
+        "Bite"
+      ],
+      "base_template": "Ocelot"
+    },
+    {
+      "id": "890147a0-bd92-469e-ac83-ea5b60828e3a",
+      "name": "Puma",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 1,
+      "hp": 22,
+      "ac": 13,
+      "biomes": [
+        3,
+        5
+      ],
+      "attacks": [
+        "Pounce",
+        "Claw"
+      ],
+      "base_template": "Puma"
+    },
+    {
+      "id": "dc5d2839-bf56-4108-a39b-1f52c708e885",
+      "name": "Cougar",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 1,
+      "hp": 22,
+      "ac": 13,
+      "biomes": [
+        4,
+        3
+      ],
+      "attacks": [
+        "Pounce",
+        "Claw"
+      ],
+      "base_template": "Cougar"
+    },
+    {
+      "id": "7b33f894-903b-4827-ab5a-fa4be4cb5cc6",
+      "name": "Caracal",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.5,
+      "hp": 10,
+      "ac": 15,
+      "biomes": [
+        7,
+        8
+      ],
+      "attacks": [
+        "Claw",
+        "Pounce"
+      ],
+      "base_template": "Caracal"
+    },
+    {
+      "id": "39024f8d-8535-45a1-a1b3-9d9233809a88",
+      "name": "Serval",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.5,
+      "hp": 9,
+      "ac": 14,
+      "biomes": [
+        8
+      ],
+      "attacks": [
+        "Claw"
+      ],
+      "base_template": "Serval"
+    },
+    {
+      "id": "5aef0ba1-b126-4c16-8259-c662be2ea661",
+      "name": "Margay",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.25,
+      "hp": 7,
+      "ac": 14,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Claw"
+      ],
+      "base_template": "Margay"
+    },
+    {
+      "id": "c0add4b7-d039-4a30-975c-ecc3d803b80e",
+      "name": "Sphinx",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.13,
+      "hp": 3,
+      "ac": 11,
+      "biomes": [
+        1
+      ],
+      "attacks": [
+        "Scratch"
+      ],
+      "base_template": "Sphinx"
+    },
+    {
+      "id": "586385dc-76a9-49c7-b742-8e2913e90a21",
+      "name": "Siamese",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.13,
+      "hp": 3,
+      "ac": 12,
+      "biomes": [
+        1
+      ],
+      "attacks": [
+        "Scratch"
+      ],
+      "base_template": "Siamese"
+    },
+    {
+      "id": "38509090-74a8-40b2-a982-1645b93bb75a",
+      "name": "Persian",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.13,
+      "hp": 4,
+      "ac": 10,
+      "biomes": [
+        1
+      ],
+      "attacks": [
+        "Scratch"
+      ],
+      "base_template": "Persian"
+    },
+    {
+      "id": "621ac5cf-b464-49b3-95ff-175428e52b0c",
+      "name": "Bengal",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.25,
+      "hp": 5,
+      "ac": 13,
+      "biomes": [
+        1
+      ],
+      "attacks": [
+        "Claw",
+        "Bite"
+      ],
+      "base_template": "Bengal"
+    },
+    {
+      "id": "6db639b4-c27c-4971-bc5e-a97d287f14e3",
+      "name": "Savannah",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.25,
+      "hp": 6,
+      "ac": 13,
+      "biomes": [
+        1
+      ],
+      "attacks": [
+        "Claw",
+        "Pounce"
+      ],
+      "base_template": "Savannah"
+    },
+    {
+      "id": "681521f5-9afc-4706-8fb3-4e9f384f988a",
+      "name": "Liger",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 4,
+      "hp": 50,
+      "ac": 12,
+      "biomes": [
+        1
+      ],
+      "attacks": [
+        "Claw",
+        "Slam"
+      ],
+      "base_template": "Liger"
+    },
+    {
+      "id": "65685773-58a5-414f-8011-bdb8a8f8d6b6",
+      "name": "Smilodon",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 5,
+      "hp": 55,
+      "ac": 13,
+      "biomes": [
+        2,
+        3
+      ],
+      "attacks": [
+        "Serrated Bite",
+        "Pounce"
+      ],
+      "base_template": "Smilodon"
+    },
+    {
+      "id": "decb9883-e305-460c-9be1-29b792460fba",
+      "name": "Bear",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 2,
+      "hp": 30,
+      "ac": 12,
+      "biomes": [
+        5,
+        3
+      ],
+      "attacks": [
+        "Claw",
+        "Bite"
+      ],
+      "base_template": "Bear"
+    },
+    {
+      "id": "d23dce6c-4d92-4b3a-afe2-617690596b8e",
+      "name": "Panda",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 1,
+      "hp": 35,
+      "ac": 11,
+      "biomes": [
+        5
+      ],
+      "attacks": [
+        "Bite",
+        "Slam"
+      ],
+      "base_template": "Panda"
+    },
+    {
+      "id": "510b9cd0-4dca-4adc-a26b-1bf11e97eb9e",
+      "name": "Grizzly",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 4,
+      "hp": 50,
+      "ac": 13,
+      "biomes": [
+        3,
+        2
+      ],
+      "attacks": [
+        "Claw",
+        "Bite",
+        "Body Slam"
+      ],
+      "base_template": "Grizzly"
+    },
+    {
+      "id": "be4fa5cc-6d7d-4dce-b1d9-09c1c380f98b",
+      "name": "Kodiak",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 5,
+      "hp": 60,
+      "ac": 13,
+      "biomes": [
+        2,
+        3
+      ],
+      "attacks": [
+        "Claw",
+        "Crushing Jaw"
+      ],
+      "base_template": "Kodiak"
+    },
+    {
+      "id": "e747ebd8-a66f-4df6-9931-db27c9f7b1df",
+      "name": "Sunbear",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 1,
+      "hp": 25,
+      "ac": 12,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Claw",
+        "Bite"
+      ],
+      "base_template": "Sunbear"
+    },
+    {
+      "id": "1cd88d95-748e-4083-b17c-3728ae303648",
+      "name": "Slothbear",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 2,
+      "hp": 30,
+      "ac": 13,
+      "biomes": [
+        9,
+        5
+      ],
+      "attacks": [
+        "Claw",
+        "Slam"
+      ],
+      "base_template": "Slothbear"
+    },
+    {
+      "id": "743e34fd-5d3d-4e5d-a308-c06b70d55c1e",
+      "name": "Tremarctos",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 2,
+      "hp": 28,
+      "ac": 12,
+      "biomes": [
+        3,
+        9
+      ],
+      "attacks": [
+        "Claw",
+        "Bite"
+      ],
+      "base_template": "Tremarctos"
+    },
+    {
+      "id": "ddcca50a-c9c1-4b13-a534-7e8a124a4c1e",
+      "name": "Cavebear",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 5,
+      "hp": 65,
+      "ac": 14,
+      "biomes": [
+        2,
+        11
+      ],
+      "attacks": [
+        "Claw",
+        "Body Slam"
+      ],
+      "base_template": "Cavebear"
+    },
+    {
+      "id": "8269241c-12f6-4ea9-8901-ee148d5cc26e",
+      "name": "Baribal",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 2,
+      "hp": 30,
+      "ac": 12,
+      "biomes": [
+        5
+      ],
+      "attacks": [
+        "Claw",
+        "Bite"
+      ],
+      "base_template": "Baribal"
+    },
+    {
+      "id": "dd1e4305-a8c3-4589-a5bf-bbb05e468da3",
+      "name": "Kermode",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 2,
+      "hp": 30,
+      "ac": 12,
+      "biomes": [
+        5
+      ],
+      "attacks": [
+        "Claw",
+        "Bite"
+      ],
+      "base_template": "Kermode"
+    },
+    {
+      "id": "0b8df18a-f621-49e5-8cf1-0af6c493fbc9",
+      "name": "Ussuri",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 3,
+      "hp": 45,
+      "ac": 13,
+      "biomes": [
+        3,
+        5
+      ],
+      "attacks": [
+        "Claw",
+        "Bite"
+      ],
+      "base_template": "Ussuri"
+    },
+    {
+      "id": "757206e7-baf9-4f84-bbc0-336772db456b",
+      "name": "Arctodus",
+      "type": "Beast",
+      "sizeIdx": 8,
+      "cr": 6,
+      "hp": 80,
+      "ac": 14,
+      "biomes": [
+        4,
+        2
+      ],
+      "attacks": [
+        "Claw",
+        "Crushing Jaw",
+        "Body Slam"
+      ],
+      "base_template": "Arctodus"
+    },
+    {
+      "id": "85b20471-a40c-4fbd-b5d2-4acaae8d4e3a",
+      "name": "Deer",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 0.25,
+      "hp": 12,
+      "ac": 13,
+      "biomes": [
+        5,
+        4
+      ],
+      "attacks": [
+        "Kick"
+      ],
+      "base_template": "Deer"
+    },
+    {
+      "id": "c49fa45e-bac1-4472-a8c0-916e76f3e5fe",
+      "name": "Elk",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 2,
+      "hp": 30,
+      "ac": 12,
+      "biomes": [
+        5,
+        2
+      ],
+      "attacks": [
+        "Antler Toss",
+        "Kick"
+      ],
+      "base_template": "Elk"
+    },
+    {
+      "id": "c83af36c-d27f-4797-bf19-9363bacfa8a7",
+      "name": "Moose",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 3,
+      "hp": 45,
+      "ac": 11,
+      "biomes": [
+        3,
+        2
+      ],
+      "attacks": [
+        "Gore",
+        "Trample"
+      ],
+      "base_template": "Moose"
+    },
+    {
+      "id": "5f05d5c3-9a72-495a-915e-899b46f40e15",
+      "name": "Boar",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 2,
+      "hp": 20,
+      "ac": 13,
+      "biomes": [
+        5,
+        6
+      ],
+      "attacks": [
+        "Tusk Slash",
+        "Gore"
+      ],
+      "base_template": "Boar"
+    },
+    {
+      "id": "23e4b081-ec60-40d8-8ebf-340d612d1f6e",
+      "name": "Bison",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 3,
+      "hp": 40,
+      "ac": 13,
+      "biomes": [
+        4
+      ],
+      "attacks": [
+        "Gore",
+        "Trample"
+      ],
+      "base_template": "Bison"
+    },
+    {
+      "id": "1a872f20-b015-46af-b584-2696cf6feaa0",
+      "name": "Rhino",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 5,
+      "hp": 50,
+      "ac": 16,
+      "biomes": [
+        8
+      ],
+      "attacks": [
+        "Rhino Charge",
+        "Horn Ram"
+      ],
+      "base_template": "Rhino"
+    },
+    {
+      "id": "c8fea0ba-ea09-4e4d-870d-8a7950cd3da7",
+      "name": "Hippo",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 5,
+      "hp": 55,
+      "ac": 14,
+      "biomes": [
+        8,
+        6
+      ],
+      "attacks": [
+        "Crushing Jaw",
+        "Trample"
+      ],
+      "base_template": "Hippo"
+    },
+    {
+      "id": "0b324af8-886d-47dc-a6ea-76b1e0ba49d3",
+      "name": "Camel",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 1,
+      "hp": 25,
+      "ac": 11,
+      "biomes": [
+        7
+      ],
+      "attacks": [
+        "Bite",
+        "Venom Spit"
+      ],
+      "base_template": "Camel"
+    },
+    {
+      "id": "0b0d5ee9-27a3-42df-a406-6455c12a45a1",
+      "name": "Giraffe",
+      "type": "Beast",
+      "sizeIdx": 8,
+      "cr": 2,
+      "hp": 40,
+      "ac": 12,
+      "biomes": [
+        8
+      ],
+      "attacks": [
+        "Hind Kick",
+        "Slam"
+      ],
+      "base_template": "Giraffe"
+    },
+    {
+      "id": "bf601e2b-1947-485b-8754-73e0b0a27c4f",
+      "name": "Elephant",
+      "type": "Beast",
+      "sizeIdx": 8,
+      "cr": 6,
+      "hp": 70,
+      "ac": 15,
+      "biomes": [
+        8,
+        9
+      ],
+      "attacks": [
+        "Trample",
+        "Tusk Slash",
+        "Slam"
+      ],
+      "base_template": "Elephant"
+    },
+    {
+      "id": "1a363b24-366b-4b70-904b-355f02868f58",
+      "name": "Sheep",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.13,
+      "hp": 6,
+      "ac": 10,
+      "biomes": [
+        4,
+        1
+      ],
+      "attacks": [
+        "Headbutt"
+      ],
+      "base_template": "Sheep"
+    },
+    {
+      "id": "231d7ad4-aec6-4aea-afeb-59c54d2c6dfa",
+      "name": "Goat",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.13,
+      "hp": 7,
+      "ac": 11,
+      "biomes": [
+        3,
+        1
+      ],
+      "attacks": [
+        "Horn Ram"
+      ],
+      "base_template": "Goat"
+    },
+    {
+      "id": "6d71a923-a9df-4c93-8703-71b29ae1471b",
+      "name": "Cow",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 0.25,
+      "hp": 15,
+      "ac": 10,
+      "biomes": [
+        4,
+        1
+      ],
+      "attacks": [
+        "Kick"
+      ],
+      "base_template": "Cow"
+    },
+    {
+      "id": "683e69c5-f8af-4b40-8c17-5d403f575389",
+      "name": "Bull",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 1,
+      "hp": 25,
+      "ac": 12,
+      "biomes": [
+        4,
+        1
+      ],
+      "attacks": [
+        "Gore",
+        "Trample"
+      ],
+      "base_template": "Bull"
+    },
+    {
+      "id": "539e1fbf-440a-4583-95e7-3c15444fd157",
+      "name": "Horse",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 0.5,
+      "hp": 19,
+      "ac": 11,
+      "biomes": [
+        4,
+        1
+      ],
+      "attacks": [
+        "Hoof Stomp",
+        "Hind Kick"
+      ],
+      "base_template": "Horse"
+    },
+    {
+      "id": "6fc34c00-0e4d-4289-82e2-adae25e5a058",
+      "name": "Zebra",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 0.5,
+      "hp": 19,
+      "ac": 12,
+      "biomes": [
+        8
+      ],
+      "attacks": [
+        "Hind Kick",
+        "Bite"
+      ],
+      "base_template": "Zebra"
+    },
+    {
+      "id": "c249968c-8270-4748-8a68-04c80cf73d5d",
+      "name": "Donkey",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 0.25,
+      "hp": 13,
+      "ac": 11,
+      "biomes": [
+        4,
+        7
+      ],
+      "attacks": [
+        "Hind Kick"
+      ],
+      "base_template": "Donkey"
+    },
+    {
+      "id": "d4136fbf-c498-4079-9cd2-73a1094ada14",
+      "name": "Antelope",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 0.25,
+      "hp": 10,
+      "ac": 14,
+      "biomes": [
+        8
+      ],
+      "attacks": [
+        "Kick"
+      ],
+      "base_template": "Antelope"
+    },
+    {
+      "id": "cb704800-fd37-4dd1-bdc8-0735d3d2ef11",
+      "name": "Gazelle",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.13,
+      "hp": 8,
+      "ac": 15,
+      "biomes": [
+        8,
+        7
+      ],
+      "attacks": [
+        "Kick"
+      ],
+      "base_template": "Gazelle"
+    },
+    {
+      "id": "3af2419a-2028-4d70-8b83-c3971aaf7139",
+      "name": "Wildebeest",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 1,
+      "hp": 25,
+      "ac": 12,
+      "biomes": [
+        8
+      ],
+      "attacks": [
+        "Gore",
+        "Trample"
+      ],
+      "base_template": "Wildebeest"
+    },
+    {
+      "id": "0b75bc09-3297-45d3-af7a-0c147d4ce88f",
+      "name": "Caribou",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 1,
+      "hp": 22,
+      "ac": 12,
+      "biomes": [
+        2
+      ],
+      "attacks": [
+        "Antler Toss",
+        "Kick"
+      ],
+      "base_template": "Caribou"
+    },
+    {
+      "id": "ebe09c43-f3db-453b-a267-59870532a123",
+      "name": "Llama",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 0.25,
+      "hp": 12,
+      "ac": 11,
+      "biomes": [
+        3
+      ],
+      "attacks": [
+        "Venom Spit",
+        "Kick"
+      ],
+      "base_template": "Llama"
+    },
+    {
+      "id": "f689191c-7918-424b-934b-583963e3844d",
+      "name": "Alpaca",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 0.13,
+      "hp": 10,
+      "ac": 11,
+      "biomes": [
+        3
+      ],
+      "attacks": [
+        "Venom Spit"
+      ],
+      "base_template": "Alpaca"
+    },
+    {
+      "id": "3580a510-9f60-4c82-a3da-7e4dd32e8007",
+      "name": "Warthog",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 1,
+      "hp": 18,
+      "ac": 13,
+      "biomes": [
+        8
+      ],
+      "attacks": [
+        "Tusk Slash"
+      ],
+      "base_template": "Warthog"
+    },
+    {
+      "id": "ebb26d86-7c5d-46e7-916d-4d496416affd",
+      "name": "Ibex",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 0.5,
+      "hp": 15,
+      "ac": 13,
+      "biomes": [
+        3
+      ],
+      "attacks": [
+        "Horn Ram"
+      ],
+      "base_template": "Ibex"
+    },
+    {
+      "id": "262098eb-2734-4342-8993-968a9edaa43e",
+      "name": "Crocodile",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 3,
+      "hp": 35,
+      "ac": 14,
+      "biomes": [
+        6,
+        8
+      ],
+      "attacks": [
+        "Death Roll",
+        "Tail Whip"
+      ],
+      "base_template": "Crocodile"
+    },
+    {
+      "id": "c1498a55-c374-4477-a378-fc07afb7be41",
+      "name": "Alligator",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 2,
+      "hp": 30,
+      "ac": 14,
+      "biomes": [
+        6
+      ],
+      "attacks": [
+        "Bite",
+        "Tail Whip"
+      ],
+      "base_template": "Alligator"
+    },
+    {
+      "id": "4ae83cf1-e596-44a7-81e7-5d84541abec8",
+      "name": "Caiman",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 1,
+      "hp": 18,
+      "ac": 13,
+      "biomes": [
+        9,
+        6
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Caiman"
+    },
+    {
+      "id": "0d0a9662-ddcc-46ee-960d-b5245151e400",
+      "name": "Gharial",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 1,
+      "hp": 25,
+      "ac": 12,
+      "biomes": [
+        6
+      ],
+      "attacks": [
+        "Bite",
+        "Tail Whip"
+      ],
+      "base_template": "Gharial"
+    },
+    {
+      "id": "a7163cb4-4e4c-48ef-b220-436c7cd44913",
+      "name": "Komodo",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 2,
+      "hp": 25,
+      "ac": 13,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Toxic Chomp",
+        "Claw"
+      ],
+      "base_template": "Komodo"
+    },
+    {
+      "id": "cff99941-51ff-4a4b-bef5-f6a8a9299239",
+      "name": "Cobra",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 1,
+      "hp": 10,
+      "ac": 14,
+      "biomes": [
+        9,
+        8
+      ],
+      "attacks": [
+        "Venomous Bite",
+        "Venom Spit"
+      ],
+      "base_template": "Cobra"
+    },
+    {
+      "id": "b829d77b-eb78-495e-8fea-c383ed6a4da4",
+      "name": "Python",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 2,
+      "hp": 20,
+      "ac": 12,
+      "biomes": [
+        9,
+        6
+      ],
+      "attacks": [
+        "Python Squeeze",
+        "Bite"
+      ],
+      "base_template": "Python"
+    },
+    {
+      "id": "c321a920-df7b-44e7-93e4-06059edbd02c",
+      "name": "Turtle",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0,
+      "hp": 10,
+      "ac": 16,
+      "biomes": [
+        6,
+        0
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Turtle"
+    },
+    {
+      "id": "cb680215-3906-49ca-bea2-bccd96799905",
+      "name": "Tortoise",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 0.13,
+      "hp": 15,
+      "ac": 17,
+      "biomes": [
+        7,
+        8
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Tortoise"
+    },
+    {
+      "id": "ede91406-49b3-4c87-ab83-914669b4159f",
+      "name": "Iguana",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.25,
+      "hp": 8,
+      "ac": 13,
+      "biomes": [
+        9,
+        5
+      ],
+      "attacks": [
+        "Bite",
+        "Tail Whip"
+      ],
+      "base_template": "Iguana"
+    },
+    {
+      "id": "dfeec237-c1b3-4399-a641-a14f26420b75",
+      "name": "Gecko",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 2,
+      "ac": 12,
+      "biomes": [
+        9,
+        7
+      ],
+      "attacks": [
+        "Nibble"
+      ],
+      "base_template": "Gecko"
+    },
+    {
+      "id": "3dfb0858-0904-41fb-8c90-1c8329ec6988",
+      "name": "Chameleon",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 3,
+      "ac": 11,
+      "biomes": [
+        9,
+        5
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Chameleon"
+    },
+    {
+      "id": "c79835d6-43f2-446a-b701-5c52793db861",
+      "name": "Skink",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 2,
+      "ac": 12,
+      "biomes": [
+        5,
+        7
+      ],
+      "attacks": [
+        "Nibble"
+      ],
+      "base_template": "Skink"
+    },
+    {
+      "id": "d06cb298-4039-4d00-b462-e02c527cd42a",
+      "name": "Monitor",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 1,
+      "hp": 18,
+      "ac": 13,
+      "biomes": [
+        7,
+        8,
+        9
+      ],
+      "attacks": [
+        "Bite",
+        "Claw"
+      ],
+      "base_template": "Monitor"
+    },
+    {
+      "id": "1e8f68cf-ef6f-4552-94e0-e6b8bec4e5d4",
+      "name": "Viper",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.5,
+      "hp": 5,
+      "ac": 13,
+      "biomes": [
+        4,
+        5,
+        7
+      ],
+      "attacks": [
+        "Venomous Bite"
+      ],
+      "base_template": "Viper"
+    },
+    {
+      "id": "114a2412-a850-4c1d-ae04-956294efde55",
+      "name": "Boa",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 1,
+      "hp": 16,
+      "ac": 12,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Python Squeeze"
+      ],
+      "base_template": "Boa"
+    },
+    {
+      "id": "2b3d28fb-4600-4fb4-8054-e3567e279b00",
+      "name": "Anaconda",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 3,
+      "hp": 40,
+      "ac": 13,
+      "biomes": [
+        9,
+        6
+      ],
+      "attacks": [
+        "Python Squeeze",
+        "Bite"
+      ],
+      "base_template": "Anaconda"
+    },
+    {
+      "id": "4495a74b-0acc-47ae-ba5c-a499a98c2a9c",
+      "name": "Mamba",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 2,
+      "hp": 12,
+      "ac": 16,
+      "biomes": [
+        8
+      ],
+      "attacks": [
+        "Neurotoxic Sting"
+      ],
+      "base_template": "Mamba"
+    },
+    {
+      "id": "fa56017a-a180-4a53-945c-b392412422ee",
+      "name": "Adder",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.25,
+      "hp": 4,
+      "ac": 12,
+      "biomes": [
+        3,
+        4
+      ],
+      "attacks": [
+        "Venomous Bite"
+      ],
+      "base_template": "Adder"
+    },
+    {
+      "id": "49b24eaf-3d5a-4d13-9cb4-c4d1f0ad4ca3",
+      "name": "Rattlesnake",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.5,
+      "hp": 8,
+      "ac": 13,
+      "biomes": [
+        7,
+        4
+      ],
+      "attacks": [
+        "Venomous Bite"
+      ],
+      "base_template": "Rattlesnake"
+    },
+    {
+      "id": "6fa9e186-bc33-4508-8f8b-9f85a51f8a9d",
+      "name": "Taipan",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 3,
+      "hp": 15,
+      "ac": 15,
+      "biomes": [
+        7,
+        9
+      ],
+      "attacks": [
+        "Neurotoxic Sting"
+      ],
+      "base_template": "Taipan"
+    },
+    {
+      "id": "f6fdcae4-ae9b-4996-97bf-0eae23ccd91e",
+      "name": "Krait",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 1,
+      "hp": 5,
+      "ac": 14,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Neurotoxic Sting"
+      ],
+      "base_template": "Krait"
+    },
+    {
+      "id": "2f4249a5-27a7-418a-96ce-5f8b19447406",
+      "name": "Copperhead",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.5,
+      "hp": 9,
+      "ac": 12,
+      "biomes": [
+        5
+      ],
+      "attacks": [
+        "Venomous Bite"
+      ],
+      "base_template": "Copperhead"
+    },
+    {
+      "id": "134d3dca-3ee7-48d6-897d-1518eaadbc3c",
+      "name": "Cottonmouth",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.5,
+      "hp": 10,
+      "ac": 12,
+      "biomes": [
+        6
+      ],
+      "attacks": [
+        "Venomous Bite"
+      ],
+      "base_template": "Cottonmouth"
+    },
+    {
+      "id": "cca97277-b825-4d6f-aba0-f8b3e2e11b81",
+      "name": "Basilisk",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.13,
+      "hp": 5,
+      "ac": 13,
+      "biomes": [
+        9,
+        6
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Basilisk"
+    },
+    {
+      "id": "86580b94-35ae-4f95-8510-8217e6c8d1fd",
+      "name": "Eagle",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 1,
+      "hp": 10,
+      "ac": 13,
+      "biomes": [
+        2,
+        3,
+        4
+      ],
+      "attacks": [
+        "Talon",
+        "Peck"
+      ],
+      "base_template": "Eagle"
+    },
+    {
+      "id": "01012836-7ac2-4779-b6cc-d4155444bc7d",
+      "name": "Hawk",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.5,
+      "hp": 5,
+      "ac": 13,
+      "biomes": [
+        4,
+        5
+      ],
+      "attacks": [
+        "Talon",
+        "Dive Bomb"
+      ],
+      "base_template": "Hawk"
+    },
+    {
+      "id": "5371da4c-e3c5-44bf-88aa-e888f6d37f53",
+      "name": "Vulture",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 1,
+      "hp": 12,
+      "ac": 11,
+      "biomes": [
+        7,
+        8
+      ],
+      "attacks": [
+        "Hooked Beak"
+      ],
+      "base_template": "Vulture"
+    },
+    {
+      "id": "f7b659a8-1757-4756-8cd0-2d9fa70267c7",
+      "name": "Ostrich",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 1,
+      "hp": 20,
+      "ac": 11,
+      "biomes": [
+        8
+      ],
+      "attacks": [
+        "Kick"
+      ],
+      "base_template": "Ostrich"
+    },
+    {
+      "id": "881d0f7b-87f8-4bb5-a2f5-81a63daad26d",
+      "name": "Cassowary",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 2,
+      "hp": 18,
+      "ac": 12,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Eviscerate",
+        "Kick"
+      ],
+      "base_template": "Cassowary"
+    },
+    {
+      "id": "ccc5de45-5aae-4c6e-a42c-2aec8feba39b",
+      "name": "Owl",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.5,
+      "hp": 6,
+      "ac": 13,
+      "biomes": [
+        5,
+        3
+      ],
+      "attacks": [
+        "Talon",
+        "Dive Bomb"
+      ],
+      "base_template": "Owl"
+    },
+    {
+      "id": "3f4827e2-8af3-4cf1-b1e1-000238cf6f22",
+      "name": "Swan",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.25,
+      "hp": 8,
+      "ac": 11,
+      "biomes": [
+        6,
+        4
+      ],
+      "attacks": [
+        "Swan Strike",
+        "Wing Buffet"
+      ],
+      "base_template": "Swan"
+    },
+    {
+      "id": "2c624791-106d-4f6b-b4ff-126e15097a48",
+      "name": "Falcon",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.5,
+      "hp": 4,
+      "ac": 15,
+      "biomes": [
+        4,
+        3
+      ],
+      "attacks": [
+        "Dive Bomb",
+        "Talon"
+      ],
+      "base_template": "Falcon"
+    },
+    {
+      "id": "4fa52ef6-69f0-47a5-9465-caa65d82a87f",
+      "name": "Buzzard",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.25,
+      "hp": 7,
+      "ac": 12,
+      "biomes": [
+        4,
+        5
+      ],
+      "attacks": [
+        "Talon"
+      ],
+      "base_template": "Buzzard"
+    },
+    {
+      "id": "1dffb0e6-9884-4aa3-843f-c641701421ef",
+      "name": "Kite",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.13,
+      "hp": 3,
+      "ac": 13,
+      "biomes": [
+        4,
+        5
+      ],
+      "attacks": [
+        "Talon"
+      ],
+      "base_template": "Kite"
+    },
+    {
+      "id": "be9b24e0-a305-4173-aaeb-983f7be8cde0",
+      "name": "Osprey",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.5,
+      "hp": 8,
+      "ac": 13,
+      "biomes": [
+        6,
+        10
+      ],
+      "attacks": [
+        "Talon",
+        "Dive Bomb"
+      ],
+      "base_template": "Osprey"
+    },
+    {
+      "id": "d517e276-4674-4ac7-bae4-d26b08266a76",
+      "name": "Condor",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 1,
+      "hp": 15,
+      "ac": 12,
+      "biomes": [
+        3
+      ],
+      "attacks": [
+        "Hooked Beak",
+        "Talon"
+      ],
+      "base_template": "Condor"
+    },
+    {
+      "id": "a3c4a292-b8ec-4830-87f0-a474cf7cc44e",
+      "name": "Pelican",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.25,
+      "hp": 9,
+      "ac": 11,
+      "biomes": [
+        10,
+        6
+      ],
+      "attacks": [
+        "Bill Thrust",
+        "Peck"
+      ],
+      "base_template": "Pelican"
+    },
+    {
+      "id": "e872428d-82b6-44f8-9192-c4e11ee39817",
+      "name": "Albatross",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 0.5,
+      "hp": 12,
+      "ac": 12,
+      "biomes": [
+        10
+      ],
+      "attacks": [
+        "Wing Buffet",
+        "Peck"
+      ],
+      "base_template": "Albatross"
+    },
+    {
+      "id": "f0ffe0bd-178c-42ae-b452-9c780dedcaec",
+      "name": "Gull",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.13,
+      "hp": 3,
+      "ac": 12,
+      "biomes": [
+        10,
+        1
+      ],
+      "attacks": [
+        "Peck"
+      ],
+      "base_template": "Gull"
+    },
+    {
+      "id": "8a06e5cf-c817-4722-bc5b-413970402dce",
+      "name": "Penguin",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.13,
+      "hp": 7,
+      "ac": 12,
+      "biomes": [
+        2
+      ],
+      "attacks": [
+        "Peck",
+        "Fin Slash"
+      ],
+      "base_template": "Penguin"
+    },
+    {
+      "id": "8d78705e-cbc1-428f-a7ff-e914e564b315",
+      "name": "Heron",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.25,
+      "hp": 6,
+      "ac": 12,
+      "biomes": [
+        6
+      ],
+      "attacks": [
+        "Bill Thrust"
+      ],
+      "base_template": "Heron"
+    },
+    {
+      "id": "bed155a0-d1fd-4d3f-9968-6a1933ee3275",
+      "name": "Stork",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.25,
+      "hp": 7,
+      "ac": 12,
+      "biomes": [
+        6
+      ],
+      "attacks": [
+        "Bill Thrust"
+      ],
+      "base_template": "Stork"
+    },
+    {
+      "id": "4348cc49-0f22-4f10-b8f8-ef58ee4238d1",
+      "name": "Crane",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 0.25,
+      "hp": 9,
+      "ac": 12,
+      "biomes": [
+        6,
+        4
+      ],
+      "attacks": [
+        "Bill Thrust",
+        "Wing Buffet"
+      ],
+      "base_template": "Crane"
+    },
+    {
+      "id": "7f4b7cbf-9c0b-4959-b6ba-bb8802cbf685",
+      "name": "Flamingo",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.13,
+      "hp": 6,
+      "ac": 11,
+      "biomes": [
+        6
+      ],
+      "attacks": [
+        "Peck"
+      ],
+      "base_template": "Flamingo"
+    },
+    {
+      "id": "d0fe0d61-994c-49b9-8499-9865855cf7aa",
+      "name": "Parrot",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 2,
+      "ac": 12,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Peck"
+      ],
+      "base_template": "Parrot"
+    },
+    {
+      "id": "abaa8962-1b96-4d25-a3e3-4aafbeabf96c",
+      "name": "Macaw",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.13,
+      "hp": 4,
+      "ac": 12,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Macaw Crush"
+      ],
+      "base_template": "Macaw"
+    },
+    {
+      "id": "c3bc5d7b-ee64-4b14-b5c3-e1fce0979dca",
+      "name": "Toucan",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.13,
+      "hp": 3,
+      "ac": 11,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Bill Thrust"
+      ],
+      "base_template": "Toucan"
+    },
+    {
+      "id": "0ac9f1e2-6ae4-4cbc-a556-8453fe379057",
+      "name": "Woodpecker",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 2,
+      "ac": 13,
+      "biomes": [
+        5
+      ],
+      "attacks": [
+        "Peck"
+      ],
+      "base_template": "Woodpecker"
+    },
+    {
+      "id": "9cf0e563-3ed7-44c0-bbb2-d2e199303487",
+      "name": "Crow",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 2,
+      "ac": 12,
+      "biomes": [
+        4,
+        1
+      ],
+      "attacks": [
+        "Peck"
+      ],
+      "base_template": "Crow"
+    },
+    {
+      "id": "8578a780-1319-480b-a411-a5f980c80e51",
+      "name": "Raven",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.13,
+      "hp": 3,
+      "ac": 12,
+      "biomes": [
+        3,
+        5
+      ],
+      "attacks": [
+        "Peck",
+        "Talon"
+      ],
+      "base_template": "Raven"
+    },
+    {
+      "id": "ad39046b-cb37-4cc5-831b-3ef67456e1d9",
+      "name": "Pigeon",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 1,
+      "ac": 11,
+      "biomes": [
+        1
+      ],
+      "attacks": [
+        "Peck"
+      ],
+      "base_template": "Pigeon"
+    },
+    {
+      "id": "2ed3f08d-f81c-4cde-a0ea-fe82979497f0",
+      "name": "Scorpion",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.13,
+      "hp": 2,
+      "ac": 12,
+      "biomes": [
+        7,
+        9
+      ],
+      "attacks": [
+        "Sting"
+      ],
+      "base_template": "Scorpion"
+    },
+    {
+      "id": "a74ab384-889f-4256-a6cb-afc21bb1193e",
+      "name": "Spider",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.13,
+      "hp": 1,
+      "ac": 12,
+      "biomes": [
+        5,
+        11
+      ],
+      "attacks": [
+        "Venomous Bite"
+      ],
+      "base_template": "Spider"
+    },
+    {
+      "id": "44758cc1-e29a-4a8d-9678-7ac0a93f84d0",
+      "name": "Ant",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 1,
+      "ac": 10,
+      "biomes": [
+        4,
+        7
+      ],
+      "attacks": [
+        "Nibble"
+      ],
+      "base_template": "Ant"
+    },
+    {
+      "id": "c57293e7-d00f-4979-9d31-e74e0684431c",
+      "name": "Wasp",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.13,
+      "hp": 2,
+      "ac": 13,
+      "biomes": [
+        5,
+        9
+      ],
+      "attacks": [
+        "Sting"
+      ],
+      "base_template": "Wasp"
+    },
+    {
+      "id": "863dd6a8-be74-43ab-8ccd-488a05f2344c",
+      "name": "Centipede",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.13,
+      "hp": 2,
+      "ac": 11,
+      "biomes": [
+        11,
+        9
+      ],
+      "attacks": [
+        "Venomous Bite"
+      ],
+      "base_template": "Centipede"
+    },
+    {
+      "id": "8bbdbe1a-e052-4abf-bebc-d11512e9a0c8",
+      "name": "Beetle",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 3,
+      "ac": 14,
+      "biomes": [
+        5,
+        9
+      ],
+      "attacks": [
+        "Mandible Pinch"
+      ],
+      "base_template": "Beetle"
+    },
+    {
+      "id": "fcfa736c-7ce0-435d-a9e8-ba3d3aa5b637",
+      "name": "Mantis",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.13,
+      "hp": 2,
+      "ac": 12,
+      "biomes": [
+        9,
+        5
+      ],
+      "attacks": [
+        "Mantis Scythe"
+      ],
+      "base_template": "Mantis"
+    },
+    {
+      "id": "d92f1737-8c4c-4c1f-aaeb-27bd91c207a8",
+      "name": "Bee",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 1,
+      "ac": 11,
+      "biomes": [
+        4,
+        5
+      ],
+      "attacks": [
+        "Sting"
+      ],
+      "base_template": "Bee"
+    },
+    {
+      "id": "f5ae55d3-3b23-46f4-8e98-1ff5fd1dd7c2",
+      "name": "Hornet",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.25,
+      "hp": 3,
+      "ac": 13,
+      "biomes": [
+        5
+      ],
+      "attacks": [
+        "Sting"
+      ],
+      "base_template": "Hornet"
+    },
+    {
+      "id": "2d67ae86-c4ec-412b-b426-d7eb7af2ee7b",
+      "name": "Locust",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 1,
+      "ac": 11,
+      "biomes": [
+        7,
+        4
+      ],
+      "attacks": [
+        "Nibble"
+      ],
+      "base_template": "Locust"
+    },
+    {
+      "id": "fcbd7dc0-d3ff-47ad-bbd0-eba2bc1e8be1",
+      "name": "Grasshopper",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 1,
+      "ac": 12,
+      "biomes": [
+        4
+      ],
+      "attacks": [
+        "Kick"
+      ],
+      "base_template": "Grasshopper"
+    },
+    {
+      "id": "1f950000-7053-47d1-8067-9929f7cafa89",
+      "name": "Moth",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 1,
+      "ac": 10,
+      "biomes": [
+        5,
+        9
+      ],
+      "attacks": [
+        "Toxic Spores"
+      ],
+      "base_template": "Moth"
+    },
+    {
+      "id": "e2bff5f8-936a-4f29-821c-6af15ec4c3bc",
+      "name": "Butterfly",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 1,
+      "ac": 11,
+      "biomes": [
+        5,
+        9
+      ],
+      "attacks": [
+        "None"
+      ],
+      "base_template": "Butterfly"
+    },
+    {
+      "id": "66cf45f8-be5e-41f3-bc64-115b4ec206e6",
+      "name": "Dragonfly",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 1,
+      "ac": 14,
+      "biomes": [
+        6
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Dragonfly"
+    },
+    {
+      "id": "7e5b2b7f-3e60-4816-9a27-06495054522d",
+      "name": "Mosquito",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 1,
+      "ac": 12,
+      "biomes": [
+        6,
+        9
+      ],
+      "attacks": [
+        "Vampiric Drain"
+      ],
+      "base_template": "Mosquito"
+    },
+    {
+      "id": "1b32e126-2c4b-4bfb-b0dc-a716ad449e67",
+      "name": "Tick",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 1,
+      "ac": 10,
+      "biomes": [
+        5,
+        4
+      ],
+      "attacks": [
+        "Leech Latch"
+      ],
+      "base_template": "Tick"
+    },
+    {
+      "id": "a26bc5a3-4c27-4e19-ba13-4e94d3a34cf7",
+      "name": "Termite",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 1,
+      "ac": 10,
+      "biomes": [
+        9,
+        8
+      ],
+      "attacks": [
+        "Mandible Pinch"
+      ],
+      "base_template": "Termite"
+    },
+    {
+      "id": "d256c44c-01af-460e-bb3d-6cbf5bde3c7a",
+      "name": "Cockroach",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 1,
+      "ac": 13,
+      "biomes": [
+        1,
+        11
+      ],
+      "attacks": [
+        "Nibble"
+      ],
+      "base_template": "Cockroach"
+    },
+    {
+      "id": "c18a3f72-cd78-48b8-89a1-18a1d7a4c517",
+      "name": "Silverfish",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 1,
+      "ac": 11,
+      "biomes": [
+        11
+      ],
+      "attacks": [
+        "Nibble"
+      ],
+      "base_template": "Silverfish"
+    },
+    {
+      "id": "0aa81312-1396-42bc-af57-0e2fca330d93",
+      "name": "Firefly",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 1,
+      "ac": 11,
+      "biomes": [
+        5
+      ],
+      "attacks": [
+        "Thermal Flash"
+      ],
+      "base_template": "Firefly"
+    },
+    {
+      "id": "c4f526d6-5702-49cc-a50a-bae382ce5b3f",
+      "name": "Millipede",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 2,
+      "ac": 12,
+      "biomes": [
+        5,
+        9
+      ],
+      "attacks": [
+        "Venom Spit"
+      ],
+      "base_template": "Millipede"
+    },
+    {
+      "id": "44e15d45-2b03-492a-9e8c-7b9d90204b13",
+      "name": "Tarantula",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.25,
+      "hp": 4,
+      "ac": 11,
+      "biomes": [
+        7,
+        9
+      ],
+      "attacks": [
+        "Venomous Bite",
+        "Quill Shoot"
+      ],
+      "base_template": "Tarantula"
+    },
+    {
+      "id": "f4530890-624b-47c4-92f5-51ce9bb26bd8",
+      "name": "Gorilla",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 3,
+      "hp": 45,
+      "ac": 13,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Slam",
+        "Crushing Jaw"
+      ],
+      "base_template": "Gorilla"
+    },
+    {
+      "id": "11315737-626b-49d1-8bd9-7ded54c61bb1",
+      "name": "Chimpanzee",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 1,
+      "hp": 20,
+      "ac": 12,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Bite",
+        "Scratch"
+      ],
+      "base_template": "Chimpanzee"
+    },
+    {
+      "id": "c6adbab6-080a-4289-9da6-00c03ee46deb",
+      "name": "Baboon",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 1,
+      "hp": 18,
+      "ac": 12,
+      "biomes": [
+        8,
+        9
+      ],
+      "attacks": [
+        "Bite",
+        "Claw"
+      ],
+      "base_template": "Baboon"
+    },
+    {
+      "id": "407c2c6a-2249-4fbc-91b5-035f37aea36d",
+      "name": "Orangutan",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 2,
+      "hp": 30,
+      "ac": 11,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Slam",
+        "Bite"
+      ],
+      "base_template": "Orangutan"
+    },
+    {
+      "id": "e3f9da5e-cd47-4c37-bf91-8d1ba92a1bee",
+      "name": "Bonobo",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 0.5,
+      "hp": 15,
+      "ac": 12,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Bite",
+        "Scratch"
+      ],
+      "base_template": "Bonobo"
+    },
+    {
+      "id": "145353d7-3f6e-4508-9da8-c746838c5eb9",
+      "name": "Gibbon",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.5,
+      "hp": 12,
+      "ac": 14,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Scratch"
+      ],
+      "base_template": "Gibbon"
+    },
+    {
+      "id": "5efc86a4-5cbb-4cd7-bcce-8f5db5375858",
+      "name": "Macaque",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.5,
+      "hp": 10,
+      "ac": 13,
+      "biomes": [
+        9,
+        5
+      ],
+      "attacks": [
+        "Bite",
+        "Scratch"
+      ],
+      "base_template": "Macaque"
+    },
+    {
+      "id": "1231cf1d-6765-4af5-b603-0245f7972853",
+      "name": "Mandrill",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 1,
+      "hp": 18,
+      "ac": 13,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Bite",
+        "Claw"
+      ],
+      "base_template": "Mandrill"
+    },
+    {
+      "id": "2ea94440-6c42-465e-bf5e-60212d828002",
+      "name": "Lemur",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.13,
+      "hp": 6,
+      "ac": 12,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Lemur"
+    },
+    {
+      "id": "55c6cd40-d55e-48cd-bc86-cd6588de7447",
+      "name": "Tarsier",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 2,
+      "ac": 13,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Tarsier"
+    },
+    {
+      "id": "08fe9ec9-29cf-49b2-967c-03b53f00a876",
+      "name": "Loris",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.13,
+      "hp": 4,
+      "ac": 11,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Toxic Chomp"
+      ],
+      "base_template": "Loris"
+    },
+    {
+      "id": "54c32123-ed25-46ca-8bd8-145ddcd9f9f4",
+      "name": "Marmoset",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 3,
+      "ac": 12,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Scratch"
+      ],
+      "base_template": "Marmoset"
+    },
+    {
+      "id": "73f64e5e-c68f-4e57-b9a2-aa747ff936d4",
+      "name": "Tamarin",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 3,
+      "ac": 12,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Scratch"
+      ],
+      "base_template": "Tamarin"
+    },
+    {
+      "id": "c003cc65-7afe-43a4-9527-b53cbe6f00e7",
+      "name": "Capuchin",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.13,
+      "hp": 5,
+      "ac": 13,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Scratch"
+      ],
+      "base_template": "Capuchin"
+    },
+    {
+      "id": "49d56d2b-f694-4524-b554-14a1d4ef8ae1",
+      "name": "Howler",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.25,
+      "hp": 8,
+      "ac": 11,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Sonic Snap",
+        "Bite"
+      ],
+      "base_template": "Howler"
+    },
+    {
+      "id": "727d37b6-3aa8-4413-a38e-f1d4d7cf8d45",
+      "name": "Colobus",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.13,
+      "hp": 6,
+      "ac": 12,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Colobus"
+    },
+    {
+      "id": "1ff2826b-6720-4731-ac32-9801f40a2df8",
+      "name": "Langur",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.25,
+      "hp": 7,
+      "ac": 12,
+      "biomes": [
+        9,
+        5
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Langur"
+    },
+    {
+      "id": "faab64f5-46ae-4796-8751-a0e26dc31a1f",
+      "name": "Proboscis",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 0.25,
+      "hp": 12,
+      "ac": 11,
+      "biomes": [
+        9,
+        6
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Proboscis"
+    },
+    {
+      "id": "ebe7bfce-37a8-42df-ac93-a4ef4913e084",
+      "name": "Aye-Aye",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.13,
+      "hp": 4,
+      "ac": 12,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Scratch"
+      ],
+      "base_template": "Aye-Aye"
+    },
+    {
+      "id": "40c6bf63-83fb-42a6-9de0-e3725e8c21ff",
+      "name": "Indri",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.25,
+      "hp": 8,
+      "ac": 12,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Indri"
+    },
+    {
+      "id": "33cb80d4-a5d2-4d07-84ec-5135cbd2bd17",
+      "name": "Shark",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 2,
+      "hp": 30,
+      "ac": 13,
+      "biomes": [
+        10
+      ],
+      "attacks": [
+        "Serrated Bite",
+        "Fin Slash"
+      ],
+      "base_template": "Shark"
+    },
+    {
+      "id": "6ea718a6-ee31-4d8d-83b6-110b209a4697",
+      "name": "Mako",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 3,
+      "hp": 35,
+      "ac": 14,
+      "biomes": [
+        10
+      ],
+      "attacks": [
+        "Serrated Bite"
+      ],
+      "base_template": "Mako"
+    },
+    {
+      "id": "597061c3-fe3e-4020-a324-20ae8c643c8d",
+      "name": "Hammerhead",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 3,
+      "hp": 40,
+      "ac": 13,
+      "biomes": [
+        10
+      ],
+      "attacks": [
+        "Slam",
+        "Serrated Bite"
+      ],
+      "base_template": "Hammerhead"
+    },
+    {
+      "id": "2b870e94-83e9-4bec-a284-704583ed7178",
+      "name": "Orca",
+      "type": "Beast",
+      "sizeIdx": 8,
+      "cr": 5,
+      "hp": 70,
+      "ac": 15,
+      "biomes": [
+        10,
+        1
+      ],
+      "attacks": [
+        "Crushing Jaw",
+        "Fluke Smash"
+      ],
+      "base_template": "Orca"
+    },
+    {
+      "id": "9f7b8bed-75b4-45c8-b835-8ed2433e822c",
+      "name": "Squid",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.25,
+      "hp": 8,
+      "ac": 11,
+      "biomes": [
+        10
+      ],
+      "attacks": [
+        "Tentacle Lash",
+        "Ink Cloud"
+      ],
+      "base_template": "Squid"
+    },
+    {
+      "id": "9b626ee7-a3a6-4d9d-9ed4-7ed7c9dff372",
+      "name": "Eel",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.25,
+      "hp": 6,
+      "ac": 12,
+      "biomes": [
+        10,
+        6
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Eel"
+    },
+    {
+      "id": "ec1fd27e-ba7f-4baa-a8f9-68ed12b92dfd",
+      "name": "Moray",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 1,
+      "hp": 18,
+      "ac": 13,
+      "biomes": [
+        10
+      ],
+      "attacks": [
+        "Trap-Jaw Strike"
+      ],
+      "base_template": "Moray"
+    },
+    {
+      "id": "42d4e108-521f-4794-9cbc-1b3ec49e6bb5",
+      "name": "Crab",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.13,
+      "hp": 4,
+      "ac": 14,
+      "biomes": [
+        10,
+        6
+      ],
+      "attacks": [
+        "Crab Pinch"
+      ],
+      "base_template": "Crab"
+    },
+    {
+      "id": "c4bf1ed8-3ee4-4ec3-a4d3-a27051ff7ab1",
+      "name": "Ray",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 0.5,
+      "hp": 15,
+      "ac": 12,
+      "biomes": [
+        10
+      ],
+      "attacks": [
+        "Barbed Sting"
+      ],
+      "base_template": "Ray"
+    },
+    {
+      "id": "097bc10d-2f26-4f8c-9f22-f24454ce0b89",
+      "name": "Dolphin",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 1,
+      "hp": 20,
+      "ac": 13,
+      "biomes": [
+        10
+      ],
+      "attacks": [
+        "Slam",
+        "Bite"
+      ],
+      "base_template": "Dolphin"
+    },
+    {
+      "id": "e1f0bb9c-bec0-45bd-9af7-efc09a35ef9c",
+      "name": "Whale",
+      "type": "Beast",
+      "sizeIdx": 8,
+      "cr": 4,
+      "hp": 80,
+      "ac": 13,
+      "biomes": [
+        10
+      ],
+      "attacks": [
+        "Fluke Smash",
+        "Slam"
+      ],
+      "base_template": "Whale"
+    },
+    {
+      "id": "ab234f1c-854f-4916-b851-eda00821bc1d",
+      "name": "Seal",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 0.5,
+      "hp": 16,
+      "ac": 11,
+      "biomes": [
+        10,
+        2
+      ],
+      "attacks": [
+        "Bite",
+        "Slam"
+      ],
+      "base_template": "Seal"
+    },
+    {
+      "id": "c1aad14e-5b49-45c1-ac28-e6a6c92ff08e",
+      "name": "Walrus",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 2,
+      "hp": 40,
+      "ac": 12,
+      "biomes": [
+        10,
+        2
+      ],
+      "attacks": [
+        "Tusk Slash",
+        "Slam"
+      ],
+      "base_template": "Walrus"
+    },
+    {
+      "id": "1a59ad7f-6ea1-4f48-a999-b94ee405000d",
+      "name": "Manatee",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 0.5,
+      "hp": 35,
+      "ac": 10,
+      "biomes": [
+        10,
+        6
+      ],
+      "attacks": [
+        "Fluke Smash"
+      ],
+      "base_template": "Manatee"
+    },
+    {
+      "id": "8cdbcba9-4354-4b47-a397-5b5bfa3920d5",
+      "name": "Octopus",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.5,
+      "hp": 12,
+      "ac": 12,
+      "biomes": [
+        10
+      ],
+      "attacks": [
+        "Tentacle Lash",
+        "Ink Cloud"
+      ],
+      "base_template": "Octopus"
+    },
+    {
+      "id": "65602364-d9bf-485e-8980-80d5501a1f29",
+      "name": "Cuttlefish",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.13,
+      "hp": 5,
+      "ac": 11,
+      "biomes": [
+        10
+      ],
+      "attacks": [
+        "Ink Cloud"
+      ],
+      "base_template": "Cuttlefish"
+    },
+    {
+      "id": "7a32e918-2d1a-4776-9916-f3a4dc10bf2f",
+      "name": "Lobster",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.13,
+      "hp": 6,
+      "ac": 15,
+      "biomes": [
+        10
+      ],
+      "attacks": [
+        "Pincer Snipe"
+      ],
+      "base_template": "Lobster"
+    },
+    {
+      "id": "8afecbed-bd00-47b3-89e4-e8d1e23706cb",
+      "name": "Shrimp",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 1,
+      "ac": 10,
+      "biomes": [
+        10
+      ],
+      "attacks": [
+        "Sonic Snap"
+      ],
+      "base_template": "Shrimp"
+    },
+    {
+      "id": "423cb454-792b-4f3c-9cdd-ade863f64a8d",
+      "name": "Jellyfish",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.25,
+      "hp": 2,
+      "ac": 10,
+      "biomes": [
+        10
+      ],
+      "attacks": [
+        "Nematocyst Lash"
+      ],
+      "base_template": "Jellyfish"
+    },
+    {
+      "id": "81a649ba-67e4-483c-ae1f-015304b7435f",
+      "name": "Seahorse",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 1,
+      "ac": 11,
+      "biomes": [
+        10
+      ],
+      "attacks": [
+        "Suction Grip"
+      ],
+      "base_template": "Seahorse"
+    },
+    {
+      "id": "229c454b-2cbc-4973-bf68-f5fe2698d5b8",
+      "name": "Swordfish",
+      "type": "Beast",
+      "sizeIdx": 6,
+      "cr": 2,
+      "hp": 25,
+      "ac": 14,
+      "biomes": [
+        10
+      ],
+      "attacks": [
+        "Sword-Bill Slash",
+        "Piercing"
+      ],
+      "base_template": "Swordfish"
+    },
+    {
+      "id": "c59e6fd7-14ca-47e0-88a4-67fdf153b047",
+      "name": "Wolverine",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 2,
+      "hp": 28,
+      "ac": 14,
+      "biomes": [
+        2,
+        3
+      ],
+      "attacks": [
+        "Eviscerate",
+        "Bite"
+      ],
+      "base_template": "Wolverine"
+    },
+    {
+      "id": "6ca4b663-ecaf-4dc0-981a-414d20265527",
+      "name": "Badger",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 1,
+      "hp": 18,
+      "ac": 13,
+      "biomes": [
+        4,
+        5
+      ],
+      "attacks": [
+        "Claw",
+        "Bite"
+      ],
+      "base_template": "Badger"
+    },
+    {
+      "id": "213d4d8f-a9d3-461a-b0be-adf4451873e6",
+      "name": "Rat",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.13,
+      "hp": 2,
+      "ac": 10,
+      "biomes": [
+        11,
+        4
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Rat"
+    },
+    {
+      "id": "58a9693d-43c7-4833-bbf9-d97f1ff46cc4",
+      "name": "Porcupine",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.5,
+      "hp": 12,
+      "ac": 12,
+      "biomes": [
+        5,
+        4
+      ],
+      "attacks": [
+        "Quill Shoot",
+        "Bite"
+      ],
+      "base_template": "Porcupine"
+    },
+    {
+      "id": "5ca3a88b-0bfe-4b48-a542-2dea395373ac",
+      "name": "Mouse",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 1,
+      "ac": 10,
+      "biomes": [
+        1,
+        4
+      ],
+      "attacks": [
+        "Nibble"
+      ],
+      "base_template": "Mouse"
+    },
+    {
+      "id": "fa4f8907-c03b-4d4a-a582-b59db2c80fa2",
+      "name": "Vole",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 1,
+      "ac": 10,
+      "biomes": [
+        4,
+        5
+      ],
+      "attacks": [
+        "Nibble"
+      ],
+      "base_template": "Vole"
+    },
+    {
+      "id": "9f420a36-6fae-476c-ad05-1bdf70cde967",
+      "name": "Lemming",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 1,
+      "ac": 10,
+      "biomes": [
+        2
+      ],
+      "attacks": [
+        "Nibble"
+      ],
+      "base_template": "Lemming"
+    },
+    {
+      "id": "58e82a2b-39b2-44dc-8a4c-f22c4deb3f6c",
+      "name": "Hamster",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 1,
+      "ac": 10,
+      "biomes": [
+        7
+      ],
+      "attacks": [
+        "Nibble"
+      ],
+      "base_template": "Hamster"
+    },
+    {
+      "id": "fbf4bc84-aadd-43ce-803c-e86c01b46485",
+      "name": "Gerbil",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 1,
+      "ac": 11,
+      "biomes": [
+        7
+      ],
+      "attacks": [
+        "Nibble"
+      ],
+      "base_template": "Gerbil"
+    },
+    {
+      "id": "86db5ef6-b4bc-480e-8fe9-9bbe9bb5ff70",
+      "name": "Guinea Pig",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 2,
+      "ac": 10,
+      "biomes": [
+        3
+      ],
+      "attacks": [
+        "Nibble"
+      ],
+      "base_template": "Guinea Pig"
+    },
+    {
+      "id": "78c94e08-ee49-47c0-b836-89decfb1003a",
+      "name": "Chinchilla",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 2,
+      "ac": 12,
+      "biomes": [
+        3
+      ],
+      "attacks": [
+        "Nibble"
+      ],
+      "base_template": "Chinchilla"
+    },
+    {
+      "id": "913320b1-e39e-4579-97ef-1da0d5d11157",
+      "name": "Capybara",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 0.13,
+      "hp": 10,
+      "ac": 10,
+      "biomes": [
+        9,
+        6
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Capybara"
+    },
+    {
+      "id": "9f0a299f-6844-4ab0-aa11-2947b15c4cc6",
+      "name": "Beaver",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.25,
+      "hp": 8,
+      "ac": 11,
+      "biomes": [
+        5,
+        6
+      ],
+      "attacks": [
+        "Bite",
+        "Tail Whip"
+      ],
+      "base_template": "Beaver"
+    },
+    {
+      "id": "dbac70ad-32d5-4ebc-abf1-e4215d52717c",
+      "name": "Squirrel",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 2,
+      "ac": 13,
+      "biomes": [
+        5,
+        1
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Squirrel"
+    },
+    {
+      "id": "79c4b9e6-2716-47d4-b27a-3032b4162312",
+      "name": "Chipmunk",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 1,
+      "ac": 13,
+      "biomes": [
+        5
+      ],
+      "attacks": [
+        "Nibble"
+      ],
+      "base_template": "Chipmunk"
+    },
+    {
+      "id": "0a16f39d-fe01-4586-ba4e-03ce26673651",
+      "name": "Marmot",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.13,
+      "hp": 5,
+      "ac": 11,
+      "biomes": [
+        3
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Marmot"
+    },
+    {
+      "id": "7a3aba0c-df67-4d93-88fe-0c689b9e3e90",
+      "name": "Ferret",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.13,
+      "hp": 3,
+      "ac": 12,
+      "biomes": [
+        4
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Ferret"
+    },
+    {
+      "id": "63b466d3-5d92-43c9-8af2-3384d9acb3c2",
+      "name": "Weasel",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.13,
+      "hp": 3,
+      "ac": 13,
+      "biomes": [
+        5,
+        4
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Weasel"
+    },
+    {
+      "id": "168ce57f-0d2c-49bd-bb66-c2b4c5795729",
+      "name": "Otter",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.25,
+      "hp": 7,
+      "ac": 13,
+      "biomes": [
+        6,
+        10
+      ],
+      "attacks": [
+        "Bite",
+        "Claw"
+      ],
+      "base_template": "Otter"
+    },
+    {
+      "id": "794166b9-d866-480c-b698-d00f15824675",
+      "name": "Skunk",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.25,
+      "hp": 6,
+      "ac": 11,
+      "biomes": [
+        5,
+        4
+      ],
+      "attacks": [
+        "Skunk Musk",
+        "Bite"
+      ],
+      "base_template": "Skunk"
+    },
+    {
+      "id": "40f63dbb-c7d4-4bcd-815f-0ed174a6da2b",
+      "name": "Raccoon",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.25,
+      "hp": 8,
+      "ac": 12,
+      "biomes": [
+        5,
+        1
+      ],
+      "attacks": [
+        "Claw",
+        "Bite"
+      ],
+      "base_template": "Raccoon"
+    },
+    {
+      "id": "383b7c39-7507-4188-a062-8eb87de8c1ee",
+      "name": "Mongoose",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.5,
+      "hp": 9,
+      "ac": 14,
+      "biomes": [
+        8,
+        9
+      ],
+      "attacks": [
+        "Bite",
+        "Pounce"
+      ],
+      "base_template": "Mongoose"
+    },
+    {
+      "id": "cd9615da-550c-4120-919d-741d4e7d81ed",
+      "name": "Meerkat",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.13,
+      "hp": 4,
+      "ac": 12,
+      "biomes": [
+        8,
+        7
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Meerkat"
+    },
+    {
+      "id": "9dc45fe9-acea-4546-bb5f-0e2bd094dddb",
+      "name": "Kangaroo",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 1,
+      "hp": 22,
+      "ac": 12,
+      "biomes": [
+        7,
+        8
+      ],
+      "attacks": [
+        "Kangaroo Box",
+        "Hind Kick"
+      ],
+      "base_template": "Kangaroo"
+    },
+    {
+      "id": "06e85900-dd71-4385-870a-6565de8ac338",
+      "name": "Devil",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 1,
+      "hp": 16,
+      "ac": 12,
+      "biomes": [
+        5,
+        9
+      ],
+      "attacks": [
+        "Crushing Jaw",
+        "Claw"
+      ],
+      "base_template": "Devil"
+    },
+    {
+      "id": "7fdb8aa6-c3c6-4895-9745-0ba20a2dbb3f",
+      "name": "Wallaby",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.25,
+      "hp": 10,
+      "ac": 12,
+      "biomes": [
+        7,
+        5
+      ],
+      "attacks": [
+        "Hind Kick"
+      ],
+      "base_template": "Wallaby"
+    },
+    {
+      "id": "e646b9ea-5538-497f-93ba-9ae2fc4f7846",
+      "name": "Quokka",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 3,
+      "ac": 10,
+      "biomes": [
+        5
+      ],
+      "attacks": [
+        "Nibble"
+      ],
+      "base_template": "Quokka"
+    },
+    {
+      "id": "111efdcb-2896-4bbf-b770-eaee076ff9fc",
+      "name": "Bettong",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 2,
+      "ac": 11,
+      "biomes": [
+        5
+      ],
+      "attacks": [
+        "Nibble"
+      ],
+      "base_template": "Bettong"
+    },
+    {
+      "id": "2e212a1c-f07d-4cb5-a91c-5cdfef1bdc0f",
+      "name": "Possum",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.13,
+      "hp": 4,
+      "ac": 11,
+      "biomes": [
+        5,
+        1
+      ],
+      "attacks": [
+        "Bite",
+        "Claw"
+      ],
+      "base_template": "Possum"
+    },
+    {
+      "id": "645a7558-5f30-4759-95e4-ebfb5a85d3d7",
+      "name": "Glider",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 2,
+      "ac": 12,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Scratch"
+      ],
+      "base_template": "Glider"
+    },
+    {
+      "id": "a53f8dbf-a5ca-4e1d-8787-6129da05e92e",
+      "name": "Wombat",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 0.5,
+      "hp": 18,
+      "ac": 13,
+      "biomes": [
+        5,
+        3
+      ],
+      "attacks": [
+        "Slam",
+        "Bite"
+      ],
+      "base_template": "Wombat"
+    },
+    {
+      "id": "50960a45-9e80-449e-a573-cec4d3d1fb20",
+      "name": "Koala",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.13,
+      "hp": 8,
+      "ac": 10,
+      "biomes": [
+        5
+      ],
+      "attacks": [
+        "Scratch"
+      ],
+      "base_template": "Koala"
+    },
+    {
+      "id": "0d612697-79ac-493d-8bb8-2122dd56a12b",
+      "name": "Bandicoot",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 3,
+      "ac": 11,
+      "biomes": [
+        5
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Bandicoot"
+    },
+    {
+      "id": "3f6b8e36-4192-4159-a393-97b6e7dfd126",
+      "name": "Bilby",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 2,
+      "ac": 11,
+      "biomes": [
+        7
+      ],
+      "attacks": [
+        "Nibble"
+      ],
+      "base_template": "Bilby"
+    },
+    {
+      "id": "c5ac239c-4905-4bd6-9e21-dad58fa6c8e8",
+      "name": "Dunnart",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 1,
+      "ac": 12,
+      "biomes": [
+        7
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Dunnart"
+    },
+    {
+      "id": "e9cb7f64-7d0d-46d9-8c54-fe570f499f33",
+      "name": "Quoll",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.25,
+      "hp": 5,
+      "ac": 13,
+      "biomes": [
+        5,
+        9
+      ],
+      "attacks": [
+        "Bite",
+        "Claw"
+      ],
+      "base_template": "Quoll"
+    },
+    {
+      "id": "56f7456a-9aed-4c49-96e3-46e57a50bb87",
+      "name": "Numbat",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 2,
+      "ac": 12,
+      "biomes": [
+        5
+      ],
+      "attacks": [
+        "Claw"
+      ],
+      "base_template": "Numbat"
+    },
+    {
+      "id": "de6d3915-ee96-49ee-918c-7170bfa5a560",
+      "name": "Thylacine",
+      "type": "Beast",
+      "sizeIdx": 4,
+      "cr": 1,
+      "hp": 16,
+      "ac": 13,
+      "biomes": [
+        5
+      ],
+      "attacks": [
+        "Bite",
+        "Crushing Jaw"
+      ],
+      "base_template": "Thylacine"
+    },
+    {
+      "id": "80a993b2-86e4-423b-9ce7-4bba53406d32",
+      "name": "Opossum",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.13,
+      "hp": 6,
+      "ac": 10,
+      "biomes": [
+        5,
+        1
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Opossum"
+    },
+    {
+      "id": "a938da77-3c45-4013-abf5-72ce83b099da",
+      "name": "Toad",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 2,
+      "ac": 10,
+      "biomes": [
+        6,
+        9
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Toad"
+    },
+    {
+      "id": "b640b3a0-c188-4a9a-94c9-8e640839bfa6",
+      "name": "Frog",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 1,
+      "ac": 11,
+      "biomes": [
+        6,
+        9
+      ],
+      "attacks": [
+        "Suction Grip"
+      ],
+      "base_template": "Frog"
+    },
+    {
+      "id": "e77cdc72-cd82-4458-b166-ef48a8336f29",
+      "name": "Dartfrog",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.25,
+      "hp": 1,
+      "ac": 14,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Toxic Spores"
+      ],
+      "base_template": "Dartfrog"
+    },
+    {
+      "id": "e72b28e4-b10a-4df0-a086-3e70ab1cd10f",
+      "name": "Salamander",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 2,
+      "ac": 11,
+      "biomes": [
+        6,
+        5
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Salamander"
+    },
+    {
+      "id": "55f8858b-958e-472b-be49-8c77fb7faeee",
+      "name": "Newt",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 1,
+      "ac": 11,
+      "biomes": [
+        6,
+        5
+      ],
+      "attacks": [
+        "Bite",
+        "Toxic Spores"
+      ],
+      "base_template": "Newt"
+    },
+    {
+      "id": "595279db-e705-4fd9-ae76-5b3f29e6a6e1",
+      "name": "Caecilian",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 2,
+      "ac": 10,
+      "biomes": [
+        11,
+        9
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Caecilian"
+    },
+    {
+      "id": "b8a740ce-ea65-4021-a1ef-7d2cf4e8eae0",
+      "name": "Axolotl",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 2,
+      "ac": 10,
+      "biomes": [
+        6
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Axolotl"
+    },
+    {
+      "id": "e41f285e-8fbe-4e23-9139-a6beb3c3080a",
+      "name": "Mudpuppy",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 2,
+      "ac": 10,
+      "biomes": [
+        6
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Mudpuppy"
+    },
+    {
+      "id": "e05057dc-336e-4ac8-93cf-5f90b8018311",
+      "name": "Hellbender",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.13,
+      "hp": 5,
+      "ac": 10,
+      "biomes": [
+        6
+      ],
+      "attacks": [
+        "Bite",
+        "Slam"
+      ],
+      "base_template": "Hellbender"
+    },
+    {
+      "id": "faf41553-09f0-4de4-87a4-1ab14eb4a97e",
+      "name": "Siren",
+      "type": "Beast",
+      "sizeIdx": 3,
+      "cr": 0.13,
+      "hp": 4,
+      "ac": 11,
+      "biomes": [
+        6,
+        9
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Siren"
+    },
+    {
+      "id": "9aaa4e2e-6d02-4166-920e-2ad1154b4f65",
+      "name": "Bullfrog",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.13,
+      "hp": 3,
+      "ac": 10,
+      "biomes": [
+        6
+      ],
+      "attacks": [
+        "Bite",
+        "Suction Grip"
+      ],
+      "base_template": "Bullfrog"
+    },
+    {
+      "id": "515dad77-6266-41f4-92ae-ada2535515cb",
+      "name": "Treefrog",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 1,
+      "ac": 13,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "None"
+      ],
+      "base_template": "Treefrog"
+    },
+    {
+      "id": "262deccb-d2a8-4355-8825-95be1c58e620",
+      "name": "Spadefoot",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0,
+      "hp": 2,
+      "ac": 10,
+      "biomes": [
+        4,
+        7
+      ],
+      "attacks": [
+        "Bite"
+      ],
+      "base_template": "Spadefoot"
+    },
+    {
+      "id": "9696c98f-c2f1-479f-9c8b-37f45744e984",
+      "name": "Bombina",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.13,
+      "hp": 1,
+      "ac": 11,
+      "biomes": [
+        6,
+        5
+      ],
+      "attacks": [
+        "Toxic Spores"
+      ],
+      "base_template": "Bombina"
+    },
+    {
+      "id": "1ad302e2-b822-46a1-896a-3dfc31a5a332",
+      "name": "Mantella",
+      "type": "Beast",
+      "sizeIdx": 2,
+      "cr": 0.13,
+      "hp": 1,
+      "ac": 13,
+      "biomes": [
+        9
+      ],
+      "attacks": [
+        "Toxic Spores"
+      ],
+      "base_template": "Mantella"
+    }
+  ],
+  "version": 1
+}

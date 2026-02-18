@@ -1,0 +1,26 @@
+{
+    "Piercing": {
+        "desc": "Deep penetration, puncture",
+        "color": "text-blue-400"
+    },
+    "Slashing": {
+        "desc": "Surface slicing, severing",
+        "color": "text-red-400"
+    },
+    "Blunt": {
+        "desc": "Breaking bones, trauma",
+        "color": "text-orange-400"
+    },
+    "Shredding": {
+        "desc": "Ripping flesh, multiple wounds",
+        "color": "text-red-600"
+    },
+    "Chemical": {
+        "desc": "Necrosis, paralysis, burns",
+        "color": "text-green-400"
+    },
+    "Energy": {
+        "desc": "Shock, sonic, thermal",
+        "color": "text-yellow-400"
+    }
+}

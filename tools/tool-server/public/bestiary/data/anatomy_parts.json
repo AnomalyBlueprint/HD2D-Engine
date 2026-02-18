@@ -1,0 +1,188 @@
+{
+    "Jaw_Teeth": {
+        "defaultHarvest": "Extraction",
+        "baseDrops": [
+            "Tooth",
+            "Jawbone",
+            "Enamel Shard"
+        ]
+    },
+    "Fangs": {
+        "defaultHarvest": "Extraction",
+        "baseDrops": [
+            "Fang",
+            "Venom Droplet"
+        ]
+    },
+    "Beak": {
+        "defaultHarvest": "Sawing",
+        "baseDrops": [
+            "Beak",
+            "Keratin Scrap"
+        ]
+    },
+    "Horns": {
+        "defaultHarvest": "Sawing",
+        "baseDrops": [
+            "Horn",
+            "Bone Dust"
+        ]
+    },
+    "Antlers": {
+        "defaultHarvest": "Sawing",
+        "baseDrops": [
+            "Antler",
+            "Bone Dust"
+        ]
+    },
+    "Tusks": {
+        "defaultHarvest": "Sawing",
+        "baseDrops": [
+            "Ivory",
+            "Bone Dust"
+        ]
+    },
+    "Spines_Quills": {
+        "defaultHarvest": "Plucking",
+        "baseDrops": [
+            "Quill",
+            "Spine"
+        ]
+    },
+    "Claws_Talons": {
+        "defaultHarvest": "Extraction",
+        "baseDrops": [
+            "Claw",
+            "Keratin Scrap"
+        ]
+    },
+    "Pincers_Mandibles": {
+        "defaultHarvest": "Sawing",
+        "baseDrops": [
+            "Pincer",
+            "Chitin Plate"
+        ]
+    },
+    "Paws_Pads": {
+        "defaultHarvest": "Skinning",
+        "baseDrops": [
+            "Paw",
+            "Sinew"
+        ]
+    },
+    "Legs_Bones": {
+        "defaultHarvest": "Butchering",
+        "baseDrops": [
+            "Femur",
+            "Marrow"
+        ]
+    },
+    "Hooves": {
+        "defaultHarvest": "Sawing",
+        "baseDrops": [
+            "Hoof",
+            "Keratin Scrap"
+        ]
+    },
+    "Skull_Head": {
+        "defaultHarvest": "Butchering",
+        "baseDrops": [
+            "Skull",
+            "Brain Matter"
+        ]
+    },
+    "Meat_Muscle": {
+        "defaultHarvest": "Butchering",
+        "baseDrops": [
+            "Raw Meat",
+            "Animal Fat"
+        ]
+    },
+    "Scales_Carapace": {
+        "defaultHarvest": "Scraping",
+        "baseDrops": [
+            "Scale",
+            "Chitin Plate",
+            "Scute"
+        ]
+    },
+    "Tail": {
+        "defaultHarvest": "Butchering",
+        "baseDrops": [
+            "Tail",
+            "Vertebrae"
+        ]
+    },
+    "Fins_Flukes": {
+        "defaultHarvest": "Butchering",
+        "baseDrops": [
+            "Fin",
+            "Cartilage"
+        ]
+    },
+    "Tentacles": {
+        "defaultHarvest": "Butchering",
+        "baseDrops": [
+            "Tentacle",
+            "Suction Cup"
+        ]
+    },
+    "Wings_Feathered": {
+        "defaultHarvest": "Plucking",
+        "baseDrops": [
+            "Feather",
+            "Hollow Bone"
+        ]
+    },
+    "Wings_Membranous": {
+        "defaultHarvest": "Skinning",
+        "baseDrops": [
+            "Wing Membrane",
+            "Leathery Scrap"
+        ]
+    },
+    "Stinger_Spur": {
+        "defaultHarvest": "Extraction",
+        "baseDrops": [
+            "Stinger",
+            "Barb"
+        ]
+    },
+    "Internal_Gland": {
+        "defaultHarvest": "Extraction",
+        "baseDrops": [
+            "Gland",
+            "Noxious Fluid",
+            "Acid Sac"
+        ]
+    },
+    "Blood": {
+        "defaultHarvest": "Draining",
+        "baseDrops": [
+            "Blood",
+            "Plasma"
+        ]
+    },
+    "Special_Organ": {
+        "defaultHarvest": "Extraction",
+        "baseDrops": [
+            "Electrocyte",
+            "Sonic Chamber",
+            "Luminous Node"
+        ]
+    },
+    "Heart": {
+        "defaultHarvest": "Butchering",
+        "baseDrops": [
+            "Heart",
+            "Artery"
+        ]
+    },
+    "Eyes": {
+        "defaultHarvest": "Extraction",
+        "baseDrops": [
+            "Eye",
+            "Vitreous Fluid"
+        ]
+    }
+}

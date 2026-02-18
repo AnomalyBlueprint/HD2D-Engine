@@ -1,0 +1,51 @@
+{
+  "Healthy": {
+    "crMult": 1,
+    "hpMult": 1,
+    "acMod": 0,
+    "addedAttack": null,
+    "behavior": "Normal"
+  },
+  "Starving": {
+    "crMult": 0.7,
+    "hpMult": 0.6,
+    "acMod": -1,
+    "addedAttack": "Bite",
+    "behavior": "Aggressive"
+  },
+  "Rabid": {
+    "crMult": 1.2,
+    "hpMult": 0.8,
+    "acMod": -2,
+    "addedAttack": "Toxic Chomp",
+    "behavior": "Reckless"
+  },
+  "Putrid": {
+    "crMult": 1.3,
+    "hpMult": 1.2,
+    "acMod": -1,
+    "addedAttack": "Toxic Spores",
+    "behavior": "Sluggish"
+  },
+  "Enraged": {
+    "crMult": 1.5,
+    "hpMult": 1,
+    "acMod": -2,
+    "addedAttack": "Slam",
+    "behavior": "Reckless"
+  },
+  "Exhausted": {
+    "crMult": 0.5,
+    "hpMult": 0.8,
+    "acMod": -2,
+    "addedAttack": null,
+    "behavior": "Defensive"
+  },
+  "Feral": {
+    "crMult": 1.2,
+    "hpMult": 1.2,
+    "acMod": 1,
+    "addedAttack": null,
+    "behavior": "Aggressive"
+  }
+}

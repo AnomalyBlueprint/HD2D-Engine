@@ -53,3 +53,7 @@ bin/
 *.o
 *.d
 engine_3d
+
+# Node.js / Tool Server
+node_modules/
+package-lock.json

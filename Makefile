@@ -28,3 +28,26 @@ run: $(TARGET)
 	./$(TARGET)
 
 -include $(DEPS)
+
+# ============================================================
+# Content Pipeline Tools
+# ============================================================
+TOOLS_DIR := tools/tool-server
+
+.PHONY: tools-deps edit-bestiary edit-ui
+
+tools-deps:
+	@if [ ! -d "$(TOOLS_DIR)/node_modules" ]; then \
+		echo "Installing tool dependencies..."; \
+		cd $(TOOLS_DIR) && npm install; \
+	fi
+
+edit-bestiary: tools-deps
+	@echo "Starting Bestiary Architect..."
+	@cd $(TOOLS_DIR) && node open-browser.js http://localhost:3001/bestiary/ &
+	@cd $(TOOLS_DIR) && node server.js
+
+edit-ui: tools-deps
+	@echo "Starting UI Architect..."
+	@cd $(TOOLS_DIR) && node open-browser.js http://localhost:3001/ui/ &
+	@cd $(TOOLS_DIR) && node server.js

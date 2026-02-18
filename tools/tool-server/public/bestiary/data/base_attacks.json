@@ -1,0 +1,500 @@
+{
+  "Nibble": {
+    "type": "Piercing",
+    "effect": "None",
+    "baseDamage": "1d2",
+    "anatomyTag": "Jaw_Teeth"
+  },
+  "Bite": {
+    "type": "Piercing",
+    "effect": "None",
+    "baseDamage": "1d6",
+    "anatomyTag": "Jaw_Teeth"
+  },
+  "Gnaw": {
+    "type": "Shredding",
+    "effect": "Bleed",
+    "baseDamage": "1d4",
+    "anatomyTag": "Jaw_Teeth"
+  },
+  "Crunch": {
+    "type": "Blunt",
+    "effect": "None",
+    "baseDamage": "1d8",
+    "anatomyTag": "Jaw_Teeth"
+  },
+  "Jaw Snap": {
+    "type": "Slashing",
+    "effect": "None",
+    "baseDamage": "1d6",
+    "anatomyTag": "Jaw_Teeth"
+  },
+  "Serrated Bite": {
+    "type": "Shredding",
+    "effect": "Bleed",
+    "baseDamage": "2d4",
+    "anatomyTag": "Jaw_Teeth"
+  },
+  "Crushing Jaw": {
+    "type": "Blunt",
+    "effect": "Stun",
+    "baseDamage": "2d6",
+    "anatomyTag": "Jaw_Teeth"
+  },
+  "Throat Crush": {
+    "type": "Blunt",
+    "effect": "Silence",
+    "baseDamage": "2d6",
+    "anatomyTag": "Jaw_Teeth"
+  },
+  "Trap-Jaw Strike": {
+    "type": "Blunt",
+    "effect": "Stun",
+    "baseDamage": "1d8",
+    "anatomyTag": "Jaw_Teeth"
+  },
+  "Venomous Bite": {
+    "type": "Piercing",
+    "effect": "Poison",
+    "baseDamage": "1d4",
+    "anatomyTag": "Fangs"
+  },
+  "Toxic Chomp": {
+    "type": "Chemical",
+    "effect": "Poison",
+    "baseDamage": "1d6",
+    "anatomyTag": "Fangs"
+  },
+  "Vampiric Drain": {
+    "type": "Piercing",
+    "effect": "Drain",
+    "baseDamage": "1d4",
+    "anatomyTag": "Fangs"
+  },
+  "Leech Latch": {
+    "type": "Slashing",
+    "effect": "Drain",
+    "baseDamage": "1d2",
+    "anatomyTag": "Fangs"
+  },
+  "Peck": {
+    "type": "Piercing",
+    "effect": "None",
+    "baseDamage": "1d4",
+    "anatomyTag": "Beak"
+  },
+  "Beak Tear": {
+    "type": "Shredding",
+    "effect": "Bleed",
+    "baseDamage": "1d6",
+    "anatomyTag": "Beak"
+  },
+  "Hooked Beak": {
+    "type": "Shredding",
+    "effect": "Bleed",
+    "baseDamage": "1d8",
+    "anatomyTag": "Beak"
+  },
+  "Bill Thrust": {
+    "type": "Piercing",
+    "effect": "None",
+    "baseDamage": "1d6",
+    "anatomyTag": "Beak"
+  },
+  "Sword-Bill Slash": {
+    "type": "Slashing",
+    "effect": "Bleed",
+    "baseDamage": "2d4",
+    "anatomyTag": "Beak"
+  },
+  "Macaw Crush": {
+    "type": "Blunt",
+    "effect": "None",
+    "baseDamage": "1d8",
+    "anatomyTag": "Beak"
+  },
+  "Gore": {
+    "type": "Piercing",
+    "effect": "Knockback",
+    "baseDamage": "1d8",
+    "anatomyTag": "Horns"
+  },
+  "Horn Ram": {
+    "type": "Blunt",
+    "effect": "Stun",
+    "baseDamage": "2d4",
+    "anatomyTag": "Horns"
+  },
+  "Rhino Charge": {
+    "type": "Blunt",
+    "effect": "Knockback",
+    "baseDamage": "2d8",
+    "anatomyTag": "Horns"
+  },
+  "Antler Toss": {
+    "type": "Piercing",
+    "effect": "Knockback",
+    "baseDamage": "1d6",
+    "anatomyTag": "Antlers"
+  },
+  "Tusk Slash": {
+    "type": "Slashing",
+    "effect": "Bleed",
+    "baseDamage": "1d8",
+    "anatomyTag": "Tusks"
+  },
+  "Spine Charge": {
+    "type": "Piercing",
+    "effect": "Bleed",
+    "baseDamage": "1d6",
+    "anatomyTag": "Spines_Quills"
+  },
+  "Quill Shoot": {
+    "type": "Piercing",
+    "effect": "None",
+    "baseDamage": "1d4",
+    "anatomyTag": "Spines_Quills"
+  },
+  "Barbed Harpoon": {
+    "type": "Piercing",
+    "effect": "Grapple",
+    "baseDamage": "1d8",
+    "anatomyTag": "Spines_Quills"
+  },
+  "Scratch": {
+    "type": "Slashing",
+    "effect": "None",
+    "baseDamage": "1d4",
+    "anatomyTag": "Claws_Talons"
+  },
+  "Claw": {
+    "type": "Slashing",
+    "effect": "Bleed",
+    "baseDamage": "1d6",
+    "anatomyTag": "Claws_Talons"
+  },
+  "Talon": {
+    "type": "Slashing",
+    "effect": "Bleed",
+    "baseDamage": "1d6",
+    "anatomyTag": "Claws_Talons"
+  },
+  "Rake": {
+    "type": "Shredding",
+    "effect": "Bleed",
+    "baseDamage": "2d4",
+    "anatomyTag": "Claws_Talons"
+  },
+  "Swipe": {
+    "type": "Slashing",
+    "effect": "None",
+    "baseDamage": "1d6",
+    "anatomyTag": "Claws_Talons"
+  },
+  "Eviscerate": {
+    "type": "Shredding",
+    "effect": "Bleed",
+    "baseDamage": "3d4",
+    "anatomyTag": "Claws_Talons"
+  },
+  "Mantis Scythe": {
+    "type": "Slashing",
+    "effect": "Bleed",
+    "baseDamage": "2d4",
+    "anatomyTag": "Pincers_Mandibles"
+  },
+  "Pincer Snipe": {
+    "type": "Slashing",
+    "effect": "None",
+    "baseDamage": "1d6",
+    "anatomyTag": "Pincers_Mandibles"
+  },
+  "Crab Pinch": {
+    "type": "Blunt",
+    "effect": "Grapple",
+    "baseDamage": "1d4",
+    "anatomyTag": "Pincers_Mandibles"
+  },
+  "Raptorial Grasp": {
+    "type": "Piercing",
+    "effect": "Grapple",
+    "baseDamage": "1d6",
+    "anatomyTag": "Pincers_Mandibles"
+  },
+  "Mandible Pinch": {
+    "type": "Shredding",
+    "effect": "Bleed",
+    "baseDamage": "1d4",
+    "anatomyTag": "Pincers_Mandibles"
+  },
+  "Pounce": {
+    "type": "Blunt",
+    "effect": "Knockback",
+    "baseDamage": "1d6",
+    "anatomyTag": "Paws_Pads"
+  },
+  "Paw Strike": {
+    "type": "Blunt",
+    "effect": "None",
+    "baseDamage": "1d4",
+    "anatomyTag": "Paws_Pads"
+  },
+  "Slam": {
+    "type": "Blunt",
+    "effect": "Stun",
+    "baseDamage": "1d6",
+    "anatomyTag": "Legs_Bones"
+  },
+  "Kick": {
+    "type": "Blunt",
+    "effect": "Knockback",
+    "baseDamage": "1d6",
+    "anatomyTag": "Legs_Bones"
+  },
+  "Hind Kick": {
+    "type": "Blunt",
+    "effect": "Knockback",
+    "baseDamage": "2d6",
+    "anatomyTag": "Legs_Bones"
+  },
+  "Kangaroo Box": {
+    "type": "Blunt",
+    "effect": "Stun",
+    "baseDamage": "1d6",
+    "anatomyTag": "Legs_Bones"
+  },
+  "Hoof Stomp": {
+    "type": "Blunt",
+    "effect": "None",
+    "baseDamage": "1d8",
+    "anatomyTag": "Hooves"
+  },
+  "Trample": {
+    "type": "Blunt",
+    "effect": "Knockback",
+    "baseDamage": "2d6",
+    "anatomyTag": "Hooves"
+  },
+  "Headbutt": {
+    "type": "Blunt",
+    "effect": "Stun",
+    "baseDamage": "1d8",
+    "anatomyTag": "Skull_Head"
+  },
+  "Body Slam": {
+    "type": "Blunt",
+    "effect": "Knockback",
+    "baseDamage": "2d4",
+    "anatomyTag": "Meat_Muscle"
+  },
+  "Roll Attack": {
+    "type": "Blunt",
+    "effect": "Knockback",
+    "baseDamage": "1d6",
+    "anatomyTag": "Scales_Carapace"
+  },
+  "Death Roll": {
+    "type": "Shredding",
+    "effect": "Grapple",
+    "baseDamage": "2d8",
+    "anatomyTag": "Meat_Muscle"
+  },
+  "Tail Whip": {
+    "type": "Blunt",
+    "effect": "Knockback",
+    "baseDamage": "1d8",
+    "anatomyTag": "Tail"
+  },
+  "Tail Club": {
+    "type": "Blunt",
+    "effect": "Stun",
+    "baseDamage": "2d6",
+    "anatomyTag": "Tail"
+  },
+  "Thresher Slap": {
+    "type": "Slashing",
+    "effect": "Stun",
+    "baseDamage": "1d8",
+    "anatomyTag": "Tail"
+  },
+  "Fluke Smash": {
+    "type": "Blunt",
+    "effect": "Knockback",
+    "baseDamage": "3d6",
+    "anatomyTag": "Fins_Flukes"
+  },
+  "Spiked Tail": {
+    "type": "Piercing",
+    "effect": "Bleed",
+    "baseDamage": "1d8",
+    "anatomyTag": "Tail"
+  },
+  "Tentacle Lash": {
+    "type": "Blunt",
+    "effect": "None",
+    "baseDamage": "1d6",
+    "anatomyTag": "Tentacles"
+  },
+  "Suction Grip": {
+    "type": "Blunt",
+    "effect": "Grapple",
+    "baseDamage": "1d4",
+    "anatomyTag": "Tentacles"
+  },
+  "Nematocyst Lash": {
+    "type": "Chemical",
+    "effect": "Burn",
+    "baseDamage": "1d4",
+    "anatomyTag": "Tentacles"
+  },
+  "Constrict": {
+    "type": "Blunt",
+    "effect": "Slow",
+    "baseDamage": "1d8",
+    "anatomyTag": "Meat_Muscle"
+  },
+  "Python Squeeze": {
+    "type": "Blunt",
+    "effect": "Grapple",
+    "baseDamage": "2d6",
+    "anatomyTag": "Meat_Muscle"
+  },
+  "Wing Buffet": {
+    "type": "Blunt",
+    "effect": "Knockback",
+    "baseDamage": "1d4",
+    "anatomyTag": "Wings_Feathered"
+  },
+  "Dive Bomb": {
+    "type": "Blunt",
+    "effect": "Stun",
+    "baseDamage": "2d6",
+    "anatomyTag": "Wings_Feathered"
+  },
+  "Swan Strike": {
+    "type": "Blunt",
+    "effect": "None",
+    "baseDamage": "1d6",
+    "anatomyTag": "Wings_Feathered"
+  },
+  "Leathery Wing Buffet": {
+    "type": "Blunt",
+    "effect": "Knockback",
+    "baseDamage": "1d6",
+    "anatomyTag": "Wings_Membranous"
+  },
+  "Fin Slash": {
+    "type": "Slashing",
+    "effect": "None",
+    "baseDamage": "1d6",
+    "anatomyTag": "Fins_Flukes"
+  },
+  "Sting": {
+    "type": "Piercing",
+    "effect": "Poison",
+    "baseDamage": "1d4",
+    "anatomyTag": "Stinger_Spur"
+  },
+  "Barbed Sting": {
+    "type": "Piercing",
+    "effect": "Bleed",
+    "baseDamage": "1d6",
+    "anatomyTag": "Stinger_Spur"
+  },
+  "Neurotoxic Sting": {
+    "type": "Chemical",
+    "effect": "Paralysis",
+    "baseDamage": "1d8",
+    "anatomyTag": "Stinger_Spur"
+  },
+  "Venom Spur": {
+    "type": "Piercing",
+    "effect": "Poison",
+    "baseDamage": "1d6",
+    "anatomyTag": "Stinger_Spur"
+  },
+  "Acid Spray": {
+    "type": "Chemical",
+    "effect": "Burn",
+    "baseDamage": "2d4",
+    "anatomyTag": "Internal_Gland"
+  },
+  "Venom Spit": {
+    "type": "Chemical",
+    "effect": "Blind",
+    "baseDamage": "1d6",
+    "anatomyTag": "Internal_Gland"
+  },
+  "Ink Cloud": {
+    "type": "Chemical",
+    "effect": "Blind",
+    "baseDamage": "0",
+    "anatomyTag": "Internal_Gland"
+  },
+  "Skunk Musk": {
+    "type": "Chemical",
+    "effect": "Nausea",
+    "baseDamage": "1d2",
+    "anatomyTag": "Internal_Gland"
+  },
+  "Blood Squirt": {
+    "type": "Chemical",
+    "effect": "Blind",
+    "baseDamage": "0",
+    "anatomyTag": "Blood"
+  },
+  "Boiling Fluid": {
+    "type": "Chemical",
+    "effect": "Burn",
+    "baseDamage": "2d6",
+    "anatomyTag": "Internal_Gland"
+  },
+  "Toxic Spores": {
+    "type": "Chemical",
+    "effect": "Poison",
+    "baseDamage": "1d4",
+    "anatomyTag": "Internal_Gland"
+  },
+  "Web Shoot": {
+    "type": "Chemical",
+    "effect": "Slow",
+    "baseDamage": "0",
+    "anatomyTag": "Internal_Gland"
+  },
+  "Slime Secretion": {
+    "type": "Chemical",
+    "effect": "Grapple",
+    "baseDamage": "0",
+    "anatomyTag": "Internal_Gland"
+  },
+  "Shock Touch": {
+    "type": "Energy",
+    "effect": "Stun",
+    "baseDamage": "1d8",
+    "anatomyTag": "Special_Organ"
+  },
+  "Eel Discharge": {
+    "type": "Energy",
+    "effect": "Paralysis",
+    "baseDamage": "2d6",
+    "anatomyTag": "Special_Organ"
+  },
+  "Sonic Snap": {
+    "type": "Energy",
+    "effect": "Stun",
+    "baseDamage": "1d10",
+    "anatomyTag": "Pincers_Mandibles"
+  },
+  "Thermal Flash": {
+    "type": "Energy",
+    "effect": "Burn",
+    "baseDamage": "1d8",
+    "anatomyTag": "Special_Organ"
+  },
+  "Echolocation Blast": {
+    "type": "Energy",
+    "effect": "Blind",
+    "baseDamage": "1d4",
+    "anatomyTag": "Skull_Head"
+  }
+}

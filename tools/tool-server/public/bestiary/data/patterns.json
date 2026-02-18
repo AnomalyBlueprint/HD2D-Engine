@@ -1,0 +1,30 @@
+{
+  "None": {
+    "stealthMod": 0,
+    "flavor": "A solid, unbroken coat or scale pattern."
+  },
+  "Mottled": {
+    "stealthMod": 1,
+    "flavor": "Covered in irregular splotches that break up its outline."
+  },
+  "Striped": {
+    "stealthMod": 1,
+    "flavor": "Bold vertical stripes, ideal for hiding in tall grass."
+  },
+  "Spotted": {
+    "stealthMod": 1,
+    "flavor": "Covered in rosette spots to blend with canopy shadows."
+  },
+  "Brindled": {
+    "stealthMod": 1,
+    "flavor": "Subtle, tiger-like streaks woven through its base color."
+  },
+  "Scarred": {
+    "stealthMod": 0,
+    "flavor": "Criss-crossed with deep, old battle wounds."
+  },
+  "Banded": {
+    "stealthMod": 0,
+    "flavor": "Thick, horizontal rings wrapping around its body or limbs."
+  }
+}

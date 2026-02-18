@@ -1,0 +1,26 @@
+{
+  "Tiny": {
+    "maxSpawn": 50,
+    "clusterType": "Swarm"
+  },
+  "Small": {
+    "maxSpawn": 20,
+    "clusterType": "Pack"
+  },
+  "Medium": {
+    "maxSpawn": 12,
+    "clusterType": "Pack"
+  },
+  "Large": {
+    "maxSpawn": 6,
+    "clusterType": "Pod"
+  },
+  "Huge": {
+    "maxSpawn": 3,
+    "clusterType": "Pair/Trio"
+  },
+  "Gargantuan": {
+    "maxSpawn": 1,
+    "clusterType": "Solo"
+  }
+}

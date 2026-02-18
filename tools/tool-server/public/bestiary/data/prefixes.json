@@ -1,0 +1,18 @@
+{
+    "Minor ": {
+        "diceMod": -1,
+        "effectChance": 0.5
+    },
+    "Savage ": {
+        "diceMod": 1,
+        "effectChance": 1.0
+    },
+    "Dire ": {
+        "diceMod": 2,
+        "effectChance": 1.0
+    },
+    "Feral ": {
+        "diceMod": 0,
+        "effectChance": 1.5
+    }
+}
