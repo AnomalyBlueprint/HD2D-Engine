@@ -1705,13 +1705,167 @@
         }
       },
       {
+        "id": "panel_map_controls",
+        "type": "CONTAINER",
+        "geometry": {
+          "x": 250,
+          "y": 570,
+          "w": 512,
+          "h": 40
+        },
+        "style": {
+          "bg": "#171717",
+          "border": "#404040"
+        },
+        "properties": {
+          "layoutMode": "free"
+        }
+      },
+      {
+        "id": "btn_reset",
+        "type": "BUTTON",
+        "geometry": {
+          "x": 260,
+          "y": 575,
+          "w": 60,
+          "h": 30
+        },
+        "style": {
+          "image": "infinity"
+        },
+        "properties": {
+          "text": "RESET",
+          "fontSize": 12,
+          "actionId": "MAP_RESET",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "btn_zoom_in",
+        "type": "BUTTON",
+        "geometry": {
+          "x": 330,
+          "y": 575,
+          "w": 30,
+          "h": 30
+        },
+        "style": {
+          "image": "expand"
+        },
+        "properties": {
+          "text": "",
+          "fontSize": 16,
+          "actionId": "MAP_ZOOM_IN",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "btn_zoom_out",
+        "type": "BUTTON",
+        "geometry": {
+          "x": 370,
+          "y": 575,
+          "w": 30,
+          "h": 30
+        },
+        "style": {
+          "image": "contract"
+        },
+        "properties": {
+          "text": "",
+          "fontSize": 16,
+          "actionId": "MAP_ZOOM_OUT",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "btn_pan_left",
+        "type": "BUTTON",
+        "geometry": {
+          "x": 420,
+          "y": 575,
+          "w": 30,
+          "h": 30
+        },
+        "style": {
+          "image": "plain-arrow-down",
+          "rotation": 90.0
+        },
+        "properties": {
+          "text": "",
+          "fontSize": 12,
+          "actionId": "MAP_PAN_LEFT",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "btn_pan_up",
+        "type": "BUTTON",
+        "geometry": {
+          "x": 460,
+          "y": 575,
+          "w": 30,
+          "h": 30
+        },
+        "style": {
+          "image": "plain-arrow-down",
+          "rotation": 180.0
+        },
+        "properties": {
+          "text": "",
+          "fontSize": 12,
+          "actionId": "MAP_PAN_UP",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "btn_pan_down",
+        "type": "BUTTON",
+        "geometry": {
+          "x": 500,
+          "y": 575,
+          "w": 30,
+          "h": 30
+        },
+        "style": {
+          "image": "plain-arrow-down",
+          "rotation": 0.0
+        },
+        "properties": {
+          "text": "",
+          "fontSize": 12,
+          "actionId": "MAP_PAN_DOWN",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
+        "id": "btn_pan_right",
+        "type": "BUTTON",
+        "geometry": {
+          "x": 540,
+          "y": 575,
+          "w": 30,
+          "h": 30
+        },
+        "style": {
+          "image": "plain-arrow-down",
+          "rotation": 270.0
+        },
+        "properties": {
+          "text": "",
+          "fontSize": 12,
+          "actionId": "MAP_PAN_RIGHT",
+          "fontName": "Kenney Pixel"
+        }
+      },
+      {
         "id": "panel_timeline",
         "type": "CONTAINER",
         "geometry": {
           "x": 250,
-          "y": 580,
+          "y": 620,
           "w": 512,
-          "h": 100
+          "h": 80
         },
         "style": {
           "bg": "#171717",
@@ -1726,7 +1880,7 @@
         "type": "LABEL",
         "geometry": {
           "x": 260,
-          "y": 590,
+          "y": 630,
           "w": 200,
           "h": 20
         },
@@ -1745,7 +1899,7 @@
         "type": "SLIDER",
         "geometry": {
           "x": 260,
-          "y": 620,
+          "y": 650,
           "w": 490,
           "h": 30
         },
@@ -1764,7 +1918,7 @@
         "type": "LABEL",
         "geometry": {
           "x": 260,
-          "y": 650,
+          "y": 675,
           "w": 490,
           "h": 20
         },
@@ -1858,9 +2012,9 @@
         "type": "CONTAINER",
         "geometry": {
           "x": 250,
-          "y": 600,
+          "y": 710,
           "w": 512,
-          "h": 100
+          "h": 80
         },
         "style": {
           "bg": "#000000",
@@ -1875,9 +2029,9 @@
         "type": "LABEL",
         "geometry": {
           "x": 260,
-          "y": 610,
+          "y": 720,
           "w": 490,
-          "h": 80
+          "h": 60
         },
         "style": {
           "color": "#00ff00"

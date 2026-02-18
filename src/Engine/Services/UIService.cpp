@@ -65,6 +65,7 @@ void UIService::LoadLayouts(const std::string& path)
                     if (style.contains("border")) uiEl.style.border = HexToVec4(style["border"]);
                     if (style.contains("color")) uiEl.style.color = HexToVec4(style["color"]);
                     if (style.contains("image")) uiEl.style.image = style.value("image", "");
+                    if (style.contains("rotation")) uiEl.style.rotation = style.value("rotation", 0.0f);
                 }
 
                 if (el.contains("properties"))
@@ -140,6 +141,21 @@ void UIService::SetElementTexture(const std::string& sceneName, const std::strin
     }
 }
 
+void UIService::SetElementUVs(const std::string& sceneName, const std::string& elementId, const glm::vec2& uvMin, const glm::vec2& uvMax)
+{
+    if (m_layouts.find(sceneName) == m_layouts.end()) return;
+
+    for (auto& el : m_layouts[sceneName])
+    {
+        if (el.id == elementId)
+        {
+            el.style.uvMin = uvMin;
+            el.style.uvMax = uvMax;
+            return;
+        }
+    }
+}
+
 void UIService::GetScreenSize(int& w, int& h)
 {
     w = m_width;
@@ -210,6 +226,7 @@ void UIService::Render(RenderService* renderer)
              imgSprite.Size = glm::vec2(el.geometry.w, el.geometry.h);
              imgSprite.Color = glm::vec4(1.0f); // White tint for texture
              imgSprite.TextureID = atlas->GetTextureID();
+             imgSprite.Rotation = el.style.rotation;
              
              UVRect uvs = atlas->GetUVs(el.style.image);
              imgSprite.MinUV = glm::vec2(uvs.uMin, uvs.vMin);
@@ -240,7 +257,9 @@ void UIService::Render(RenderService* renderer)
             texSprite.Size = glm::vec2(el.geometry.w, el.geometry.h);
             texSprite.Color = glm::vec4(1.0f); // White for texture
             texSprite.TextureID = el.style.textureId;
-            // Default UVs are 0,0 to 1,1
+            texSprite.MinUV = el.style.uvMin;
+            texSprite.MaxUV = el.style.uvMax;
+            texSprite.Rotation = el.style.rotation;
             renderer->DrawSprite(texSprite);
         }
 

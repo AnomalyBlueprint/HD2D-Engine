@@ -36,5 +36,8 @@ private:
     
     RenderStyle m_currentStyle = RenderStyle::BORDERLANDS;
     GameState m_currentState = GameState::MainMenu;
-    // MapMode enum removed, state managed by MacroService directly
+    // Map View State
+    float m_mapZoom = 1.0f;
+    glm::vec2 m_mapOffset = glm::vec2(0.0f);
+    void UpdateMapView();
 };

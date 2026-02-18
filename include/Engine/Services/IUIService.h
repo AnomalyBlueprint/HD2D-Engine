@@ -56,5 +56,6 @@ public:
     // Dynamic Updates
     virtual void SetElementText(const std::string& sceneName, const std::string& elementId, const std::string& text) = 0;
     virtual void SetElementTexture(const std::string& sceneName, const std::string& elementId, unsigned int textureId) = 0;
+    virtual void SetElementUVs(const std::string& sceneName, const std::string& elementId, const glm::vec2& uvMin, const glm::vec2& uvMax) = 0;
 };
 

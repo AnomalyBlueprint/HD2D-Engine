@@ -15,7 +15,11 @@ void UIPathRepository::OnInitialize()
     ScanDirectory("assets/ui/kenney_ui-pack-pixel-adventure/Tiles/Large tiles/Thin outline/");
     ScanDirectory("assets/ui/kenney_fantasy-ui-borders/");
     
-    // We can add more specific folders if needed
+    // Manual registration for specific icons in root assets/ui
+    m_paths["expand"] = "assets/ui/expand.png";
+    m_paths["contract"] = "assets/ui/contract.png";
+    m_paths["plain-arrow-down"] = "assets/ui/plain-arrow-down.png";
+    m_paths["infinity"] = "assets/ui/infinity.png";
 }
 
 void UIPathRepository::ScanDirectory(const std::string& path)

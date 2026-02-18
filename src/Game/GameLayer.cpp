@@ -236,16 +236,56 @@ void GameLayer::OnUpdate(float deltaTime)
                      if (m_currentStyle != RenderStyle::BORDERLANDS) m_currentStyle = RenderStyle::BORDERLANDS;
                      else m_currentStyle = RenderStyle::MINECRAFT; // Toggle off
                 }
-                else if (action == "TOGGLE_SHADER_CRT")
+                else if (action == "TOGGLE_MOCO")
                 {
-                    // Toggle CRT/Moco style
+                     // Toggle CRT/Moco style
                      if (m_currentStyle != RenderStyle::MOCO) m_currentStyle = RenderStyle::MOCO;
                      else m_currentStyle = RenderStyle::MINECRAFT; // Toggle off
+                }
+                else if (action == "MAP_ZOOM_IN")
+                {
+                    m_mapZoom *= 1.2f;
+                    if (m_mapZoom > 10.0f) m_mapZoom = 10.0f;
+                    UpdateMapView();
+                }
+                else if (action == "MAP_ZOOM_OUT")
+                {
+                    m_mapZoom /= 1.2f;
+                    if (m_mapZoom < 1.0f) m_mapZoom = 1.0f;
+                    UpdateMapView();
+                }
+                else if (action == "MAP_PAN_UP")
+                {
+                    m_mapOffset.y -= 0.1f / m_mapZoom;
+                    UpdateMapView();
+                }
+                else if (action == "MAP_PAN_DOWN")
+                {
+                    m_mapOffset.y += 0.1f / m_mapZoom;
+                    UpdateMapView();
+                }
+                else if (action == "MAP_PAN_LEFT")
+                {
+                    m_mapOffset.x -= 0.1f / m_mapZoom;
+                    UpdateMapView();
+                }
+                else if (action == "MAP_PAN_RIGHT")
+                {
+                    m_mapOffset.x += 0.1f / m_mapZoom;
+                    UpdateMapView();
+                }
+                else if (action == "MAP_RESET")
+                {
+                    m_mapZoom = 1.0f;
+                    m_mapOffset = glm::vec2(0.0f);
+                    UpdateMapView();
                 }
                 
                 uiService->ConsumeAction();
             }
         }
+
+
     }
 
     // Update Title (Need Window access? Engine handles title? Or GameLayer sets it via SDL)
@@ -268,6 +308,7 @@ void GameLayer::OnUpdate(float deltaTime)
         if (curWindow) SDL_SetWindowTitle(curWindow, title.c_str());
     }
 }
+
 
 void GameLayer::OnEvent(SDL_Event& e)
 {
@@ -668,6 +709,7 @@ void GameLayer::SwitchScene(GameState newState)
             if (macroService && macroService->GetMapTexture() != 0)
             {
                 uiService->SetElementTexture("macroWorldGeneration", "map_visualizer", macroService->GetMapTexture());
+                UpdateMapView();
             }
         }
     }
@@ -690,5 +732,28 @@ void GameLayer::SwitchScene(GameState newState)
     else if (m_currentState == GameState::DeathSummary)
     {
         if (uiService) uiService->SetScene("death_summary");
+    }
+}
+
+void GameLayer::UpdateMapView()
+{
+    float visiblePortion = 1.0f / m_mapZoom;
+    float halfVis = visiblePortion / 2.0f;
+    
+    // Clamp offset to keep view within bounds
+    float maxOffset = (1.0f - visiblePortion) / 2.0f;
+    if (maxOffset < 0) maxOffset = 0;
+    
+    m_mapOffset.x = glm::clamp(m_mapOffset.x, -maxOffset, maxOffset);
+    m_mapOffset.y = glm::clamp(m_mapOffset.y, -maxOffset, maxOffset);
+
+    glm::vec2 center = glm::vec2(0.5f) + m_mapOffset;
+    glm::vec2 minUV = center - glm::vec2(halfVis);
+    glm::vec2 maxUV = center + glm::vec2(halfVis);
+    
+    auto ui = ServiceLocator::Get().GetService<IUIService>();
+    if (ui)
+    {
+        ui->SetElementUVs("macroWorldGeneration", "map_visualizer", minUV, maxUV);
     }
 }

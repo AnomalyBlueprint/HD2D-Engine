@@ -122,8 +122,8 @@ void FontService::RenderText(RenderService* renderer, const std::string& text, f
     
     const FontData& font = m_fonts[nameIdx];
 
-    // 1. Shadow Pass (+2, +2 offset, Black)
-    RenderTextInternal(renderer, font, text, x + 2.0f, y + 2.0f, scale, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+    // 1. Shadow Pass (+2, +2 offset, Black) - REMOVED per user request
+    // RenderTextInternal(renderer, font, text, x + 2.0f, y + 2.0f, scale, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
     
     // 2. Main Pass
     RenderTextInternal(renderer, font, text, x, y, scale, color);

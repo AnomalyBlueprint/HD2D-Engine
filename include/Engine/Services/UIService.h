@@ -17,6 +17,9 @@ struct UIStyle {
     glm::vec4 color = glm::vec4(1.0f);
     std::string image;
     unsigned int textureId = 0; // Custom OpenGL Texture ID
+    glm::vec2 uvMin = glm::vec2(0.0f, 0.0f);
+    glm::vec2 uvMax = glm::vec2(1.0f, 1.0f);
+    float rotation = 0.0f;
 };
 // ... (skip down to class definition) ...
 
@@ -73,6 +76,7 @@ public:
     void ConsumeAction() override;
     void SetElementText(const std::string& sceneName, const std::string& elementId, const std::string& text) override;
     void SetElementTexture(const std::string& sceneName, const std::string& elementId, unsigned int textureId) override;
+    void SetElementUVs(const std::string& sceneName, const std::string& elementId, const glm::vec2& uvMin, const glm::vec2& uvMax) override;
 
 protected:
     void OnInitialize() override;
